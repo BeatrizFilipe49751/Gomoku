@@ -1,4 +1,4 @@
-package daw.isel.pt.Gomoku
+package daw.isel.pt.gomoku
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
