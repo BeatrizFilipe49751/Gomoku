@@ -6,5 +6,7 @@ In addition, please add a [`.mailmap`](https://git-scm.com/docs/gitmailmap) file
 Example:
 
 ```
-12345 <a12345@alunos.isel.pt> <mygithubuser@whatever.com>
+49751 <a49751@alunos.isel.pt> <> 
+49457 <a49457@alunos.isel.pt> <>
+49473 <a49473@alunos.isel.pt> <>
 ```
