@@ -7,5 +7,6 @@ data class Game(
         val board : Board,
         val name: String,
         val playerBlack : Int,
-        val playerWhite : Int
+        val playerWhite : Int,
+        val state: GameState
 )
