@@ -1,4 +1,3 @@
 package daw.isel.pt.gomoku.domain
 
-class Board  {
-}
+data class Board(val id: Int)
