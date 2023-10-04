@@ -1,10 +1,12 @@
 package daw.isel.pt.gomoku.controllers
 
+import daw.isel.pt.gomoku.controllers.models.UserIn
 import daw.isel.pt.gomoku.controllers.models.UserOut
 import daw.isel.pt.gomoku.controllers.models.UserOutWithToken
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.controllers.utils.toUserOutWithToken
+import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,12 +29,13 @@ class UserController(val userServices: UserServices) {
     }
 
     @PostMapping(UserRoutes.CREATE_USER)
-    fun createUser(@RequestBody userName: String): ResponseEntity<UserOutWithToken> {
+    fun createUser(
+        @RequestBody userIn: UserIn
+    ): ResponseEntity<User> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
-                userServices.createUser(userName).toUserOutWithToken()
+                userServices.createUser(userIn.username, userIn.email)
             )
-
     }
 }
