@@ -3,8 +3,9 @@ package daw.isel.pt.gomoku.repository.dataJDBI
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.UserRepository
 import org.jdbi.v3.core.Jdbi
-import java.util.UUID
+import org.springframework.stereotype.Component
 
+@Component
 class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
     override fun getUser(id: Int): User? {
         return jdbi.withHandle<User?, Exception> { handle ->
@@ -15,14 +16,17 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
         }
     }
 
-    override fun createUser(username: String): User {
-        val newToken = UUID.randomUUID().toString()
-        return jdbi.withHandle<User?, Exception> { handle ->
-            handle.createQuery("INSERT INTO users values (:username, :token)")
+    override fun createUser(username: String, token: String): User {
+        val id = jdbi.withHandle<Int, Exception> { handle ->
+            handle.createQuery(
+                "INSERT INTO users values (:username, :token) RETURNING id")
                 .bind("username", username)
-                .bind("token", newToken)
-                .mapTo(User::class.java)
+                .bind("token", token)
+                .mapTo(Int::class.java)
                 .singleOrNull()
         }
+        return User(
+            id, username, token
+        )
     }
 }
