@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class UserController(val userServices: UserServices) {
 
-    @GetMapping(UserRoutes.GETU_USER)
+    @GetMapping(UserRoutes.GET_USER)
     fun getUser(@PathVariable id: Int): ResponseEntity<UserOut> {
         return ResponseEntity
             .status(HttpStatus.OK) // to be defined
