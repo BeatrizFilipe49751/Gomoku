@@ -1,3 +1,6 @@
+CREATE TABLE IF NOT EXISTS boards (
+    id INTEGER UNIQUE PRIMARY KEY
+);
 
 CREATE TABLE IF NOT EXISTS users (
     id  SERIAL PRIMARY KEY,
@@ -18,8 +21,4 @@ CREATE TABLE IF NOT EXISTS game_users (
      player_white INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
      player_black INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
      PRIMARY KEY (game, player_white, player_black)
-);
-
-CREATE TABLE IF NOT EXISTS boards (
-     id INTEGER UNIQUE PRIMARY KEY
 );
