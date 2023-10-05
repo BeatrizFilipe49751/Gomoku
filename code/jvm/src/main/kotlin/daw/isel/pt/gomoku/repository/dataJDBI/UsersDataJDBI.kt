@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
     override fun getUser(id: Int): User? {
         return jdbi.withHandle<User?, Exception> { handle ->
-            handle.createQuery("select id, username from users where id = :id")
+            handle.createQuery("select id, username, token from users where id = :id")
                 .bind("id", id)
                 .mapTo(User::class.java)
                 .singleOrNull()
@@ -19,7 +19,7 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
     override fun createUser(username: String, token: String): User {
         val id = jdbi.withHandle<Int, Exception> { handle ->
             handle.createQuery(
-                "INSERT INTO users values (:username, :token) RETURNING id")
+                "INSERT INTO users (username, token) values (:username, :token) RETURNING id")
                 .bind("username", username)
                 .bind("token", token)
                 .mapTo(Int::class.java)

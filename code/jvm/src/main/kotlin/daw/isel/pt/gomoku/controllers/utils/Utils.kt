@@ -5,9 +5,9 @@ import daw.isel.pt.gomoku.controllers.models.UserOutWithToken
 import daw.isel.pt.gomoku.domain.User
 
 fun User.toUserOut(): UserOut{
-    return UserOut(this.username)
+    return UserOut(this.id, this.username)
 }
 
 fun User.toUserOutWithToken(): UserOutWithToken{
-    return UserOutWithToken(this.username, this.token)
+    return UserOutWithToken(this.id, this.username, this.token)
 }
