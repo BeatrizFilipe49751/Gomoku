@@ -16,17 +16,17 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
         }
     }
 
-    override fun createUser(username: String, token: String): User {
+
+    override fun createUser(username: String, email: String, token: String): User {
         val id = jdbi.withHandle<Int, Exception> { handle ->
             handle.createQuery(
-                "INSERT INTO users (username, token) values (:username, :token) RETURNING id")
+                "INSERT INTO users (username, email, token) values (:username, :email, :token) RETURNING id")
                 .bind("username", username)
+                .bind("email", email)
                 .bind("token", token)
                 .mapTo(Int::class.java)
                 .singleOrNull()
         }
-        return User(
-            id, username, token
-        )
+        return User(id, username, token)
     }
 }

@@ -15,21 +15,18 @@ import org.springframework.web.bind.annotation.*
 class UserController(val userServices: UserServices) {
 
     @GetMapping(UserRoutes.GET_USER)
-    fun getUser(@PathVariable id: Int): ResponseEntity<UserOut> {
-        return ResponseEntity
+    fun getUser(@PathVariable id: Int): ResponseEntity<UserOut> =
+        ResponseEntity
             .status(HttpStatus.OK) // to be defined
             .body(
                 userServices.getUser(id).toUserOut()
             )
-    }
 
     @PostMapping(UserRoutes.CREATE_USER)
-    fun createUser(@RequestBody userIn: UserIn): ResponseEntity<UserOutWithToken> {
-        return ResponseEntity
+    fun createUser(@RequestBody userIn: UserIn): ResponseEntity<UserOutWithToken> =
+        ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
-                userServices.createUser(userIn.username).toUserOutWithToken()
+                userServices.createUser(userIn.username, userIn.email).toUserOutWithToken()
             )
-
-    }
 }

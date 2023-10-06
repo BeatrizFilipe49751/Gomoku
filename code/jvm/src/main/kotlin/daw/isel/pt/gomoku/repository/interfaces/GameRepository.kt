@@ -7,4 +7,6 @@ import java.util.*
 interface GameRepository {
     fun getGame(id: UUID): Game
     fun createGame(name: String, playerWhite: User, playerBlack: User): UUID
+
+    fun updateGame(id: UUID): Game
 }

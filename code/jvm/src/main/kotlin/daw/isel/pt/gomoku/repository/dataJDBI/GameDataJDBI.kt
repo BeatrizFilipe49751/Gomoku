@@ -16,4 +16,8 @@ class GameDataJDBI(private val jdbi: Jdbi): GameRepository {
     override fun createGame(name: String, playerWhite: User, playerBlack: User): UUID {
         TODO("Not yet implemented")
     }
+
+    override fun updateGame(id: UUID): Game {
+        TODO("Not yet implemented")
+    }
 }
