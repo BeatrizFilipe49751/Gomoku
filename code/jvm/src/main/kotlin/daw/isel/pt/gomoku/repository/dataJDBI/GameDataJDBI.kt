@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.repository.dataJDBI
 
-import daw.isel.pt.gomoku.domain.Game
+import daw.isel.pt.gomoku.domain.game.Game
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.GameRepository
 import org.jdbi.v3.core.Jdbi

@@ -1,4 +1,4 @@
-package daw.isel.pt.gomoku.domain
+package daw.isel.pt.gomoku.domain.game
 
 data class Row(val identifier: Int) {
     val index = BOARD_DIM - identifier

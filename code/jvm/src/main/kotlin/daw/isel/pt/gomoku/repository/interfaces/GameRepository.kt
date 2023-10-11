@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.repository.interfaces
 
-import daw.isel.pt.gomoku.domain.Game
+import daw.isel.pt.gomoku.domain.game.Game
 import daw.isel.pt.gomoku.domain.User
 import java.util.*
 
