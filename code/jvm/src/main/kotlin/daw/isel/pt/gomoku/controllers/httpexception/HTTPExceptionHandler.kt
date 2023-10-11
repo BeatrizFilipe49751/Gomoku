@@ -14,18 +14,18 @@ import java.sql.SQLException
 class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(value = [NotFoundException::class] )
-    fun exceptionHandlerNotFound() = ResponseEntity
+    fun exceptionHandlerNotFound(e: NotFoundException) = ResponseEntity
         .status(HttpStatus.NOT_FOUND)
-        .body("Error: Not Found") //
+        .body("Error: NOT FOUND")
 
     @ExceptionHandler(value = [IllegalArgumentException::class, InvalidCredentialsException::class, SQLException::class] )
-    fun exceptionHandlerBadRequest() = ResponseEntity
+    fun exceptionHandlerBadRequest(e: Exception) = ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body("Error: Bad Request") //
 
 
     @ExceptionHandler(value = [UnauthorizedException::class] )
-    fun exceptionHandlerUnauthorized() = ResponseEntity
+    fun exceptionHandlerUnauthorized(e: UnauthorizedException) = ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body("Error: Unauthorized access") //
 

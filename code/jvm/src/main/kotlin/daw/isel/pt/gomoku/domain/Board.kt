@@ -1,3 +1,7 @@
 package daw.isel.pt.gomoku.domain
 
-data class Board(val id: Int)
+
+const val BOARD_DIM = 15
+class Board{
+
+}
