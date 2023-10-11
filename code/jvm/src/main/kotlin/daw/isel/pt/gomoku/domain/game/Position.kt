@@ -1,7 +1,21 @@
 package daw.isel.pt.gomoku.domain.game
 
+
 data class Position(val row: Row, val column: Column, val state: PositionState){
     companion object {
+        fun deserialize(pos: String): Position {
+            val params = pos.split(":")
+            check(params.size == 3) {"Parameter size wrong"}
+            check(params[0].all { it.isDigit() }) {"Row index is not a number"}
+            check(params[1].all { it.isDigit() }) {"Column index is not a number"}
+            check(params[2].length == 1) {"Position State must be a single char"}
+            return Position(
+                params[0].toInt().indexToRow(),
+                params[1].toInt().indexToColumn(),
+                params[2].first().toPositionState()
+            )
+        }
+
         val positions = (0 until MAX_POSITIONS).map{
             idx -> Position((idx / BOARD_DIM).indexToRow(), (idx % BOARD_DIM).indexToColumn(), PositionState.EMPTY)
         }
@@ -19,11 +33,6 @@ data class Position(val row: Row, val column: Column, val state: PositionState){
             return positions[index]
         }
     }
-}
 
-fun String.toPositionOrNull(): Position? {
-    if ( !this[0].isDigit() ) return null
-    val aux = this.partition { it.isDigit() }
-    return Position.positions
-        .find { it.row.identifier == aux.first.toInt() && it.column.symbol == aux.second[0] }
+    override fun toString() = "${row.index}:${column.index}:${state.state}"
 }
