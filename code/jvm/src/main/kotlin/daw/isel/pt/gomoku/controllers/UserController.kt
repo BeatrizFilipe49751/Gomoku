@@ -29,4 +29,5 @@ class UserController(val userServices: UserServices) {
             .body(
                 userServices.createUser(userIn.username, userIn.email).toUserOutWithToken()
             )
+
 }

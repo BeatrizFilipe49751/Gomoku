@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.repository.dataJDBI
 
+import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.UserRepository
 import org.jdbi.v3.core.Jdbi
@@ -28,5 +29,17 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
                 .singleOrNull()
         }
         return User(id, username, token)
+    }
+
+    override fun createLobby(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLobbies(): List<Lobby> {
+        TODO("Not yet implemented")
+    }
+
+    override fun joinLobby(): Boolean {
+        TODO("Not yet implemented")
     }
 }
