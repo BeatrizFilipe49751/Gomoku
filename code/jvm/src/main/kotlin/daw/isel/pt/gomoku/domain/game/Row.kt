@@ -15,3 +15,4 @@ data class Row(val identifier: Int) {
 
 fun Int.toRowOrNull(): Row? = Row.rows.find { it.identifier == this }
 fun Int.indexToRow() = Row.rows.find { it.index == this }
+    ?: throw IndexOutOfBoundsException("Index must be between 0 and $BOARD_DIM")

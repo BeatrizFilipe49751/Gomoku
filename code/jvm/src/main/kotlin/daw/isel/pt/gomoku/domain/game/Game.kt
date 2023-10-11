@@ -6,5 +6,5 @@ data class Game(
         val id : UUID,
         val board : Int,
         val name: String,
-        val state: GameState
+        val state: GameState,
 )

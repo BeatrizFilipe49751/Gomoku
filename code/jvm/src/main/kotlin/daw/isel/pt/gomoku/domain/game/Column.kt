@@ -18,3 +18,4 @@ fun Char.toColumnOrNull() =
 
 
 fun Int.indexToColumn() = Column.columns.find { it.index == this }
+    ?: throw IndexOutOfBoundsException("Index must be between 0 and $BOARD_DIM")
