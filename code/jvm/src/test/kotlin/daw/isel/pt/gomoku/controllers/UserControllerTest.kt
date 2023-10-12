@@ -15,7 +15,7 @@ class UserControllerTest {
     @LocalServerPort
     var port: Int = 0
     @Test
-    fun exampleTestUsingWebTestClient() {
+    fun createUser() {
         val client = WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
         client.get().uri("/users/1")
             .exchange()
@@ -24,17 +24,4 @@ class UserControllerTest {
             .jsonPath("username").isEqualTo("filipe")
     }
 
-    @Test
-    fun exampleUsingHttpClientOK() {
-        val client = HttpClient.newHttpClient()
-        val response = client.send(
-            HttpRequest
-                .newBuilder()
-                .uri(URI("http://localhost:$port/users/1"))
-                .GET()
-                .build(),
-            HttpResponse.BodyHandlers.ofString()
-        )
-        Assertions.assertEquals(200, response.statusCode())
-    }
 }

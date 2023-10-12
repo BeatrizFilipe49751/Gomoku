@@ -9,5 +9,5 @@ interface UserRepository {
     fun createLobby(userId: Int): Int
     fun getLobbies(): List<Lobby>
     fun joinLobby(): Boolean
-    fun checkUserToken(userId: Int, token: String) : String?
+    fun checkUserToken(token: String) : User?
 }

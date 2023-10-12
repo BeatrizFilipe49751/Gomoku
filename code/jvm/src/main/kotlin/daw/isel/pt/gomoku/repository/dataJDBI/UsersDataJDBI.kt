@@ -48,12 +48,11 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
         TODO("Not yet implemented")
     }
 
-    override fun checkUserToken(userId: Int, token: String): String? {
-        return jdbi.withHandle<String?, Exception> { handle ->
-            handle.createQuery("select token from users where id = :id and token = :token")
-                .bind("id", userId)
+    override fun checkUserToken(token: String): User? {
+        return jdbi.withHandle<User?, Exception> { handle ->
+            handle.createQuery("select * from users where id = :id and token = :token")
                 .bind("token", token)
-                .mapTo(String::class.java)
+                .mapTo(User::class.java)
                 .singleOrNull()
         }
     }

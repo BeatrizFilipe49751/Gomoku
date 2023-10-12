@@ -6,4 +6,5 @@ data class UserOut(val id: Int, val username: String)
 data class UserOutWithToken(val id: Int, val username: String, val token: String)
 data class UserIn(val username: String, val email: String)
 
+data class UserWithToken(val id: Int, val token: String)
 data class LobbyIn(val name: String, )
