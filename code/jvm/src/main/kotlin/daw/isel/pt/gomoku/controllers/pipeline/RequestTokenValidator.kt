@@ -1,7 +1,6 @@
 package daw.isel.pt.gomoku.controllers.pipeline
 
-import daw.isel.pt.gomoku.controllers.models.UserOutWithToken
-import daw.isel.pt.gomoku.controllers.models.UserWithToken
+
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.stereotype.Component
