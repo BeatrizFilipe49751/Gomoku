@@ -31,8 +31,13 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
         return User(id, username, token)
     }
 
-    override fun createLobby(): Int {
-        TODO("Not yet implemented")
+    override fun createLobby(userId: Int): Int {
+        return jdbi.withHandle<Int?, Exception> { handle ->
+            handle.createQuery("insert into lobby(p1, p2) values (:p1, null) RETURNING id")
+                .bind("p1", userId)
+                .mapTo(Int::class.java)
+                .singleOrNull()
+        }
     }
 
     override fun getLobbies(): List<Lobby> {
@@ -42,4 +47,16 @@ class UsersDataJDBI(private val jdbi: Jdbi): UserRepository {
     override fun joinLobby(): Boolean {
         TODO("Not yet implemented")
     }
+
+    override fun checkUserToken(userId: Int, token: String): String? {
+        return jdbi.withHandle<String?, Exception> { handle ->
+            handle.createQuery("select token from users where id = :id and token = :token")
+                .bind("id", userId)
+                .bind("token", token)
+                .mapTo(String::class.java)
+                .singleOrNull()
+        }
+    }
+
+
 }

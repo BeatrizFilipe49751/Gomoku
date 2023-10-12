@@ -7,6 +7,7 @@ import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.controllers.utils.toUserOutWithToken
 import daw.isel.pt.gomoku.services.UserServices
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
@@ -32,9 +33,12 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.CREATE_LOBBY)
-    fun createLobby(@PathVariable id: Int): ResponseEntity<Int> =
-        ResponseEntity
+    fun createLobby(request: HttpServletRequest, @PathVariable id: Int): ResponseEntity<Int> {
+        val token: String = request.getHeader("Authorization").removePrefix("Bearer ")
+        return  ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(userServices.createLobby(id))
+            .body(userServices.createLobby(id, token))
+    }
+
 
 }

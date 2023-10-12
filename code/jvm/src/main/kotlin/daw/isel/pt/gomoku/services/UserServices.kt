@@ -5,6 +5,7 @@ import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.UserRepository
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
+import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -17,7 +18,17 @@ class UserServices(val userRepo: UserRepository) {
         return userRepo.createUser(username, email, newToken)
     }
 
-    fun createLobby(userId: Int): Int {
-        return userRepo.createLobby(userId)
+    fun createLobby(userId: Int, token: String): Int = checkUserToken(userId, token) {
+        userRepo.createLobby(userId)
     }
+
+    fun <T> checkUserToken(userId: Int, token: String, function: () -> T): T {
+        val verify = userRepo.checkUserToken(userId, token)
+        return if(verify != null) {
+            function()
+        } else {
+            throw UnauthorizedException("Unauthorized access")
+        }
+    }
+
 }
