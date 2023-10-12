@@ -1,12 +1,11 @@
 package daw.isel.pt.gomoku.services
 
 
+import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.TransactionManager
-import daw.isel.pt.gomoku.repository.interfaces.UserRepository
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
-import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import org.springframework.stereotype.Component
 import java.lang.Exception
 import java.util.UUID
@@ -31,12 +30,25 @@ class UserServices(val transactionManager: TransactionManager) {
 
     fun createLobby(userId: Int): Int {
         return transactionManager.run {
-            if(it.usersRepository.canCreateLobby(userId))
+            if(it.usersRepository.isInLobby(userId))
                 it.usersRepository.createLobby(userId)
             else throw Exception() // TODO
         }
     }
 
+    fun getLobbies(): List<Lobby> {
+        return transactionManager.run {
+            it.usersRepository.getLobbies()
+        }
+    }
+
+    fun joinLobby(userId: Int, lobbyId: Int): Boolean {
+        return transactionManager.run {
+            if(it.usersRepository.isInLobby(userId))
+                it.usersRepository.joinLobby(userId, lobbyId)
+            else throw Exception() // TODO
+        }
+    }
 
     fun checkUserToken(token: String): User? {
         return transactionManager.run {

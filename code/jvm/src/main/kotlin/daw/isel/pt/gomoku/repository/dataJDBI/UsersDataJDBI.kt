@@ -4,7 +4,6 @@ import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.UserRepository
 import org.jdbi.v3.core.Handle
-import org.jdbi.v3.core.kotlin.mapTo
 
 
 class UsersDataJDBI(private val handle: Handle): UserRepository {
@@ -48,7 +47,7 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .singleOrNull()
     }
 
-    override fun canCreateLobby(userId: Int): Boolean{
+    override fun isInLobby(userId: Int): Boolean{
         val numLobbies = handle.createQuery("select count(*) from lobby where p1 = :userId OR p2 = :userId")
             .bind("userId", userId)
             .mapTo(Int::class.java)
@@ -61,7 +60,11 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
                 .list()
     }
 
-    override fun joinLobby(): Boolean {
-        TODO("Not yet implemented")
+    override fun joinLobby(lobbyId: Int, userId: Int): Boolean {
+        val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where id = :lobbyId")
+            .bind("lobbyId", lobbyId)
+            .bind("userId", userId)
+            .execute()
+        return numRows > 0
     }
 }
