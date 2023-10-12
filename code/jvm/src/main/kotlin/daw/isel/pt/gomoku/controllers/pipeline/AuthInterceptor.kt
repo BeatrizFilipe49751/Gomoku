@@ -1,12 +1,10 @@
 package daw.isel.pt.gomoku.controllers.pipeline
 
-import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
@@ -18,8 +16,7 @@ class AuthInterceptor(private val tokenValidator: RequestTokenValidator): Handle
             response.status = HttpServletResponse.SC_UNAUTHORIZED
             throw UnauthorizedException("Unauthorized Access")
         }
-        val token: String = authorizationHeader.removePrefix("Bearer ")
-        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(token)
+        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authorizationHeader)
         return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
         else true
     }

@@ -45,7 +45,7 @@ class UserServices(val transactionManager: TransactionManager) {
     fun joinLobby(userId: Int, lobbyId: Int): Boolean {
         return transactionManager.run {
             if(it.usersRepository.isInLobby(userId))
-                it.usersRepository.joinLobby(userId, lobbyId)
+                it.usersRepository.joinLobby(lobbyId, userId)
             else throw Exception() // TODO
         }
     }

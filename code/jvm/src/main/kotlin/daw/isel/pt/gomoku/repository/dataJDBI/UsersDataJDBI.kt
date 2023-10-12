@@ -41,7 +41,7 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
     }
 
     override fun checkUserToken(token: String): User? {
-        return handle.createQuery("select * from users where id = :id and token = :token")
+        return handle.createQuery("select * from users where token = :token")
             .bind("token", token)
             .mapTo(User::class.java)
             .singleOrNull()

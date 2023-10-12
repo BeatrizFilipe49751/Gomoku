@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.controllers.httpexception
 
 import daw.isel.pt.gomoku.controllers.models.ErrorResponse
+import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
 import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
@@ -23,7 +24,7 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
             .status(errorResponse.status)
             .body(errorResponse)
     }
-    @ExceptionHandler(value = [IllegalArgumentException::class, InvalidCredentialsException::class] )
+    @ExceptionHandler(value = [AlreadyInLobbyException::class, IllegalArgumentException::class, InvalidCredentialsException::class] )
     fun exceptionHandlerBadRequest(e: Exception): ResponseEntity<ErrorResponse>{
         val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(),  e.message ?: "No message provided")
         log.info("Handling ${e::class.java.simpleName}: ${e.message}")
