@@ -4,8 +4,7 @@ import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.interfaces.UserRepository
 import org.jdbi.v3.core.Handle
-import org.jdbi.v3.core.Jdbi
-import org.springframework.stereotype.Component
+import org.jdbi.v3.core.kotlin.mapTo
 
 
 class UsersDataJDBI(private val handle: Handle): UserRepository {
@@ -14,7 +13,6 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .bind("id", id)
             .mapTo(User::class.java)
             .singleOrNull()
-
     }
 
 
@@ -26,9 +24,14 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
                 .bind("token", token)
                 .mapTo(Int::class.java)
                 .single()
-
-
         return User(id, username, token)
+    }
+
+    override fun quitLobby(lobbyId: Int): Boolean {
+        val numRows = handle.createUpdate("DELETE FROM lobby where lobby.id = :lobbyId")
+            .bind("lobbyId", lobbyId)
+            .execute()
+        return numRows > 0
     }
 
     override fun createLobby(userId: Int): Int {
@@ -38,6 +41,20 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
                 .single()
     }
 
+    override fun checkUserToken(token: String): User? {
+        return handle.createQuery("select * from users where id = :id and token = :token")
+            .bind("token", token)
+            .mapTo(User::class.java)
+            .singleOrNull()
+    }
+
+    override fun canCreateLobby(userId: Int): Boolean{
+        val numLobbies = handle.createQuery("select count(*) from lobby where p1 = :userId OR p2 = :userId")
+            .bind("userId", userId)
+            .mapTo(Int::class.java)
+            .single()
+        return numLobbies < 1
+    }
     override fun getLobbies(): List<Lobby> {
         TODO("Not yet implemented")
     }
@@ -45,13 +62,4 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
     override fun joinLobby(): Boolean {
         TODO("Not yet implemented")
     }
-
-    override fun checkUserToken(token: String): User? {
-        return handle.createQuery("select * from users where id = :id and token = :token")
-                .bind("token", token)
-                .mapTo(User::class.java)
-                .singleOrNull()
-    }
-
-
 }
