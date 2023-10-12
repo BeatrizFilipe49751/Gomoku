@@ -6,7 +6,7 @@ interface UserRepository {
     fun getUser(id: Int): User?
     fun createUser(username: String, email: String, token:String): User
 
-    fun createLobby(): Int
+    fun createLobby(userId: Int): Int
     fun getLobbies(): List<Lobby>
     fun joinLobby(): Boolean
 }

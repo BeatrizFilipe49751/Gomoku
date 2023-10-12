@@ -8,6 +8,7 @@ import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.controllers.utils.toUserOutWithToken
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.http.HttpStatus
+import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -29,5 +30,11 @@ class UserController(val userServices: UserServices) {
             .body(
                 userServices.createUser(userIn.username, userIn.email).toUserOutWithToken()
             )
+
+    @PostMapping(UserRoutes.CREATE_LOBBY)
+    fun createLobby(@PathVariable id: Int): ResponseEntity<Int> =
+        ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(userServices.createLobby(id))
 
 }

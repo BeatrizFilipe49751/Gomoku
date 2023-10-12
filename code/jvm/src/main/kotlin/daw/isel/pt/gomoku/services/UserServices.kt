@@ -16,4 +16,8 @@ class UserServices(val userRepo: UserRepository) {
         val newToken = UUID.randomUUID().toString()
         return userRepo.createUser(username, email, newToken)
     }
+
+    fun createLobby(userId: Int): Int {
+        return userRepo.createLobby(userId)
+    }
 }
