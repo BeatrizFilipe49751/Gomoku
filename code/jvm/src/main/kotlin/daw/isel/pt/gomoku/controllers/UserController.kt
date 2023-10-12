@@ -33,12 +33,9 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.CREATE_LOBBY)
-    fun createLobby(request: HttpServletRequest, @PathVariable id: Int): ResponseEntity<Int> {
-        val token: String = request.getHeader("Authorization").removePrefix("Bearer ")
+    fun createLobby(@PathVariable id: Int): ResponseEntity<Int> {
         return  ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(userServices.createLobby(id, token))
+            .body(userServices.createLobby(id))
     }
-
-
 }

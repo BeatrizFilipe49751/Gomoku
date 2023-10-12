@@ -3,6 +3,7 @@ package daw.isel.pt.gomoku.controllers.httpexception
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
 import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -28,5 +29,9 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
     fun exceptionHandlerUnauthorized(e: UnauthorizedException) = ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body("Error: Unauthorized access") //
+
+    companion object {
+        private val log = LoggerFactory.getLogger(HTTPExceptionHandler::class.java)
+    }
 
 }

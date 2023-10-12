@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.controllers.pipeline
 
 import daw.isel.pt.gomoku.domain.User
+import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
@@ -12,29 +13,20 @@ import org.springframework.web.servlet.HandlerInterceptor
 class AuthInterceptor(private val tokenValidator: RequestTokenValidator): HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        if (handler is HandlerMethod && handler.methodParameters.any {
-                it.parameterType == User::class.java
-            }
-        ) {
-            // enforce authentication
-            val user = tokenValidator
-                .processAuthorizationHeaderValue(request.getHeader(NAME_AUTHORIZATION_HEADER))
-            return if (user == null) {
-                response.status = 401
-                response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, RequestTokenValidator.SCHEME)
-                false
-            } else {
-                UserArgumentResolver.addUserTo(user, request)
-                true
-            }
+        val authorizationHeader: String? = request.getHeader(NAME_AUTHORIZATION_HEADER)
+        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_STRING)) {
+            response.status = HttpServletResponse.SC_UNAUTHORIZED
+            throw UnauthorizedException("Unauthorized Access")
         }
-
-        return true
+        val token: String = authorizationHeader.removePrefix("Bearer ")
+        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(token)
+        return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
+        else true
     }
 
     companion object {
         private val logger = LoggerFactory.getLogger(AuthInterceptor::class.java)
         const val NAME_AUTHORIZATION_HEADER = "Authorization"
-        private const val NAME_WWW_AUTHENTICATE_HEADER = "WWW-Authenticate"
+        const val BEARER_STRING = "Bearer "
     }
 }

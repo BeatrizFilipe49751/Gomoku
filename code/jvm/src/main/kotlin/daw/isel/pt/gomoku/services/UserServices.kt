@@ -19,8 +19,7 @@ class UserServices(val userRepo: UserRepository) {
         return userRepo.createUser(username, email, newToken)
     }
 
-    fun createLobby(userId: Int, token: String): Int {
-        if(token.isEmpty()) throw InvalidCredentialsException("token not present")
+    fun createLobby(userId: Int): Int {
         return userRepo.createLobby(userId)
     }
 
