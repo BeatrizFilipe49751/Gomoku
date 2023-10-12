@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.controllers.httpexception
 
+import daw.isel.pt.gomoku.controllers.models.ErrorResponse
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
 import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
@@ -15,20 +16,40 @@ import java.sql.SQLException
 class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(value = [NotFoundException::class] )
-    fun exceptionHandlerNotFound(e: NotFoundException) = ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body("Error: NOT FOUND")
-
-    @ExceptionHandler(value = [IllegalArgumentException::class, InvalidCredentialsException::class, SQLException::class] )
-    fun exceptionHandlerBadRequest(e: Exception) = ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("Error: Bad Request") //
+    fun exceptionHandlerNotFound(e: NotFoundException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(HttpStatus.NOT_FOUND.value(),  e.message ?: "No message provided")
+        log.info("Handling NotFoundException: ${e.message}")
+        return ResponseEntity
+            .status(errorResponse.status)
+            .body(errorResponse)
+    }
+    @ExceptionHandler(value = [IllegalArgumentException::class, InvalidCredentialsException::class] )
+    fun exceptionHandlerBadRequest(e: Exception): ResponseEntity<ErrorResponse>{
+        val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(),  e.message ?: "No message provided")
+        log.info("Handling ${e::class.java.simpleName}: ${e.message}")
+        return ResponseEntity
+            .status(errorResponse.status)
+            .body(errorResponse)
+    }
 
 
     @ExceptionHandler(value = [UnauthorizedException::class] )
-    fun exceptionHandlerUnauthorized(e: UnauthorizedException) = ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body("Error: Unauthorized access") //
+    fun exceptionHandlerUnauthorized(e: UnauthorizedException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.message ?: "No message provided")
+        log.info("Handling UnauthorizedException ${e.message}")
+        return ResponseEntity
+            .status(errorResponse.status)
+            .body(errorResponse)
+    } //
+
+    @ExceptionHandler(value = [SQLException::class])
+    fun handleSQLException(e: SQLException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "DATABASE ERROR")
+        log.info("Handling SQLException ${e.message}")
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(errorResponse)
+    }
 
     companion object {
         private val log = LoggerFactory.getLogger(HTTPExceptionHandler::class.java)
