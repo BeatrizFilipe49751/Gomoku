@@ -56,7 +56,9 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
         return numLobbies < 1
     }
     override fun getLobbies(): List<Lobby> {
-        TODO("Not yet implemented")
+        return handle.createQuery("select * from lobby where p2 IS NULL")
+                .mapTo(Lobby::class.java)
+                .list()
     }
 
     override fun joinLobby(): Boolean {
