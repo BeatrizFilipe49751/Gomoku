@@ -5,7 +5,6 @@ import daw.isel.pt.gomoku.controllers.models.UserIn
 import daw.isel.pt.gomoku.controllers.models.UserOut
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
-import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.http.HttpStatus
@@ -19,36 +18,12 @@ class UserController(val userServices: UserServices) {
     fun getUser(@PathVariable userId: Int): ResponseEntity<UserOut> =
         ResponseEntity
             .status(HttpStatus.OK) // to be defined
-            .body(
-                userServices.getUser(userId).toUserOut()
-            )
+            .body(userServices.getUser(userId).toUserOut())
 
     @PostMapping(UserRoutes.CREATE_USER)
     fun createUser(@RequestBody userIn: UserIn): ResponseEntity<User> =
         ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(
-                userServices.createUser(userIn.username, userIn.email)
-            )
+            .body(userServices.createUser(userIn.username, userIn.email))
 
-    @PostMapping(UserRoutes.CREATE_LOBBY)
-    fun createLobby(@PathVariable userId: Int): ResponseEntity<Int> {
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(userServices.createLobby(userId))
-    }
-
-    @GetMapping(UserRoutes.GET_AVAILABLE_LOBBIES)
-    fun getLobbies(@PathVariable userId: Int): ResponseEntity<List<Lobby>> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(userServices.getLobbies())
-    }
-
-    @PutMapping(UserRoutes.JOIN_LOBBY)
-    fun joinLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Boolean> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(userServices.joinLobby(userId, lobbyId))
-    }
 }

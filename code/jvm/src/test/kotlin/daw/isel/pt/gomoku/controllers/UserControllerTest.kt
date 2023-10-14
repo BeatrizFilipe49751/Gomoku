@@ -92,6 +92,37 @@ class UserControllerTest {
             .jsonPath("username").isEqualTo("Dummy")
 
     }
+
+    @Test
+    fun `Get user with Invalid id`() {
+        val id = Int.MAX_VALUE
+        val path = "/users/$id"
+        val newClient = createNewClient(port)
+        newClient.get().uri(path)
+            .exchange()
+            .expectStatus().isNotFound
+            .expectBody()
+            .jsonPath("message").isEqualTo(UserErrorMessages.USER_NOT_FOUND)
+    }
+
+    @Test
+    fun `Create lobby successfully`() {
+        val newClient = createNewClient(port)
+        val userName = newTestUserName()
+        val email = newTestEmail()
+        newClient.post().uri(UserRoutes.CREATE_USER)
+            .bodyValue(
+                mapOf(
+                    "username" to userName,
+                    "email" to email
+                )
+            )
+            .exchange()
+            .expectStatus().isCreated
+            .expectBody()
+            .jsonPath("username").isEqualTo(userName)
+            .jsonPath("email").isEqualTo(email)
+    }
     companion object {
         private fun newTestUserName() = "user-${abs(Random.nextLong())}"
         private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
