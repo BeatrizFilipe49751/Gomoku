@@ -29,7 +29,7 @@ data class WatchBoard (val game: Game) {
                 if (piece != null)
                     if (piece.color == BLACK) print(blackPiece)
                     else print(whitePiece)
-                else print("$emptySquare")
+                else print(emptySquare)
             }
             print("|")
             println()
@@ -75,5 +75,5 @@ fun main() {
     println("NEW BOARD INCOMING --------------------")
     watchBoard.printBoard()
     // this will throw an error as the game is already finished
-    watchBoard = WatchBoard(watchBoard.game.play(Piece(Position(0,5), WHITE)))
+    WatchBoard(watchBoard.game.play(Piece(Position(0,5), WHITE)))
 }
