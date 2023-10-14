@@ -4,6 +4,7 @@ const val BOARD_DIM = 15
 const val LAST_INDEX = BOARD_DIM - 1
 const val LAST_COL_CHAR = 'a' + LAST_INDEX
 const val MAX_POSITIONS = BOARD_DIM * BOARD_DIM
+const val WIN_STREAK = 5
 
 data class Board(val id: Int, val pieces: List<Piece> = emptyList()) {
 
@@ -23,7 +24,7 @@ data class Board(val id: Int, val pieces: List<Piece> = emptyList()) {
 
     val isEmptyBoard get() = pieces.isEmpty()
 
-    fun hasPiece(p: Piece) = pieces.contains(p)
+    fun positionHasPiece(p: Piece) = pieces.find { it.position == p.position } != null
 
     override fun toString() =
         "$id\n" + if (isEmptyBoard) "" else pieces.joinToString { it.toString() + "\n" }
