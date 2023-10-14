@@ -1,9 +1,8 @@
 package daw.isel.pt.gomoku.domain
 
-import java.util.UUID
-
 data class User (
-        val id: Int,
+        val userId: Int,
         val username: String,
+        val email: String,
         val token: String
 )

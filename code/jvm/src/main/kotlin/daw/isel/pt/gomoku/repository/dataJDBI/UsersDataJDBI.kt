@@ -7,34 +7,34 @@ import org.jdbi.v3.core.Handle
 
 
 class UsersDataJDBI(private val handle: Handle): UserRepository {
-    override fun getUser(id: Int): User? {
-        return handle.createQuery("select id, username, token from users where id = :id")
-            .bind("id", id)
+    override fun getUser(userId: Int): User? {
+        return handle.createQuery("select userId, username, email, token from users where userId = :userId")
+            .bind("userId", userId)
             .mapTo(User::class.java)
             .singleOrNull()
     }
 
 
     override fun createUser(username: String, email: String, token: String): User {
-        val id: Int = handle.createQuery(
-                "INSERT INTO users (username, email, token) values (:username, :email, :token) RETURNING id")
+        val userId: Int = handle.createQuery(
+                "INSERT INTO users (username, email, token) values (:username, :email, :token) RETURNING userId")
                 .bind("username", username)
                 .bind("email", email)
                 .bind("token", token)
                 .mapTo(Int::class.java)
                 .single()
-        return User(id, username, token)
+        return User(userId, username, email, token)
     }
 
     override fun quitLobby(lobbyId: Int): Boolean {
-        val numRows = handle.createUpdate("DELETE FROM lobby where lobby.id = :lobbyId")
+        val numRows = handle.createUpdate("DELETE FROM lobby where lobby.lobbyid = :lobbyId")
             .bind("lobbyId", lobbyId)
             .execute()
         return numRows > 0
     }
 
     override fun createLobby(userId: Int): Int {
-        return handle.createQuery("insert into lobby(p1, p2) values (:p1, null) RETURNING id")
+        return handle.createQuery("insert into lobby(p1, p2) values (:p1, null) RETURNING lobbyid")
                 .bind("p1", userId)
                 .mapTo(Int::class.java)
                 .single()
@@ -61,7 +61,7 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
     }
 
     override fun joinLobby(lobbyId: Int, userId: Int): Boolean {
-        val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where id = :lobbyId")
+        val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where lobbyid = :lobbyId")
             .bind("lobbyId", lobbyId)
             .bind("userId", userId)
             .execute()

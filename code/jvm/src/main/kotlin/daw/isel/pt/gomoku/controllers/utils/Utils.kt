@@ -6,9 +6,9 @@ import daw.isel.pt.gomoku.domain.User
 
 
 fun User.toUserOut(): UserOut{
-    return UserOut(this.id, this.username)
+    return UserOut(this.userId, this.username, this.email)
 }
 
 fun User.toUserOutWithToken(): UserOutWithToken{
-    return UserOutWithToken(this.id, this.username, this.token)
+    return UserOutWithToken(this.userId, this.username, this.token)
 }
