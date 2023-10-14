@@ -24,7 +24,7 @@ data class Game(
         private fun checkWin(board: Board, piece: Piece): Boolean {
                 val directions = piece.position.Directions().getDirections()
                 if (directions.isNotEmpty()) {
-                        val foundPieces = directions.map { direction ->
+                        directions.map { direction ->
                                 val filteredDir = direction.filter { pos ->
                                         pos in board.pieces
                                                 .filter { it.color == piece.color}
