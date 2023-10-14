@@ -24,7 +24,7 @@ data class Board(val id: Int, val pieces: List<Piece> = emptyList()) {
 
     val isEmptyBoard get() = pieces.isEmpty()
 
-    fun positionHasPiece(p: Piece) = pieces.find { it.position == p.position } != null
+    fun hasPiece(p: Piece) = pieces.find { it.position == p.position } != null
 
     override fun toString() =
         "$id\n" + if (isEmptyBoard) "" else pieces.joinToString { it.toString() + "\n" }

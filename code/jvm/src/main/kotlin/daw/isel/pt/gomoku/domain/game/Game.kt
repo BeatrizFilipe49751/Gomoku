@@ -14,7 +14,7 @@ data class Game(
         fun play(pieceToPlace: Piece): Game {
                 check(state == ACTIVE) { "Game has finished" }
                 check(currentTurn == pieceToPlace.color)
-                check(!board.positionHasPiece(pieceToPlace)) { "Piece already there" }
+                check(!board.hasPiece(pieceToPlace)) { "Piece already there" }
                 val newBoard = board.copy(pieces = board.pieces + pieceToPlace)
                 return if (checkWin(newBoard, pieceToPlace))
                         copy(board = newBoard, state = FINISHED)
