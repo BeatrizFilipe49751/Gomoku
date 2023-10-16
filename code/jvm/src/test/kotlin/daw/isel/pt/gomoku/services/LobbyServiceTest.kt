@@ -71,7 +71,18 @@ class LobbyServiceTest {
 
     @Test
     fun `User deletes lobby successfully`(){
+        val user = createUser()
+        val lobby = lobbyServices.createLobby(user.userId)
+        assertTrue { lobbyServices.deleteLobby(user.userId, lobby.lobbyId)}
+    }
 
+    @Test
+    fun `User quits lobby successfully`(){
+        val user = createUser()
+        val otherUser = createUser()
+        val lobby = lobbyServices.createLobby(user.userId)
+        lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
+        assertTrue {lobbyServices.deleteLobby(otherUser.userId, lobby.lobbyId)}
     }
     companion object {
 

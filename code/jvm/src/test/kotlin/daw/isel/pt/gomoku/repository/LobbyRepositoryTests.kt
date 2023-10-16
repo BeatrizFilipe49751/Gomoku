@@ -40,6 +40,29 @@ class LobbyRepositoryTests {
         assertTrue { !lobbyRepo.isNotInLobby(otherUser.userId) }
     }
 
+    @Test
+    fun `delete Lobby Successfully`() = runWithHandle {
+        val usersRepo = UsersDataJDBI(it)
+        val lobbyRepo = LobbyDataJDBI(it)
+
+        val user = createUser(usersRepo)
+        val newLobby = lobbyRepo.createLobby(user.userId)
+
+        assertTrue {lobbyRepo.deleteLobby(newLobby.lobbyId)}
+    }
+
+    @Test
+    fun `quit Lobby Successfully`() = runWithHandle {
+        val usersRepo = UsersDataJDBI(it)
+        val lobbyRepo = LobbyDataJDBI(it)
+
+        val user = createUser(usersRepo)
+        val otherUser = createUser(usersRepo)
+        val newLobby = lobbyRepo.createLobby(user.userId)
+        lobbyRepo.joinLobby(newLobby.lobbyId, otherUser.userId)
+        assertTrue {lobbyRepo.quitLobby(newLobby.lobbyId, otherUser.userId)}
+    }
+
     companion object {
 
         private fun createUser(userRepo : UsersDataJDBI): User {
