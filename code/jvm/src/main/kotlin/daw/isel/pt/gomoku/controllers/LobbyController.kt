@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class LobbyController(private val lobbyServices: LobbyServices) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
-    fun createLobby(@PathVariable userId: Int): ResponseEntity<Int> {
+    fun createLobby(@PathVariable userId: Int): ResponseEntity<Lobby> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(userId))

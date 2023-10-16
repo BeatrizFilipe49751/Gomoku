@@ -41,7 +41,7 @@ class UserRepositoryTest {
     companion object {
         private fun runWithHandle(block: (Handle) -> Unit) = jdbi.useTransaction<Exception>(block)
 
-            private fun newTestUserName() = "user-${abs(Random.nextLong())}"
+        private fun newTestUserName() = "user-${abs(Random.nextLong())}"
 
         private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
 

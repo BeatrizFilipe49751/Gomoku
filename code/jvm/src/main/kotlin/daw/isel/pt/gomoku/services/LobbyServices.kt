@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class LobbyServices(private val transactionManager: TransactionManager) {
-    fun createLobby(userId: Int): Int {
+    fun createLobby(userId: Int): Lobby {
         return transactionManager.run {
-            if(it.lobbyRepository.isInLobby(userId))
+            if(it.lobbyRepository.isNotInLobby(userId))
                 it.lobbyRepository.createLobby(userId)
             else throw AlreadyInLobbyException(LobbyErrorMessages.USER_ALREADY_IN_LOBBY)
         }
@@ -25,7 +25,7 @@ class LobbyServices(private val transactionManager: TransactionManager) {
 
     fun joinLobby(userId: Int, lobbyId: Int): Boolean {
         return transactionManager.run {
-            if(it.lobbyRepository.isInLobby(userId))
+            if(it.lobbyRepository.isNotInLobby(userId))
                 it.lobbyRepository.joinLobby(lobbyId, userId)
             else throw AlreadyInLobbyException(LobbyErrorMessages.USER_ALREADY_IN_LOBBY)
         }
