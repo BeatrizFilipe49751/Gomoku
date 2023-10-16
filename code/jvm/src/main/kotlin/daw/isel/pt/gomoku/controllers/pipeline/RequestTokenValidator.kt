@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class RequestTokenValidator(val userServices: UserServices) {
-    fun processAuthorizationHeaderValue(authorizationValue: String?): User? {
+    fun processAuthorizationHeaderValue(authorizationValue: String?, userId: Int): User? {
         if (authorizationValue == null) {
             return null
         }
@@ -18,7 +18,7 @@ class RequestTokenValidator(val userServices: UserServices) {
         if (parts[0].lowercase() != SCHEME) {
             return null
         }
-        return userServices.checkUserToken(parts[1])
+        return userServices.checkUserToken(parts[1], userId)
     }
 
     companion object {

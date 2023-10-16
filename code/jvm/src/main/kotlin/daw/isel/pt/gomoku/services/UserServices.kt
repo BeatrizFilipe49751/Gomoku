@@ -24,9 +24,9 @@ class UserServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun checkUserToken(token: String): User? {
+    fun checkUserToken(token: String, userId: Int): User? {
         return transactionManager.run {
-            it.usersRepository.checkUserToken(token)
+            it.usersRepository.checkUserToken(token, userId)
         }
     }
 }
