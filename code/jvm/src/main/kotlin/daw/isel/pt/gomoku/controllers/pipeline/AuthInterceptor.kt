@@ -16,6 +16,7 @@ class AuthInterceptor(private val tokenValidator: RequestTokenValidator): Handle
             response.status = HttpServletResponse.SC_UNAUTHORIZED
             throw UnauthorizedException("Unauthorized Access")
         }
+        logger.info("Handling Auth interceptor")
         val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authorizationHeader)
         return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
         else true
