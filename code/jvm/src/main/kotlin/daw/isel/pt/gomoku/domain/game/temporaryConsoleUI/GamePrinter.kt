@@ -1,12 +1,8 @@
 package daw.isel.pt.gomoku.domain.game.temporaryConsoleUI
 
-import daw.isel.pt.gomoku.domain.game.BOARD_DIM
-import daw.isel.pt.gomoku.domain.game.Board
-import daw.isel.pt.gomoku.domain.game.Game
+import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.domain.game.GameState.*
-import daw.isel.pt.gomoku.domain.game.Piece
 import daw.isel.pt.gomoku.domain.game.PieceColor.*
-import daw.isel.pt.gomoku.domain.game.Position
 import java.util.*
 
 /**
@@ -45,34 +41,22 @@ fun printBoard(game: Game) {
  */
 fun main() {
     var testGame = Game(UUID.randomUUID(), Board(1), "testGame", ACTIVE)
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(0, 0), BLACK))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(0,1), WHITE))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(1,1), BLACK))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(0,2), WHITE))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(2,2), BLACK))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(0,3), WHITE))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(3,3), BLACK))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(0,6), WHITE))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    testGame = testGame.play(Piece(Position(4,4), BLACK))
-    println("NEW BOARD INCOMING --------------------")
-    printBoard(testGame)
-    // this will throw an error as the game is already finished
-    testGame.play(Piece(Position(0,5), WHITE))
+    while (true) {
+        println("Type play position color")
+        val command = readln()
+        val args = command.split(" ")
+        if (args.size == 1 && args[0] == "exit")
+            break
+        try {
+            testGame = testGame.play(
+                Piece(
+                    Position(args[1].toInt(), args[2].toInt()),
+                    args[3].first().toPieceColor()
+                )
+            )
+            printBoard(testGame)
+        } catch (ex: Exception) {
+            println("Error: $ex")
+        }
+    }
 }

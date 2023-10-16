@@ -13,9 +13,11 @@ data class Game(
 ) {
         fun play(pieceToPlace: Piece): Game {
                 check(state == ACTIVE) { "Game has finished" }
-                check(currentTurn == pieceToPlace.color)
+                check(currentTurn == pieceToPlace.color) { "It is not your turn" }
                 check(!board.hasPiece(pieceToPlace)) { "Piece already there" }
                 val newBoard = board.copy(pieces = board.pieces + pieceToPlace)
+                if (newBoard.pieces.size < WIN_STREAK)
+                        return copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
                 return if (checkWin(newBoard, pieceToPlace))
                         copy(board = newBoard, state = FINISHED)
                 else copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
