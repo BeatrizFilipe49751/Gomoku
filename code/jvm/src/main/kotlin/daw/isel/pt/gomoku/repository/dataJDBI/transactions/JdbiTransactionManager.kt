@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.repository.dataJDBI.transactions
 
-import daw.isel.pt.gomoku.repository.interfaces.Transaction
-import daw.isel.pt.gomoku.repository.interfaces.TransactionManager
+import daw.isel.pt.gomoku.repository.interfaces.transactions.Transaction
+import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import org.jdbi.v3.core.Jdbi
 import org.springframework.stereotype.Component
 

@@ -3,13 +3,13 @@ package daw.isel.pt.gomoku.controllers
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.services.exceptions.UserErrorMessages
 
-import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.test.web.reactive.server.WebTestClient
 import kotlin.math.abs
 import kotlin.random.Random
+import kotlin.test.Test
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -91,6 +91,18 @@ class UserControllerTest {
             .expectBody()
             .jsonPath("username").isEqualTo("Dummy")
 
+    }
+
+    @Test
+    fun `Get user with Invalid id`() {
+        val id = Int.MAX_VALUE
+        val path = "/users/$id"
+        val newClient = createNewClient(port)
+        newClient.get().uri(path)
+            .exchange()
+            .expectStatus().isNotFound
+            .expectBody()
+            .jsonPath("message").isEqualTo(UserErrorMessages.USER_NOT_FOUND)
     }
     companion object {
         private fun newTestUserName() = "user-${abs(Random.nextLong())}"

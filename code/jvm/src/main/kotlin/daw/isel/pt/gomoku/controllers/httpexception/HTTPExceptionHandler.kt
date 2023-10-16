@@ -41,14 +41,14 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity
             .status(errorResponse.status)
             .body(errorResponse)
-    } //
+    }
 
     @ExceptionHandler(value = [SQLException::class])
     fun handleSQLException(e: SQLException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "DATABASE ERROR")
         log.info("Handling SQLException ${e.message}")
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .status(errorResponse.status)
             .body(errorResponse)
     }
 
