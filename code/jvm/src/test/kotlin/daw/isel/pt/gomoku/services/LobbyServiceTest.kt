@@ -68,6 +68,11 @@ class LobbyServiceTest {
 
         assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(otheruser.userId) }
     }
+
+    @Test
+    fun `User deletes lobby successfully`(){
+
+    }
     companion object {
 
         private fun createUser(): User {

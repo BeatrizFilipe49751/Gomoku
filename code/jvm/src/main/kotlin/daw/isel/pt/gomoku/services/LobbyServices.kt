@@ -31,15 +31,21 @@ class LobbyServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun getLobby(userId: Int, lobbyId: Int): Lobby {
+    fun getLobby(lobbyId: Int): Lobby {
         return transactionManager.run {
-            it.lobbyRepository.getLobby(userId, lobbyId)
+            it.lobbyRepository.getLobby(lobbyId)
                 ?: throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
         }
     }
-    fun deleteLobby(userId: Int, lobbyId: Int){
+    fun deleteLobby(userId: Int, lobbyId: Int): Boolean{
         return transactionManager.run {
-           TODO()
+           if(it.lobbyRepository.getLobby(lobbyId) != null) {
+               if(it.lobbyRepository.isLobbyAdmin(lobbyId, userId)) {
+                   it.lobbyRepository.deleteLobby(lobbyId)
+               } else {
+                   it.lobbyRepository.quitLobby(lobbyId, userId)
+               }
+           } else throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
         }
     }
 }

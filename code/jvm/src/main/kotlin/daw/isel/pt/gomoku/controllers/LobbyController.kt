@@ -5,6 +5,7 @@ import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.LobbyServices
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -31,7 +32,7 @@ class LobbyController(private val lobbyServices: LobbyServices) {
     fun getLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Lobby> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(lobbyServices.getLobby(userId, lobbyId))
+            .body(lobbyServices.getLobby(userId))
     }
 
     @PutMapping(LobbyRoutes.JOIN_LOBBY)
@@ -39,5 +40,12 @@ class LobbyController(private val lobbyServices: LobbyServices) {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.joinLobby(userId, lobbyId))
+    }
+
+    @DeleteMapping(LobbyRoutes.DELETE_LOBBY)
+    fun quitLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Boolean> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(lobbyServices.deleteLobby(userId, lobbyId))
     }
 }

@@ -20,17 +20,27 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
             .list()
     }
 
-    override fun getLobby(userId: Int, lobbyId: Int): Lobby? {
+    override fun getLobby(lobbyId: Int): Lobby? {
         return handle.createQuery("select lobbyid, p1, p2 from lobby where lobbyid= :lobbyId")
             .bind("lobbyId", lobbyId)
             .mapTo(Lobby::class.java)
             .singleOrNull()
     }
-    override fun quitLobby(lobbyId: Int): Boolean {
+    override fun deleteLobby(lobbyId: Int): Boolean {
         val numRows = handle.createUpdate("DELETE FROM lobby where lobby.lobbyid = :lobbyId")
             .bind("lobbyId", lobbyId)
             .execute()
         return numRows > 0
+    }
+
+    override fun quitLobby(lobbyId: Int, userId: Int): Boolean {
+        val rows = handle.createUpdate("""
+           UPDATE lobby SET p2 = NULL WHERE lobbyid = :lobbyId AND p2 = :userId
+        """)
+            .bind("lobbyId", lobbyId)
+            .bind("userId", userId)
+            .execute()
+        return rows > 0
     }
 
     override fun isNotInLobby(userId: Int): Boolean{
@@ -41,6 +51,17 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
         return numLobbies < 1
     }
 
+    override fun isLobbyAdmin(lobbyId: Int, userId: Int): Boolean {
+        val lobby = handle.createQuery("""
+            select * from lobby 
+            where lobbyid = :lobbyId and p1 = :userId
+        """)
+            .bind("lobbyId", lobbyId)
+            .bind("userId", userId)
+            .mapTo(Lobby::class.java)
+            .singleOrNull()
+        return lobby != null
+    }
     override fun joinLobby(lobbyId: Int, userId: Int): Boolean {
         val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where lobbyid = :lobbyId")
             .bind("lobbyId", lobbyId)
