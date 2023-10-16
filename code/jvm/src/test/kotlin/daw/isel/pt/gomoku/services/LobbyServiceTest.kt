@@ -57,6 +57,17 @@ class LobbyServiceTest {
         }
 
     }
+
+    @Test
+    fun `User joined a lobby but tries to create one while inside it`() {
+        val user = createUser()
+        val otheruser = createUser()
+
+        val lobby = lobbyServices.createLobby(user.userId)
+        lobbyServices.joinLobby(otheruser.userId, lobby.lobbyId)
+
+        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(otheruser.userId) }
+    }
     companion object {
 
         private fun createUser(): User {
@@ -78,7 +89,7 @@ class LobbyServiceTest {
             .installPlugin(KotlinPlugin())
             .installPlugin(PostgresPlugin())
 
-        val lobbyServices = LobbyServices(JdbiTransactionManager(jdbi))
-        val userServices = UserServices(JdbiTransactionManager(jdbi))
+        private val lobbyServices = LobbyServices(JdbiTransactionManager(jdbi))
+        private val userServices = UserServices(JdbiTransactionManager(jdbi))
     }
 }
