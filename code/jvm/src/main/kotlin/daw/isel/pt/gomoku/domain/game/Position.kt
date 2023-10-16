@@ -15,7 +15,7 @@ data class Position(val row: Row, val column: Column){
         }
 
         private val grid = (0 until MAX_POSITIONS).map{
-            idx -> Position((idx / BOARD_DIM).indexToRow(), (idx % BOARD_DIM).indexToColumn())
+                idx -> Position((idx / BOARD_DIM).indexToRow(), (idx % BOARD_DIM).indexToColumn())
         }
 
         operator fun invoke(r: Int, c: Int): Position {
@@ -32,68 +32,15 @@ data class Position(val row: Row, val column: Column){
         }
     }
 
-    inner class Directions {
-        private val up get() =
-            Array(WIN_STREAK - 1) {Position(row, (column.index + (it + 1)).indexToColumn())}
-        private val down get() =
-            Array(WIN_STREAK - 1) {Position(row, (column.index - (it + 1)).indexToColumn())}
-        private val left get() =
-            Array(WIN_STREAK - 1) {Position((row.index - (it + 1)).indexToRow(), column)}
-        private val right get() =
-            Array(WIN_STREAK - 1) {Position((row.index + (it + 1)).indexToRow(), column)}
-        private val upLeft get() =
-            Array(WIN_STREAK - 1) {
-                Position(
-                    (row.index - (it + 1)).indexToRow(),
-                    (column.index + (it + 1)).indexToColumn()
-                )
-            }
-        private val upRight get() =
-            Array(WIN_STREAK - 1) {
-                Position(
-                    (row.index + (it + 1)).indexToRow(),
-                    (column.index + (it + 1)).indexToColumn()
-                )
-            }
-        private val downLeft get() =
-            Array(WIN_STREAK - 1) {
-                Position(
-                    (row.index - (it + 1)).indexToRow(),
-                    (column.index - (it + 1)).indexToColumn()
-                )
-            }
-        private val downRight get() =
-            Array(WIN_STREAK - 1) {
-                Position(
-                    (row.index + (it + 1)).indexToRow(),
-                    (column.index - (it + 1)).indexToColumn()
-                )
-            }
-
-        private val directions = arrayOf(
-            {up},
-            {down},
-            {left},
-            {right},
-            {upLeft},
-            {downLeft},
-            {upRight},
-            {downRight},
-        )
-
-        fun getDirections(): List<Array<Position>> {
-            val list = mutableListOf<Array<Position>>()
-            directions.forEach {
-                try {
-                    list.add(it())
-                } catch (_: Exception) {
-                    // if an index is out of bounds,
-                    // the direction is not added and the
-                    // cycle is continued
-                }
-            }
-            return list
-        }
+    enum class DirectionMath(val pair: Pair<Int, Int>) {
+        UP(Pair(0, 1)),
+        DOWN(Pair(0, -1)),
+        LEFT(Pair(-1, 0)),
+        RIGHT(Pair(1, 0)),
+        UP_LEFT(Pair(-1, 1)),
+        UP_RIGHT(Pair(1, 1)),
+        DOWN_LEFT(Pair(-1, -1)),
+        DOWN_RIGHT(Pair(1, -1))
     }
 
     override fun toString() = "${row.index}:${column.index}"

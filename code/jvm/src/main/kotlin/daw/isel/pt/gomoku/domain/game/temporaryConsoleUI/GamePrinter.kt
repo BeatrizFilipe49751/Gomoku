@@ -42,6 +42,8 @@ fun printBoard(game: Game) {
 fun main() {
     var testGame = Game(UUID.randomUUID(), Board(1), "testGame", ACTIVE)
     while (true) {
+        if (testGame.state == FINISHED)
+            println("Game is finished, do not try to play")
         println("Type play position color")
         val command = readln()
         val args = command.split(" ")

@@ -13,7 +13,7 @@ data class Game(
 ) {
         fun play(pieceToPlace: Piece): Game {
                 check(state == ACTIVE) { "Game has finished" }
-                check(currentTurn == pieceToPlace.color) { "It is not your turn" }
+                check(currentTurn == pieceToPlace.color) { "Not your turn" }
                 check(!board.hasPiece(pieceToPlace)) { "Piece already there" }
                 val newBoard = board.copy(pieces = board.pieces + pieceToPlace)
                 if (newBoard.pieces.size < WIN_STREAK)
@@ -23,19 +23,22 @@ data class Game(
                 else copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
         }
 
-        private fun checkWin(board: Board, piece: Piece): Boolean {
-                val directions = piece.position.Directions().getDirections()
-                if (directions.isNotEmpty()) {
-                        directions.map { direction ->
-                                val filteredDir = direction.filter { pos ->
-                                        pos in board.pieces
-                                                .filter { it.color == piece.color}
-                                                .map { it.position }
-                                }
-                                if (filteredDir.size >= WIN_STREAK - 1 )
+        private fun checkWin(board: Board, p: Piece): Boolean {
+                val neighbors = MutableList(DIRECTIONS) { 0 }
+                for (i in 1 until WIN_STREAK) {
+                        Position.DirectionMath.values().forEachIndexed { index, element ->
+                                val pair = element.pair
+                                val currentCheck =
+                                        board.positionHasColoredPiece(
+                                                p.position.row.index + (i * pair.first) ,
+                                                p.position.column.index + (i * pair.second),
+                                                p.color
+                                        )
+                                if (currentCheck)
+                                        neighbors[index]++
+                                if (neighbors[index] == WIN_STREAK - 1)
                                         return true
                         }
-
                 }
                 return false
         }
