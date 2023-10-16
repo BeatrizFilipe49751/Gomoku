@@ -19,6 +19,7 @@ class UserServices(private val transactionManager: TransactionManager) {
         if (username.isNullOrEmpty() || email.isNullOrEmpty()) throw InvalidCredentialsException(UserErrorMessages.PARAMETERS_MISSING)
         if(!email.contains("@")) throw InvalidCredentialsException(UserErrorMessages.EMAIL_WRONG_FORMAT)
         val newToken = UUID.randomUUID().toString()
+
         return transactionManager.run {
             it.usersRepository.createUser(username, email, newToken)
         }
