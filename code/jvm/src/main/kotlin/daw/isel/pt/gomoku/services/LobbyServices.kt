@@ -39,15 +39,24 @@ class LobbyServices(private val transactionManager: TransactionManager) {
                 ?: throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
         }
     }
+
+    /**
+     * when is lobby admin, checks if there is another player in the lobby
+     * if there isn't the lobby is deleted, if there is, the other player becomes that lobby's admin
+     */
     fun deleteLobby(userId: Int, lobbyId: Int): Boolean{
         return transactionManager.run {
-           if(it.lobbyRepository.getLobby(lobbyId) != null) {
-               if(it.lobbyRepository.isLobbyAdmin(lobbyId, userId)) {
-                   it.lobbyRepository.deleteLobby(lobbyId)
-               } else {
-                   it.lobbyRepository.quitLobby(lobbyId, userId)
-               }
-           } else throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
+            val lobby = it.lobbyRepository.getLobby(lobbyId)
+            if(lobby != null) {
+                when(lobby.p1) {
+                    userId -> {
+                        when(lobby.p2) {
+                            null ->  it.lobbyRepository.deleteLobby(lobbyId)
+                            else ->  it.lobbyRepository.switchLobbyAdmin(lobbyId, userId)
+                        }
+                    } else -> it.lobbyRepository.quitLobby(lobbyId, userId)
+                }
+            } else throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
         }
     }
 }

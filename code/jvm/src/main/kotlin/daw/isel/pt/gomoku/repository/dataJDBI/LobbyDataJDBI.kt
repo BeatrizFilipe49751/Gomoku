@@ -52,10 +52,9 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
         return numLobbies < 1
     }
 
-    override fun isLobbyAdmin(lobbyId: Int, userId: Int): Boolean {
+    override fun switchLobbyAdmin(lobbyId: Int, userId: Int): Boolean {
         val lobby = handle.createQuery("""
-            select * from lobby 
-            where lobbyId = :lobbyId and p1 = :userId
+              UPDATE lobby SET p1 = p2, p2 = NULL WHERE lobbyId = :lobbyId AND p1 = :userId
         """)
             .bind("lobbyId", lobbyId)
             .bind("userId", userId)
