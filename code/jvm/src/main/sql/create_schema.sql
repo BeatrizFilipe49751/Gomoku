@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS games (
     gameId  VARCHAR(36) UNIQUE PRIMARY KEY,
     board VARCHAR(2048) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    state VARCHAR(8) NOT NULL CHECK (state IN ('ACTIVE', 'FINISHED'))
+    state CHAR NOT NULL CHECK (state IN ('A', 'F')),
+    turn CHAR NOT NULL CHECK (turn IN ('b', 'w'))
 );
 
 CREATE TABLE IF NOT EXISTS game_users (
