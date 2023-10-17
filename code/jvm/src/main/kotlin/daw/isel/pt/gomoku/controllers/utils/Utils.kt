@@ -6,7 +6,7 @@ import daw.isel.pt.gomoku.domain.game.*
 
 fun Game.toGameSerialized(): GameSerialized {
     return GameSerialized(
-        id = this.id,
+        gameId = this.id,
         name = this.name,
         board = this.board.serialize(),
         state = this.state.stateChar,
@@ -16,7 +16,7 @@ fun Game.toGameSerialized(): GameSerialized {
 
 fun GameSerialized.toGame(): Game {
     return Game(
-        id = this.id,
+        id = this.gameId,
         board = Board.deserialize(this.board),
         name = name,
         state = this.state.toGameState(),
@@ -24,18 +24,11 @@ fun GameSerialized.toGame(): Game {
     )
 }
 
+
 fun Game.toGameOut(): GameOut {
     return GameOut(
-        name = this.name,
-        board = gameString()
-    )
-}
-
-fun Game.toGameOutWithId(): GameOutWithId {
-    return GameOutWithId(
         id = this.id,
         name = this.name,
-        board = gameString()
     )
 }
 
@@ -50,13 +43,13 @@ fun User.toUserOutWithToken(): UserOutWithToken{
 const val emptySquare = "| "
 const val blackPiece = "|B"
 const val whitePiece = "|W"
-val boardLine = "--".repeat(BOARD_DIM) + "\n"
+val boardLine = "--".repeat(BOARD_DIM) + " \n"
 
 fun Game.gameString(): String {
     val game = this
     var boardString = ""
     boardString +=
-        "GAME: ${game.name} IS ${if (game.state == GameState.ACTIVE) "ACTIVE" else "FINISHED"}\n"
+        "GAME: ${game.name} IS ${if (game.state == GameState.ACTIVE) "ACTIVE" else "FINISHED"} \n "
 
     repeat(BOARD_DIM) { col ->
         boardString += boardLine
@@ -67,10 +60,10 @@ fun Game.gameString(): String {
                 else whitePiece
             else emptySquare
         }
-        boardString += "|\n"
+        boardString += "| \n "
     }
     boardString += boardLine
     if (game.state == GameState.FINISHED)
-        boardString += "WINNER: ${game.currentTurn}\n"
+        boardString += "WINNER: ${game.currentTurn} \n"
     return boardString
 }

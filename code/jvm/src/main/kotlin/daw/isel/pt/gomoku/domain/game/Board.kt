@@ -13,7 +13,7 @@ data class Board(val pieces: List<Piece> = emptyList()) {
         fun deserialize(b: String): Board {
             val params = b.split("\n")
             return Board(
-                if (params.isNotEmpty()) params.map { Piece.deserialize(it) }
+                if (params.size > 1) params.map { Piece.deserialize(it) }
                 else emptyList()
             )
         }

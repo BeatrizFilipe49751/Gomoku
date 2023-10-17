@@ -7,7 +7,7 @@ import org.jdbi.v3.core.Handle
 
 class GameDataJDBI(private val handle: Handle): GameRepository {
     override fun getGame(gameId: String): GameSerialized? {
-        return handle.createQuery("SELECT gameid, name, board, state FROM games WHERE gameid = :id")
+        return handle.createQuery("SELECT gameId, name, board, state, turn FROM games WHERE gameid = :id")
             .bind("id", gameId)
             .mapTo(GameSerialized::class.java)
             .singleOrNull()
@@ -15,11 +15,11 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
 
     override fun createGame(game: GameSerialized, playerBlack: Int, playerWhite: Int): Boolean {
         val numRowsGame = handle.createUpdate( """
-            INSERT into games(gameid, board, name, state)  
-            VALUES (:gameId, :board, :name, :state)
+            INSERT into games(gameid, board, name, state, turn)  
+            VALUES (:gameId, :board, :name, :state, :turn)
         """.trimIndent()
         )
-            .bind("gameId", game.id)
+            .bind("gameId", game.gameId)
             .bind("board", game.board)
             .bind("name", game.name)
             .bind("state", game.state)
@@ -32,7 +32,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
         """.trimIndent()
 
         )
-            .bind("game", game.id)
+            .bind("game", game.gameId)
             .bind("player_black", playerBlack)
             .bind("player_white", playerWhite)
             .execute()
@@ -43,6 +43,15 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
     }
 
     override fun updateGame(game: GameSerialized): Boolean {
-        TODO("Not yet implemented")
+        val numRows = handle.createUpdate(
+            """
+                UPDATE games SET board = :board where gameid = :gameId
+            """.trimIndent()
+        )
+            .bind("board", game.board)
+            .bind("gameId", game.gameId)
+            .execute()
+
+        return numRows > 0
     }
 }

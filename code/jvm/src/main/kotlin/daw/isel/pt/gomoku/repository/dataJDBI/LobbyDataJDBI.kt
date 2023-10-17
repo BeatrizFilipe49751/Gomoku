@@ -6,7 +6,7 @@ import org.jdbi.v3.core.Handle
 
 class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
     override fun createLobby(userId: Int, name: String): Lobby {
-        val lobbyId = handle.createQuery("insert into lobby(p1, name, p2) values (:p1,:name, null) RETURNING lobbyid")
+        val lobbyId = handle.createQuery("insert into lobby(p1, name, p2) values (:p1,:name, null) RETURNING lobbyId")
             .bind("p1", userId)
             .bind("name", name)
             .mapTo(Int::class.java)
@@ -22,13 +22,13 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
     }
 
     override fun getLobby(lobbyId: Int): Lobby? {
-        return handle.createQuery("select lobbyid, p1, p2 from lobby where lobbyid= :lobbyId")
+        return handle.createQuery("select lobbyId,name, p1, p2 from lobby where lobbyId= :lobbyId")
             .bind("lobbyId", lobbyId)
             .mapTo(Lobby::class.java)
             .singleOrNull()
     }
     override fun deleteLobby(lobbyId: Int): Boolean {
-        val numRows = handle.createUpdate("DELETE FROM lobby where lobby.lobbyid = :lobbyId")
+        val numRows = handle.createUpdate("DELETE FROM lobby where lobby.lobbyId = :lobbyId")
             .bind("lobbyId", lobbyId)
             .execute()
         return numRows > 0

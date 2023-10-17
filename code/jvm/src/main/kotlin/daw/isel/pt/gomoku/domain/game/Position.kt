@@ -5,7 +5,7 @@ data class Position(val row: Row, val column: Column){
     companion object {
         fun deserialize(pos: String): Position {
             val params = pos.split(":")
-            check(params.size == 2) {"Parameter size wrong"}
+            check(params.size == 2) {"Position Parameter size wrong"}
             check(params[0].all { it.isDigit() }) {"Row index is not a number"}
             check(params[1].all { it.isDigit() }) {"Column index is not a number"}
             return Position(
