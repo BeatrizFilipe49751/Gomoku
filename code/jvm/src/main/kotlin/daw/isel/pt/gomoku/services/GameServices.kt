@@ -26,7 +26,7 @@ class GameServices(private val transactionManager: TransactionManager) {
             )
 
             if(wasCreated) newGame
-            else throw IllegalStateException("Error creating Game")
+            else throw IllegalStateException("Error creating Game") // to change
         }
     }
 
