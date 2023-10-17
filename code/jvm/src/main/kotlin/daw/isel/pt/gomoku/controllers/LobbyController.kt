@@ -1,8 +1,11 @@
 package daw.isel.pt.gomoku.controllers
 
+import daw.isel.pt.gomoku.controllers.models.GameOutWithId
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
+import daw.isel.pt.gomoku.controllers.utils.toGameOutWithId
 import daw.isel.pt.gomoku.domain.Lobby
+import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class LobbyController(private val lobbyServices: LobbyServices) {
+class LobbyController(private val lobbyServices: LobbyServices, private val gameServices: GameServices) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
     fun createLobby(@PathVariable userId: Int, @RequestBody lobbyIn: LobbyIn): ResponseEntity<Lobby> {
         return ResponseEntity
@@ -38,10 +41,13 @@ class LobbyController(private val lobbyServices: LobbyServices) {
     }
 
     @PutMapping(LobbyRoutes.JOIN_LOBBY)
-    fun joinLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Boolean> {
+    fun joinLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<GameOutWithId> {
+        lobbyServices.joinLobby(userId, lobbyId)
+        val lobby = lobbyServices.getLobby(lobbyId)
+        val game = gameServices.createGame(lobby.name, lobby.p1, userId)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(lobbyServices.joinLobby(userId, lobbyId))
+            .body(game.toGameOutWithId())
     }
 
     @DeleteMapping(LobbyRoutes.DELETE_LOBBY)

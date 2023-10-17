@@ -39,7 +39,8 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun play(game: Game, pieceToPlay: Piece): Game {
+    fun play(game: Game, row: Int, col: Int): Game {
+        val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
         return transactionManager.run {
             playChecks(game, pieceToPlay)
             val newGame = game.play(pieceToPlay)
