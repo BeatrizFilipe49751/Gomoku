@@ -7,6 +7,7 @@ import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.game.Board
 import daw.isel.pt.gomoku.domain.game.Game
 import daw.isel.pt.gomoku.domain.game.toGameState
+import daw.isel.pt.gomoku.domain.game.toPieceColor
 
 
 fun Game.toGameSerialized(): GameSerialized {
@@ -14,7 +15,8 @@ fun Game.toGameSerialized(): GameSerialized {
         id = this.id,
         name = this.name,
         board = this.board.serialize(),
-        state = this.state.stateChar
+        state = this.state.stateChar,
+        turn = this.currentTurn.color
     )
 }
 
@@ -23,7 +25,8 @@ fun GameSerialized.toGame(): Game {
         id = this.id,
         board = Board.deserialize(this.board),
         name = name,
-        state = this.state.toGameState()
+        state = this.state.toGameState(),
+        currentTurn = this.turn.toPieceColor()
     )
 }
 fun User.toUserOut(): UserOut{

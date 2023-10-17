@@ -23,6 +23,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .bind("board", game.board)
             .bind("name", game.name)
             .bind("state", game.state)
+            .bind("turn", game.turn)
             .execute()
 
         val numRowsGameUsers = handle.createUpdate("""
@@ -41,7 +42,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
 
     }
 
-    override fun updateGame(gameId: String): GameSerialized {
+    override fun updateGame(game: GameSerialized): Boolean {
         TODO("Not yet implemented")
     }
 }

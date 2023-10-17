@@ -8,5 +8,5 @@ data class UserIn(val username: String?, val email: String?)
 
 data class LobbyIn(val name: String?)
 
-data class GameSerialized(val id: String, val name: String, val board: String, val state: Char)
+data class GameSerialized(val id: String, val name: String, val board: String, val state: Char, val turn: Char)
 data class ErrorResponse(val status: Int, val message: String = "No message provided")

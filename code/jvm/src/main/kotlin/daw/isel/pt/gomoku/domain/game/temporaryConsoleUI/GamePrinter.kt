@@ -3,7 +3,6 @@ package daw.isel.pt.gomoku.domain.game.temporaryConsoleUI
 import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.domain.game.GameState.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.*
-import java.util.*
 
 /**
  * Temporary console preview testing file
@@ -40,7 +39,7 @@ fun printBoard(game: Game) {
  * VERY HARD-CODED, will be implemented as unit test
  */
 fun main() {
-    var testGame = Game(UUID.randomUUID(), Board(1), "testGame", ACTIVE)
+    var testGame = Game("random-id-things", Board(), "testGame", ACTIVE)
     while (true) {
         if (testGame.state == FINISHED)
             println("Game is finished, do not try to play")

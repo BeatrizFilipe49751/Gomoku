@@ -6,5 +6,5 @@ interface GameRepository {
     fun getGame(gameId: String): GameSerialized?
     fun createGame(game: GameSerialized, playerBlack: Int, playerWhite: Int): Boolean
 
-    fun updateGame(gameId: String): GameSerialized
+    fun updateGame(game: GameSerialized): Boolean
 }

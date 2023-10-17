@@ -4,7 +4,7 @@ import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
-import daw.isel.pt.gomoku.services.exceptions.NotFoundException
+import daw.isel.pt.gomoku.services.exceptions.*
 import org.springframework.stereotype.Component
 import java.lang.IllegalStateException
 import java.util.*
@@ -20,9 +20,9 @@ class GameServices(private val transactionManager: TransactionManager) {
                 name = name
             )
             val wasCreated = it.gameRepository.createGame(
-                newGame.toGameSerialized(),
-                playerBlack,
-                playerWhite
+                game = newGame.toGameSerialized(),
+                playerBlack = playerBlack,
+                playerWhite = playerWhite
             )
 
             if(wasCreated) newGame
@@ -39,20 +39,22 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun play(gameId: String, pieceToPlay: Piece) {
-        transactionManager.run {
-            val game = it.gameRepository.getGame(gameId)
+    fun play(game: Game, pieceToPlay: Piece): Game {
+        return transactionManager.run {
+            playChecks(game, pieceToPlay)
+            val newGame = game.play(pieceToPlay)
+            if (it.gameRepository.updateGame(newGame.toGameSerialized()))
+                newGame
+            else throw IllegalStateException("Game failed to update")
         }
-        /*
-        check(state == GameState.ACTIVE) { "Game has finished" }
-        check(currentTurn == pieceToPlace.color) { "Not your turn" }
-        check(!board.hasPiece(pieceToPlace)) { "Piece already there" }
-        val newBoard = board.copy(pieces = board.pieces + pieceToPlace)
-        if (newBoard.pieces.size < WIN_STREAK)
-            return copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
-        return if (checkWin(newBoard, pieceToPlace))
-            copy(board = newBoard, state = GameState.FINISHED)
-        else copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
-         */
+    }
+
+    private fun playChecks(game: Game, pieceToPlay: Piece) {
+        if (game.state == GameState.FINISHED)
+            throw GameError(GameErrorMessages.GAME_FINISHED)
+        if (game.currentTurn != pieceToPlay.color)
+            throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+        if (game.board.hasPiece(pieceToPlay))
+            throw GameError(GameErrorMessages.INVALID_PLAY)
     }
 }
