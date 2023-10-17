@@ -5,13 +5,14 @@ import daw.isel.pt.gomoku.repository.interfaces.LobbyRepository
 import org.jdbi.v3.core.Handle
 
 class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
-    override fun createLobby(userId: Int): Lobby {
-        val lobbyId = handle.createQuery("insert into lobby(p1, p2) values (:p1, null) RETURNING lobbyid")
+    override fun createLobby(userId: Int, name: String): Lobby {
+        val lobbyId = handle.createQuery("insert into lobby(p1, name, p2) values (:p1,:name, null) RETURNING lobbyid")
             .bind("p1", userId)
+            .bind("name", name)
             .mapTo(Int::class.java)
             .single()
 
-        return Lobby(lobbyId, userId, null)
+        return Lobby(lobbyId, name, userId, null)
     }
 
     override fun getLobbies(): List<Lobby> {
@@ -35,7 +36,7 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
 
     override fun quitLobby(lobbyId: Int, userId: Int): Boolean {
         val rows = handle.createUpdate("""
-           UPDATE lobby SET p2 = NULL WHERE lobbyid = :lobbyId AND p2 = :userId
+           UPDATE lobby SET p2 = NULL WHERE lobbyId = :lobbyId AND p2 = :userId
         """)
             .bind("lobbyId", lobbyId)
             .bind("userId", userId)
@@ -54,7 +55,7 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
     override fun isLobbyAdmin(lobbyId: Int, userId: Int): Boolean {
         val lobby = handle.createQuery("""
             select * from lobby 
-            where lobbyid = :lobbyId and p1 = :userId
+            where lobbyId = :lobbyId and p1 = :userId
         """)
             .bind("lobbyId", lobbyId)
             .bind("userId", userId)
@@ -63,7 +64,7 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
         return lobby != null
     }
     override fun joinLobby(lobbyId: Int, userId: Int): Boolean {
-        val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where lobbyid = :lobbyId")
+        val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where lobbyId = :lobbyId")
             .bind("lobbyId", lobbyId)
             .bind("userId", userId)
             .execute()

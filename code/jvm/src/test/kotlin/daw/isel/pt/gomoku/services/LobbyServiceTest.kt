@@ -19,7 +19,7 @@ class LobbyServiceTest {
     @Test
     fun `Create a lobby Successfully`() {
         val user = createUser()
-        val lobby = lobbyServices.createLobby(user.userId)
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         assertEquals(lobby.p1, user.userId)
 
     }
@@ -28,25 +28,26 @@ class LobbyServiceTest {
     fun `Join a Lobby Successfully`() {
         val user = createUser()
         val otherUser = createUser()
-        val lobby = lobbyServices.createLobby(user.userId)
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         assertTrue { lobbyServices.joinLobby(lobbyId = lobby.lobbyId, userId = otherUser.userId) }
     }
     @Test
     fun `Try to create a lobby when you are already in one`() {
         val user = createUser()
-        lobbyServices.createLobby(userId = user.userId)
-        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(user.userId) }
+        lobbyServices.createLobby(userId = user.userId, newLobbyName())
+        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(user.userId, newLobbyName()) }
     }
 
     @Test
     fun `Try to join a lobby when you are already in one`() {
         val user = createUser()
         val otherUser  = createUser()
-        val lobby = lobbyServices.createLobby(user.userId)
-        val otherUserLobby = lobbyServices.createLobby(otherUser.userId)
-        assertFailsWith<AlreadyInLobbyException> { lobbyServices.joinLobby(
-            userId = otherUser.userId,
-            lobbyId = lobby.lobbyId
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
+        val otherUserLobby = lobbyServices.createLobby(otherUser.userId, newLobbyName())
+        assertFailsWith<AlreadyInLobbyException> {
+            lobbyServices.joinLobby(
+                userId = otherUser.userId,
+                lobbyId = lobby.lobbyId
         ) }
 
         assertFailsWith<AlreadyInLobbyException> {
@@ -63,16 +64,16 @@ class LobbyServiceTest {
         val user = createUser()
         val otheruser = createUser()
 
-        val lobby = lobbyServices.createLobby(user.userId)
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         lobbyServices.joinLobby(otheruser.userId, lobby.lobbyId)
 
-        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(otheruser.userId) }
+        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(otheruser.userId, newLobbyName()) }
     }
 
     @Test
     fun `User deletes lobby successfully`(){
         val user = createUser()
-        val lobby = lobbyServices.createLobby(user.userId)
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         assertTrue { lobbyServices.deleteLobby(user.userId, lobby.lobbyId)}
     }
 
@@ -80,7 +81,7 @@ class LobbyServiceTest {
     fun `User quits lobby successfully`(){
         val user = createUser()
         val otherUser = createUser()
-        val lobby = lobbyServices.createLobby(user.userId)
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
         assertTrue {lobbyServices.deleteLobby(otherUser.userId, lobby.lobbyId)}
     }
@@ -93,7 +94,7 @@ class LobbyServiceTest {
             )
         }
         private fun newTestUserName() = "user-${abs(Random.nextLong())}"
-
+        private fun newLobbyName() = "lobby-${abs(Random.nextLong())}"
         private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
 
 

@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.controllers
 
+import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.LobbyServices
@@ -10,15 +11,16 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class LobbyController(private val lobbyServices: LobbyServices) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
-    fun createLobby(@PathVariable userId: Int): ResponseEntity<Lobby> {
+    fun createLobby(@PathVariable userId: Int, @RequestBody lobbyIn: LobbyIn): ResponseEntity<Lobby> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(lobbyServices.createLobby(userId))
+            .body(lobbyServices.createLobby(userId, lobbyIn.name))
     }
 
     @GetMapping(LobbyRoutes.GET_AVAILABLE_LOBBIES)

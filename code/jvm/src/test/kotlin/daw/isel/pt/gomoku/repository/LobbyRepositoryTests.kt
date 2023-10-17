@@ -22,7 +22,7 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
 
         val user = createUser(usersRepo)
-        val newLobby = lobbyRepo.createLobby(user.userId)
+        val newLobby = lobbyRepo.createLobby(user.userId, newLobbyName())
         assertTrue {  newLobby.p1 == user.userId && newLobby.p2 == null }
     }
 
@@ -32,7 +32,7 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
 
         val user = createUser(usersRepo)
-        val newLobby = lobbyRepo.createLobby(user.userId)
+        val newLobby = lobbyRepo.createLobby(user.userId, newLobbyName())
 
         val otherUser = createUser(usersRepo)
         assertTrue { lobbyRepo.joinLobby(newLobby.lobbyId, otherUser.userId) }
@@ -46,7 +46,7 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
 
         val user = createUser(usersRepo)
-        val newLobby = lobbyRepo.createLobby(user.userId)
+        val newLobby = lobbyRepo.createLobby(user.userId, newLobbyName())
 
         assertTrue {lobbyRepo.deleteLobby(newLobby.lobbyId)}
     }
@@ -58,7 +58,7 @@ class LobbyRepositoryTests {
 
         val user = createUser(usersRepo)
         val otherUser = createUser(usersRepo)
-        val newLobby = lobbyRepo.createLobby(user.userId)
+        val newLobby = lobbyRepo.createLobby(user.userId, newLobbyName())
         lobbyRepo.joinLobby(newLobby.lobbyId, otherUser.userId)
         assertTrue {lobbyRepo.quitLobby(newLobby.lobbyId, otherUser.userId)}
     }
@@ -72,7 +72,8 @@ class LobbyRepositoryTests {
                 token = newToken()
             )
         }
-        private fun runWithHandle(block: (Handle) -> Unit) = LobbyRepositoryTests.jdbi.useTransaction<Exception>(block)
+        private fun runWithHandle(block: (Handle) -> Unit) = jdbi.useTransaction<Exception>(block)
+        private fun newLobbyName() = "lobby-${abs(Random.nextLong())}"
         private fun newTestUserName() = "user-${abs(Random.nextLong())}"
 
         private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"

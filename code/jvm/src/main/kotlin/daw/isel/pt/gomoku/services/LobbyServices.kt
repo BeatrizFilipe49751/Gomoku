@@ -3,16 +3,18 @@ package daw.isel.pt.gomoku.services
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
+import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.LobbyErrorMessages
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
 import org.springframework.stereotype.Component
 
 @Component
 class LobbyServices(private val transactionManager: TransactionManager) {
-    fun createLobby(userId: Int): Lobby {
+    fun createLobby(userId: Int, name: String?): Lobby {
         return transactionManager.run {
+            if(name.isNullOrEmpty()) throw InvalidCredentialsException("Invalid name for lobby")
             if(it.lobbyRepository.isNotInLobby(userId))
-                it.lobbyRepository.createLobby(userId)
+                it.lobbyRepository.createLobby(userId, name)
             else throw AlreadyInLobbyException(LobbyErrorMessages.USER_ALREADY_IN_LOBBY)
         }
     }
