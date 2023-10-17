@@ -11,11 +11,34 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .bind("id", gameId)
             .mapTo(GameSerialized::class.java)
             .singleOrNull()
-
     }
 
-    override fun createGame(game: GameSerialized, playerBlack: Int, playerWhite: Int): GameSerialized {
-        TODO()
+    override fun createGame(game: GameSerialized, playerBlack: Int, playerWhite: Int): GameSerialized? {
+        val numRowsGame = handle.createUpdate( """
+            INSERT into games(gameid, board, name, state)  
+            VALUES (:gameId, :board, :name, :state)
+        """.trimIndent()
+        )
+            .bind("gameId", game.id)
+            .bind("board", game.board)
+            .bind("name", game.name)
+            .bind("state", game.state)
+            .execute()
+
+        val numRowsGameUsers = handle.createUpdate("""
+             INSERT INTO game_users(game, player_white, player_black) 
+             VALUES (:game, :player_black, :player_white)
+        """.trimIndent()
+
+        )
+            .bind("game", game.id)
+            .bind("player_black", playerBlack)
+            .bind("player_white", playerWhite)
+            .execute()
+        val insertedGame = numRowsGame > 0
+        val insertedGameUsers = numRowsGameUsers > 0
+        return if(insertedGame && insertedGameUsers) game
+        else null
     }
 
     override fun updateGame(gameId: String): GameSerialized {
