@@ -1,12 +1,12 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.controllers.utils.toGame
+import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
-import daw.isel.pt.gomoku.repository.interfaces.GameRepository
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
-import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
-import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
-import daw.isel.pt.gomoku.services.exceptions.LobbyErrorMessages
+import daw.isel.pt.gomoku.services.exceptions.NotFoundException
 import org.springframework.stereotype.Component
+import java.lang.IllegalStateException
 import java.util.*
 
 @Component
@@ -14,17 +14,28 @@ class GameServices(private val transactionManager: TransactionManager) {
 
     fun createGame(name: String, playerBlack: Int, playerWhite: Int): Game {
         return transactionManager.run {
-            it.gameRepository.createGame(
-                Game(UUID.randomUUID(), Board(), name),
+            val newGame = Game(
+                id = UUID.randomUUID().toString(),
+                board = Board(),
+                name = name
+            )
+            val wasCreated = it.gameRepository.createGame(
+                newGame.toGameSerialized(),
                 playerBlack,
                 playerWhite
             )
+
+            if(wasCreated) newGame
+            else throw IllegalStateException("Error creating Game")
         }
     }
 
     fun getGame(gameId: String): Game {
         return transactionManager.run {
-            it.gameRepository.getGame(gameId)
+            when(val gameSerialized = it.gameRepository.getGame(gameId)) {
+                null -> throw NotFoundException("Game not Found")
+                else -> gameSerialized.toGame()
+            }
         }
     }
 

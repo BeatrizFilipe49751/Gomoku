@@ -31,6 +31,6 @@ data class Board(val pieces: List<Piece> = emptyList()) {
             false
         }
 
-    override fun toString() =
+    fun serialize() =
         if (isEmptyBoard) "" else pieces.joinToString { it.toString() + "\n" }
 }

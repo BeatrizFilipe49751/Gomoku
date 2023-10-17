@@ -13,7 +13,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .singleOrNull()
     }
 
-    override fun createGame(game: GameSerialized, playerBlack: Int, playerWhite: Int): GameSerialized? {
+    override fun createGame(game: GameSerialized, playerBlack: Int, playerWhite: Int): Boolean {
         val numRowsGame = handle.createUpdate( """
             INSERT into games(gameid, board, name, state)  
             VALUES (:gameId, :board, :name, :state)
@@ -37,8 +37,8 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .execute()
         val insertedGame = numRowsGame > 0
         val insertedGameUsers = numRowsGameUsers > 0
-        return if(insertedGame && insertedGameUsers) game
-        else null
+        return insertedGame && insertedGameUsers
+
     }
 
     override fun updateGame(gameId: String): GameSerialized {

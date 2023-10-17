@@ -2,10 +2,9 @@ package daw.isel.pt.gomoku.domain.game
 
 import daw.isel.pt.gomoku.domain.game.GameState.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
-import java.util.UUID
 
 data class Game(
-        val id : UUID,
+        val id : String,
         val board : Board,
         val name: String,
         val state: GameState = ACTIVE,
