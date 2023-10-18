@@ -21,6 +21,7 @@ class GameServices(private val transactionManager: TransactionManager) {
                 board = Board(),
                 name = name
             )
+
             val wasCreated = it.gameRepository.createGame(
                 game = newGame.toGameSerialized(),
                 gameNumber = gameNumber,
@@ -28,7 +29,10 @@ class GameServices(private val transactionManager: TransactionManager) {
                 playerWhite = playerWhite
             )
 
-            if(wasCreated) newGame
+            if(wasCreated){
+                it.lobbyRepository.deleteLobby(gameNumber)
+                newGame
+            }
             else throw GameError(GameErrorMessages.GAME_CREATION_ERROR)
         }
     }
