@@ -27,14 +27,14 @@ class GameServices(private val transactionManager: TransactionManager) {
             )
 
             if(wasCreated) newGame
-            else throw IllegalStateException("Error creating Game") // to change
+            else throw GameError(GameErrorMessages.GAME_CREATION_ERROR)
         }
     }
 
     fun getGame(gameId: String): Game {
         return transactionManager.run {
             when(val gameSerialized = it.gameRepository.getGame(gameId)) {
-                null -> throw NotFoundException("Game not Found")
+                null -> throw NotFoundException(GameErrorMessages.GAME_NOT_FOUND)
                 else -> gameSerialized.toGame()
             }
         }
@@ -46,7 +46,8 @@ class GameServices(private val transactionManager: TransactionManager) {
                 Piece(
                     Position(
                         row.indexToRow(),
-                        col.indexToColumn()),
+                        col.indexToColumn()
+                    ),
                     game.currentTurn
                 )
             playChecks(game, pieceToPlay)

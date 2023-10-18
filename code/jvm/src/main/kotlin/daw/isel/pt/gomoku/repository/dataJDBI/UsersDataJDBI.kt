@@ -22,7 +22,12 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
                 .bind("token", token)
                 .mapTo(Int::class.java)
                 .single()
-        return User(userId, username, email, token)
+        return User(
+            userId = userId,
+            username = username,
+            email = email,
+            token = token
+        )
     }
 
     override fun checkUserToken(token: String, userId: Int): User? {

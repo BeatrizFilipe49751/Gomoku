@@ -18,8 +18,15 @@ import org.springframework.web.bind.annotation.RestController
 class GameController(val gameServices: GameServices) {
     @PutMapping(GameRoutes.PLAY)
     fun play(@RequestBody playIn: PlayIn, @PathVariable userId: Int): ResponseEntity<GameOut> {
-        val game = gameServices.getGame(playIn.gameId)
-        val newGame = gameServices.play(game, userId, playIn.row, playIn.col)
+        val game = gameServices.getGame(
+            gameId = playIn.gameId
+        )
+        val newGame = gameServices.play(
+            game = game,
+            userId = userId,
+            row = playIn.row,
+            col = playIn.col
+        )
         logger.info("\n" + newGame.gameString())
         return ResponseEntity
             .status(HttpStatus.OK)

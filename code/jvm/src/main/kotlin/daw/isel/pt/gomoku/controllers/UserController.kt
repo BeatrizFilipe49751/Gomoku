@@ -18,12 +18,18 @@ class UserController(val userServices: UserServices) {
     fun getUser(@PathVariable userId: Int): ResponseEntity<UserOut> =
         ResponseEntity
             .status(HttpStatus.OK) // to be defined
-            .body(userServices.getUser(userId).toUserOut())
+            .body(
+                userServices.getUser(id = userId).toUserOut()
+            )
 
     @PostMapping(UserRoutes.CREATE_USER)
     fun createUser(@RequestBody userIn: UserIn): ResponseEntity<User> =
         ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(userServices.createUser(userIn.username, userIn.email))
-
+            .body(
+                userServices.createUser(
+                    username = userIn.username,
+                    email = userIn.email
+                )
+            )
 }

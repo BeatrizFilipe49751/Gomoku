@@ -25,7 +25,11 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
     fun createLobby(@PathVariable userId: Int, @RequestBody lobbyIn: LobbyIn): ResponseEntity<Lobby> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(lobbyServices.createLobby(userId, lobbyIn.name))
+            .body(lobbyServices.createLobby(
+                    userId = userId,
+                    name = lobbyIn.name
+                )
+            )
     }
 
     @GetMapping(LobbyRoutes.GET_AVAILABLE_LOBBIES)
@@ -39,14 +43,27 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
     fun getLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Lobby> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(lobbyServices.getLobby(userId))
+            .body(lobbyServices.getLobby(
+                    lobbyId = lobbyId
+                )
+            )
     }
 
     @PutMapping(LobbyRoutes.JOIN_LOBBY)
     fun joinLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<GameOut> {
-        val lobby = lobbyServices.getLobby(lobbyId)
-        lobbyServices.joinLobby(userId, lobby.lobbyId)
-        val game = gameServices.createGame(lobby.name, lobby.p1, userId)
+        val lobby = lobbyServices.getLobby(
+            lobbyId = lobbyId
+        )
+        lobbyServices.joinLobby(
+            userId = userId,
+            lobbyId = lobby.lobbyId
+        )
+        val game = gameServices.createGame(
+            name = lobby.name,
+            playerBlack = lobby.p1,
+            playerWhite = userId
+        )
+
         logger.info(game.gameString())
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -57,7 +74,11 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
     fun quitLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Boolean> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(lobbyServices.deleteLobby(userId, lobbyId))
+            .body(lobbyServices.deleteLobby(
+                    userId = userId,
+                    lobbyId = lobbyId
+                )
+            )
     }
 
     companion object{

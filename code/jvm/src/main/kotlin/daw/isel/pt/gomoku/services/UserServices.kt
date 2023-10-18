@@ -11,23 +11,33 @@ import java.util.UUID
 class UserServices(private val transactionManager: TransactionManager) {
     fun getUser(id: Int): User {
         return transactionManager.run {
-            it.usersRepository.getUser(id) ?: throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
+            it.usersRepository.getUser(id) ?:
+                throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
         }
     }
 
     fun createUser(username: String?, email: String?): User {
-        if (username.isNullOrEmpty() || email.isNullOrEmpty()) throw InvalidCredentialsException(UserErrorMessages.PARAMETERS_MISSING)
-        if(!email.contains("@")) throw InvalidCredentialsException(UserErrorMessages.EMAIL_WRONG_FORMAT)
+        if (username.isNullOrEmpty() || email.isNullOrEmpty())
+            throw InvalidCredentialsException(UserErrorMessages.PARAMETERS_MISSING)
+        if(!email.contains("@"))
+            throw InvalidCredentialsException(UserErrorMessages.EMAIL_WRONG_FORMAT)
         val newToken = UUID.randomUUID().toString()
 
         return transactionManager.run {
-            it.usersRepository.createUser(username, email, newToken)
+            it.usersRepository.createUser(
+                username = username,
+                email = email,
+                token = newToken
+            )
         }
     }
 
     fun checkUserToken(token: String, userId: Int): User? {
         return transactionManager.run {
-            it.usersRepository.checkUserToken(token, userId)
+            it.usersRepository.checkUserToken(
+                token = token,
+                userId = userId
+            )
         }
     }
 }
