@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class GameController(val gameServices: GameServices) {
     @PutMapping(GameRoutes.PLAY)
-    fun play(@RequestBody playIn: PlayIn, @PathVariable userId: String): ResponseEntity<GameOut> {
+    fun play(@RequestBody playIn: PlayIn, @PathVariable userId: Int): ResponseEntity<GameOut> {
         val game = gameServices.getGame(playIn.gameId)
-        val newGame = gameServices.play(game, playIn.row, playIn.col)
+        val newGame = gameServices.play(game, userId, playIn.row, playIn.col)
         logger.info(newGame.gameString())
         return ResponseEntity
             .status(HttpStatus.OK)

@@ -39,9 +39,9 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun play(game: Game, row: Int, col: Int): Game {
-        val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
+    fun play(game: Game, userId: Int, row: Int, col: Int): Game {
         return transactionManager.run {
+            val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
             playChecks(game, pieceToPlay)
             val newGame = game.play(pieceToPlay)
             if (it.gameRepository.updateGame(newGame.toGameSerialized()))
