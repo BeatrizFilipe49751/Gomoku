@@ -56,11 +56,9 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
         return numRows > 0
     }
 
-    override fun checkTurn(userId: Int, turn: Char, gameId: String): TurnInfo? {
-        return handle.createQuery("SELECT gameId, player_white, player_black FROM game_users WHERE player_black = :userid AND game = :game AND turn = :color")
-            .bind("userid", userId)
+    override fun checkTurn(gameId: String): TurnInfo? {
+        return handle.createQuery("SELECT gameId, player_white, player_black FROM game_users WHERE game = :game")
             .bind("game", gameId)
-            .bind("color", turn)
             .mapTo(TurnInfo::class.java)
             .singleOrNull()
     }

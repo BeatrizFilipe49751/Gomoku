@@ -9,5 +9,5 @@ interface GameRepository {
 
     fun updateGame(game: GameSerialized): Boolean
 
-    fun checkTurn(userId : Int, turn : Char, gameId : String): TurnInfo?
+    fun checkTurn(gameId : String): TurnInfo?
 }
