@@ -43,6 +43,21 @@ class GameServices(private val transactionManager: TransactionManager) {
         return transactionManager.run {
             val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
             playChecks(game, pieceToPlay)
+            val turn = it.gameRepository.checkTurn(userId, game.currentTurn.color, game.id)
+                ?: throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+            when (game.currentTurn) {
+                PieceColor.BLACK -> {
+                    if (turn.black != userId) {
+                        throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+                    }
+                }
+                PieceColor.WHITE -> {
+                    if (turn.white != userId) {
+                        throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+                    }
+                }
+
+            }
             val newGame = game.play(pieceToPlay)
             if (it.gameRepository.updateGame(newGame.toGameSerialized()))
                 newGame

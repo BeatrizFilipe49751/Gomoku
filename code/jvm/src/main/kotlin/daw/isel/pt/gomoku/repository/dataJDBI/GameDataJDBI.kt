@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.repository.dataJDBI
 
 import daw.isel.pt.gomoku.controllers.models.GameSerialized
+import daw.isel.pt.gomoku.controllers.models.TurnInfo
 import daw.isel.pt.gomoku.repository.interfaces.GameRepository
 import org.jdbi.v3.core.Handle
 
@@ -53,5 +54,14 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .execute()
 
         return numRows > 0
+    }
+
+    override fun checkTurn(userId: Int, turn: Char, gameId: String): TurnInfo? {
+        return handle.createQuery("SELECT gameId, player_white, player_black FROM game_users WHERE player_black = :userid AND game = :game AND turn = :color")
+            .bind("userid", userId)
+            .bind("game", gameId)
+            .bind("color", turn)
+            .mapTo(TurnInfo::class.java)
+            .singleOrNull()
     }
 }
