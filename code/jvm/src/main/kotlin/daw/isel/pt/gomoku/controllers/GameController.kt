@@ -20,7 +20,7 @@ class GameController(val gameServices: GameServices) {
     fun play(@RequestBody playIn: PlayIn, @PathVariable userId: Int): ResponseEntity<GameOut> {
         val game = gameServices.getGame(playIn.gameId)
         val newGame = gameServices.play(game, userId, playIn.row, playIn.col)
-        logger.info(newGame.gameString())
+        logger.info("\n" + newGame.gameString())
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(newGame.toGameOut())

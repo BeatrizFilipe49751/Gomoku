@@ -12,4 +12,4 @@ data class PlayIn(val gameId: String, val row: Int, val col: Int)
 data class ErrorResponse(val status: Int, val message: String = "No message provided")
 data class GameOut(val id: String, val name: String)
 
-data class TurnInfo(val gameId : String, val black : Int, val white : Int)
+data class TurnInfo(val game : String, val player_black : Int, val player_white : Int)

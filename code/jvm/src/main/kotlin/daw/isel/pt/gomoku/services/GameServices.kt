@@ -3,6 +3,7 @@ package daw.isel.pt.gomoku.services
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
+import daw.isel.pt.gomoku.domain.game.PieceColor.*
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.*
 import org.springframework.stereotype.Component
@@ -41,18 +42,24 @@ class GameServices(private val transactionManager: TransactionManager) {
 
     fun play(game: Game, userId: Int, row: Int, col: Int): Game {
         return transactionManager.run {
-            val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
+            val pieceToPlay =
+                Piece(
+                    Position(
+                        row.indexToRow(),
+                        col.indexToColumn()),
+                    game.currentTurn
+                )
             playChecks(game, pieceToPlay)
             val turn = it.gameRepository.checkTurn(game.id)
-                ?: throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+                ?: throw NotFoundException("Game Not Found")
             when (game.currentTurn) {
-                PieceColor.BLACK -> {
-                    if (turn.black != userId) {
+                BLACK -> {
+                    if (turn.player_black != userId) {
                         throw GameError(GameErrorMessages.NOT_YOUR_TURN)
                     }
                 }
-                PieceColor.WHITE -> {
-                    if (turn.white != userId) {
+                WHITE -> {
+                    if (turn.player_white != userId) {
                         throw GameError(GameErrorMessages.NOT_YOUR_TURN)
                     }
                 }

@@ -28,7 +28,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .execute()
 
         val numRowsGameUsers = handle.createUpdate("""
-             INSERT INTO game_users(game, player_white, player_black) 
+             INSERT INTO game_users(game, player_black, player_white) 
              VALUES (:game, :player_black, :player_white)
         """.trimIndent()
 
@@ -46,11 +46,13 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
     override fun updateGame(game: GameSerialized): Boolean {
         val numRows = handle.createUpdate(
             """
-                UPDATE games SET board = :board where gameid = :gameId
+                UPDATE games SET board = :board, state=:state, turn=:turn where gameid = :gameId
             """.trimIndent()
         )
             .bind("board", game.board)
             .bind("gameId", game.gameId)
+            .bind("state", game.state)
+            .bind("turn", game.turn)
             .execute()
 
         return numRows > 0

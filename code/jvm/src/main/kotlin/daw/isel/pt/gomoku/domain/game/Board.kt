@@ -11,10 +11,13 @@ data class Board(val pieces: List<Piece> = emptyList()) {
 
     companion object {
         fun deserialize(b: String): Board {
-            val params = b.split("\n")
-            return Board(
-                if (params.size > 1) params.map { Piece.deserialize(it) }
-                else emptyList()
+            val params = b.replace(" ", "").split(",")
+            return if (params.isEmpty()) {
+                if (b != "")
+                    Board(listOf(Piece.deserialize(b)))
+                else Board(emptyList())
+            } else Board(
+                params.map { Piece.deserialize(it) }
             )
         }
     }
@@ -32,5 +35,5 @@ data class Board(val pieces: List<Piece> = emptyList()) {
         }
 
     fun serialize() =
-        if (isEmptyBoard) "" else pieces.joinToString { it.toString() + "\n" }
+        if (isEmptyBoard) "" else pieces.joinToString { it.toString() }
 }
