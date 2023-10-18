@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.services
 
-import daw.isel.pt.gomoku.controllers.models.TurnInfo
+import daw.isel.pt.gomoku.controllers.models.GameInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
@@ -14,7 +14,7 @@ import java.util.*
 @Component
 class GameServices(private val transactionManager: TransactionManager) {
 
-    fun createGame(name: String, playerBlack: Int, playerWhite: Int): Game {
+    fun createGame(name: String, gameNumber: Int, playerBlack: Int, playerWhite: Int): Game {
         return transactionManager.run {
             val newGame = Game(
                 id = UUID.randomUUID().toString(),
@@ -23,6 +23,7 @@ class GameServices(private val transactionManager: TransactionManager) {
             )
             val wasCreated = it.gameRepository.createGame(
                 game = newGame.toGameSerialized(),
+                gameNumber = gameNumber,
                 playerBlack = playerBlack,
                 playerWhite = playerWhite
             )
@@ -45,7 +46,7 @@ class GameServices(private val transactionManager: TransactionManager) {
         return transactionManager.run {
             val pieceToPlay =
                 Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
-            val turn = it.gameRepository.checkTurn(game.id) ?: throw NotFoundException("Game Not Found")
+            val turn = it.gameRepository.checkGameInfo(game.id) ?: throw NotFoundException("Game Not Found")
             playChecks(
                 game = game,
                 pieceToPlay = pieceToPlay,
@@ -59,7 +60,7 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    private fun playChecks(game: Game, pieceToPlay: Piece, userId: Int, turn: TurnInfo) {
+    private fun playChecks(game: Game, pieceToPlay: Piece, userId: Int, turn: GameInfo) {
         if (game.state == GameState.FINISHED)
             throw GameError(GameErrorMessages.GAME_FINISHED)
         if (game.currentTurn != pieceToPlay.color)

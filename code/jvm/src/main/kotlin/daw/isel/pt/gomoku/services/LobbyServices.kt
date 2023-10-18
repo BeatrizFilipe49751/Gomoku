@@ -1,6 +1,8 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.domain.Lobby
+import daw.isel.pt.gomoku.domain.game.Game
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.*
 import org.springframework.stereotype.Component
@@ -25,6 +27,17 @@ class LobbyServices(private val transactionManager: TransactionManager) {
     fun getLobbies(): List<Lobby> {
         return transactionManager.run {
             it.lobbyRepository.getLobbies()
+        }
+    }
+
+    fun checkFullLobby(userId: Int, lobbyId: Int): Game {
+        return transactionManager.run {
+            val lobby = it.lobbyRepository.getLobby(lobbyId = lobbyId)
+            if(lobby == null) {
+                val gameSerialized = it.gameRepository.checkGameStarted(gameNumber = lobbyId)
+                    ?: throw GameError(GameErrorMessages.GAME_NOT_STARTED)
+                gameSerialized.toGame()
+            } else throw GameError(GameErrorMessages.GAME_NOT_STARTED)
         }
     }
 

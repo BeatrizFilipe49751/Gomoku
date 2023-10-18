@@ -20,8 +20,11 @@ CREATE TABLE IF NOT EXISTS games (
     turn CHAR NOT NULL CHECK (turn IN ('b', 'w'))
 );
 
+
+
 CREATE TABLE IF NOT EXISTS game_users (
     game VARCHAR(36) NOT NULL REFERENCES games(gameId) ON DELETE CASCADE,
+    game_number INTEGER UNIQUE NOT NULL,
     player_white INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
     player_black INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
     PRIMARY KEY (game, player_white, player_black)

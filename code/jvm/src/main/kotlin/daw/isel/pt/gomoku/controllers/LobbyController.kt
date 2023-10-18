@@ -61,6 +61,7 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
         val game = gameServices.createGame(
             name = lobby.name,
             playerBlack = lobby.p1,
+            gameNumber = lobbyId,
             playerWhite = userId
         )
 
@@ -79,6 +80,17 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
                     lobbyId = lobbyId
                 )
             )
+    }
+    @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
+    fun checkFullLobby(@PathVariable lobbyId: Int, @PathVariable userId: Int): ResponseEntity<GameOut> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                lobbyServices.checkFullLobby(
+                    userId = userId,
+                    lobbyId = lobbyId
+                ).toGameOut()
+        )
     }
 
     companion object{
