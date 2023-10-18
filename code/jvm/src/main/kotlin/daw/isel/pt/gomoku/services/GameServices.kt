@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.controllers.models.TurnInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
@@ -43,29 +44,14 @@ class GameServices(private val transactionManager: TransactionManager) {
     fun play(game: Game, userId: Int, row: Int, col: Int): Game {
         return transactionManager.run {
             val pieceToPlay =
-                Piece(
-                    Position(
-                        row.indexToRow(),
-                        col.indexToColumn()
-                    ),
-                    game.currentTurn
-                )
-            playChecks(game, pieceToPlay)
-            val turn = it.gameRepository.checkTurn(game.id)
-                ?: throw NotFoundException("Game Not Found")
-            when (game.currentTurn) {
-                BLACK -> {
-                    if (turn.player_black != userId) {
-                        throw GameError(GameErrorMessages.NOT_YOUR_TURN)
-                    }
-                }
-                WHITE -> {
-                    if (turn.player_white != userId) {
-                        throw GameError(GameErrorMessages.NOT_YOUR_TURN)
-                    }
-                }
-
-            }
+                Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
+            val turn = it.gameRepository.checkTurn(game.id) ?: throw NotFoundException("Game Not Found")
+            playChecks(
+                game = game,
+                pieceToPlay = pieceToPlay,
+                userId = userId,
+                turn = turn
+            )
             val newGame = game.play(pieceToPlay)
             if (it.gameRepository.updateGame(newGame.toGameSerialized()))
                 newGame
@@ -73,12 +59,25 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    private fun playChecks(game: Game, pieceToPlay: Piece) {
+    private fun playChecks(game: Game, pieceToPlay: Piece, userId: Int, turn: TurnInfo) {
         if (game.state == GameState.FINISHED)
             throw GameError(GameErrorMessages.GAME_FINISHED)
         if (game.currentTurn != pieceToPlay.color)
             throw GameError(GameErrorMessages.NOT_YOUR_TURN)
         if (game.board.hasPiece(pieceToPlay))
             throw GameError(GameErrorMessages.INVALID_PLAY)
+
+        when (game.currentTurn) {
+            BLACK -> {
+                if (turn.player_black != userId) {
+                    throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+                }
+            }
+            WHITE -> {
+                if (turn.player_white != userId) {
+                    throw GameError(GameErrorMessages.NOT_YOUR_TURN)
+                }
+            }
+        }
     }
 }
