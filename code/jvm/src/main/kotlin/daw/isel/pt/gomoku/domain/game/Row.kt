@@ -1,5 +1,8 @@
 package daw.isel.pt.gomoku.domain.game
 
+import daw.isel.pt.gomoku.services.exceptions.GameError
+import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
+
 data class Row(val identifier: Int) {
     val index = BOARD_DIM - identifier
 
@@ -14,4 +17,4 @@ data class Row(val identifier: Int) {
 }
 
 fun Int.indexToRow() = Row.rows.find { it.index == this }
-    ?: throw IndexOutOfBoundsException("Index must be between 0 and $LAST_INDEX")
+    ?: throw GameError(GameErrorMessages.INDEX_OUT_OF_BOUNDS)

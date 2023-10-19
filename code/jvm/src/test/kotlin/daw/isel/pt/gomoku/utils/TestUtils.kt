@@ -3,6 +3,7 @@ package daw.isel.pt.gomoku.utils
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.repository.dataJDBI.transactions.JdbiTransactionManager
+import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
 import daw.isel.pt.gomoku.services.UserServices
 import org.jdbi.v3.core.Handle
@@ -35,6 +36,7 @@ object TestUtils {
     }
     fun runWithHandle(block: (Handle) -> Unit) = jdbi.useTransaction<Exception>(block)
 
+    val gameServices = GameServices(JdbiTransactionManager(jdbi))
     val lobbyServices = LobbyServices(JdbiTransactionManager(jdbi))
     val userServices = UserServices(JdbiTransactionManager(jdbi))
 
@@ -59,7 +61,6 @@ object TestUtils {
                 name = newLobbyName()
             )
     }
-
 
     fun newGameName() = "game-${abs(Random.nextLong())}@gmail.com"
     fun newTestUserName() = "user-${abs(Random.nextLong())}"

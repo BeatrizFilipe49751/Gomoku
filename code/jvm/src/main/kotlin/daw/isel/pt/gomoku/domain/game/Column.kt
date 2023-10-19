@@ -1,5 +1,8 @@
 package daw.isel.pt.gomoku.domain.game
 
+import daw.isel.pt.gomoku.services.exceptions.GameError
+import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
+
 data class Column(val symbol: Char) {
     val index: Int = symbol - 'a'
 
@@ -14,4 +17,4 @@ data class Column(val symbol: Char) {
 }
 
 fun Int.indexToColumn() = Column.columns.find { it.index == this }
-    ?: throw IndexOutOfBoundsException("Index must be between 0 and $LAST_INDEX")
+    ?: throw GameError(GameErrorMessages.INDEX_OUT_OF_BOUNDS)
