@@ -148,7 +148,6 @@ class LobbyControllerTest {
         val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
         client.put().uri(uri)
             .exchange()
-            .expectStatus().isCreated
             .expectStatus().isUnauthorized
             .expectBody()
             .jsonPath("status").isEqualTo(HttpStatus.UNAUTHORIZED.value())
@@ -159,15 +158,30 @@ class LobbyControllerTest {
         val user = createUser()
         val otherUser = createUser()
         val lobby = createLobby(user)
+        joinLobby(otherUser, lobby)
         val client = createNewClient(port)
-        val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/${user.userId}/lobby/${lobby.lobbyId}"
         client.delete().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .exchange()
-            .expectStatus().isCreated
-            .expectStatus().isUnauthorized
+            .expectStatus().isOk
             .expectBody()
-            .jsonPath("status").isEqualTo(HttpStatus.UNAUTHORIZED.value())
+            .jsonPath("p1").isEqualTo(otherUser.userId)
+    }
+
+    @Test
+    fun `p2 quits lobby`() {
+        val user = createUser()
+        val otherUser = createUser()
+        val lobby = createLobby(user)
+        joinLobby(otherUser, lobby)
+        val client = createNewClient(port)
+        val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
+        client.delete().uri(uri)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
     }
 
 
@@ -190,6 +204,14 @@ class LobbyControllerTest {
                 .createLobby(
                     userId = user.userId,
                     name = newLobbyName()
+                )
+        }
+
+        fun joinLobby(user: User, lobby: Lobby): Boolean {
+            return lobbyServices
+                .joinLobby(
+                    userId = user.userId,
+                    lobbyId = lobby.lobbyId
                 )
         }
         private val userServices = UserServices(JdbiTransactionManager(jdbi))

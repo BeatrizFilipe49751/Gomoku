@@ -74,13 +74,15 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
     }
 
     @DeleteMapping(LobbyRoutes.DELETE_LOBBY)
-    fun quitLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Boolean> {
+    fun quitLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Lobby> {
+        lobbyServices.deleteLobby(
+            userId = userId,
+            lobbyId = lobbyId
+        )
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(lobbyServices.deleteLobby(
-                    userId = userId,
-                    lobbyId = lobbyId
-                )
+            .body(
+                lobbyServices.getLobby(lobbyId)
             )
     }
     @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
