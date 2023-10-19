@@ -6,6 +6,7 @@ import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.services.exceptions.GameError
 import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
+import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createLobby
 import daw.isel.pt.gomoku.utils.TestUtils.createUser
 import daw.isel.pt.gomoku.utils.TestUtils.gameServices
@@ -13,6 +14,8 @@ import daw.isel.pt.gomoku.utils.TestUtils.newGameName
 import kotlin.test.*
 
 class GameServiceTest {
+    @BeforeTest
+    fun resetInit() = TestUtils.resetDatabase()
     @Test
     fun `Create a game successfully`() {
         val user1 = createUser()
@@ -119,7 +122,7 @@ class GameServiceTest {
             assertEquals(beforeGame.id, afterGame.id)
             assertEquals(beforeGame.name, afterGame.name)
             assertEquals(beforeGame.state, afterGame.state)
-            assertEquals(beforeGame.currentTurn, afterGame.currentTurn)
+            assertNotEquals(beforeGame.currentTurn, afterGame.currentTurn)
         }
 
         data class GameInfo(val user1: User, val user2: User, val lobby: Lobby, val game: Game)
@@ -132,5 +135,8 @@ class GameServiceTest {
             return GameInfo(user1, user2, lobby, game)
         }
     }
+
+    @BeforeTest
+    fun resetAgain() = TestUtils.resetDatabase()
 
 }
