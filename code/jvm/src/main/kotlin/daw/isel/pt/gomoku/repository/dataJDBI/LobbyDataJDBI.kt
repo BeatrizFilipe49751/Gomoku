@@ -53,14 +53,13 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
     }
 
     override fun switchLobbyAdmin(lobbyId: Int, userId: Int): Boolean {
-        val lobby = handle.createQuery("""
+        val numRows = handle.createUpdate("""
               UPDATE lobby SET p1 = p2, p2 = NULL WHERE lobbyId = :lobbyId AND p1 = :userId
         """)
             .bind("lobbyId", lobbyId)
             .bind("userId", userId)
-            .mapTo(Lobby::class.java)
-            .singleOrNull()
-        return lobby != null
+            .execute()
+        return numRows > 0
     }
     override fun joinLobby(lobbyId: Int, userId: Int): Boolean {
         val numRows = handle.createUpdate("UPDATE lobby set p2 = :userId where lobbyId = :lobbyId")

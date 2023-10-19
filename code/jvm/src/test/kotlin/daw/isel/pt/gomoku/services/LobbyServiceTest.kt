@@ -62,12 +62,12 @@ class LobbyServiceTest {
     @Test
     fun `User joined a lobby but tries to create one while inside it`() {
         val user = createUser()
-        val otheruser = createUser()
+        val otherUser = createUser()
 
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
-        lobbyServices.joinLobby(otheruser.userId, lobby.lobbyId)
+        lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
 
-        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(otheruser.userId, newLobbyName()) }
+        assertFailsWith<AlreadyInLobbyException> { lobbyServices.createLobby(otherUser.userId, newLobbyName()) }
     }
 
     @Test
@@ -85,6 +85,32 @@ class LobbyServiceTest {
         lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
         assertTrue {lobbyServices.deleteLobby(otherUser.userId, lobby.lobbyId)}
     }
+
+    @Test
+    fun `lobby admin quits lobby and other user becomes admin`(){
+        val user = createUser()
+        val otherUser = createUser()
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
+        lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
+        val deleteLobby = lobbyServices.deleteLobby(user.userId, lobby.lobbyId)
+        val changedLobby = lobbyServices.getLobby(lobby.lobbyId)
+        assertTrue { deleteLobby }
+        assertTrue { changedLobby.p1 == otherUser.userId }
+    }
+
+    @Test
+    fun `p2 quits lobby successfully`(){
+        val user = createUser()
+        val otherUser = createUser()
+        val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
+        lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
+        val deleteLobby = lobbyServices.deleteLobby(otherUser.userId, lobby.lobbyId)
+        val changedLobby = lobbyServices.getLobby(lobby.lobbyId)
+        assertTrue { deleteLobby }
+        assertTrue { changedLobby.p2 == null }
+    }
+
+
     companion object {
 
         private fun createUser(): User {

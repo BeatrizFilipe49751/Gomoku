@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.controllers.utils
 
 import daw.isel.pt.gomoku.controllers.models.*
+import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.game.*
 
@@ -36,9 +37,12 @@ fun User.toUserOut(): UserOut{
     return UserOut(this.userId, this.username, this.email)
 }
 
-fun User.toUserOutWithToken(): UserOutWithToken{
-    return UserOutWithToken(this.userId, this.username, this.token)
-}
+fun Lobby.toLobbyOut(): LobbyOut =
+    LobbyOut(
+        lobbyId = this.lobbyId,
+        p1 =  this.p1,
+        name = this.name
+    )
 
 const val emptySquare = "| "
 const val blackPiece = "|B"

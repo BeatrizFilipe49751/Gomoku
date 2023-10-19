@@ -2,9 +2,11 @@ package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
+import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.utils.gameString
 import daw.isel.pt.gomoku.controllers.utils.toGameOut
+import daw.isel.pt.gomoku.controllers.utils.toLobbyOut
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
@@ -22,13 +24,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class LobbyController(private val lobbyServices: LobbyServices, private val gameServices: GameServices) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
-    fun createLobby(@PathVariable userId: Int, @RequestBody lobbyIn: LobbyIn): ResponseEntity<Lobby> {
+    fun createLobby(@PathVariable userId: Int, @RequestBody lobbyIn: LobbyIn): ResponseEntity<LobbyOut> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
                     userId = userId,
                     name = lobbyIn.name
-                )
+                ).toLobbyOut()
             )
     }
 
@@ -67,7 +69,7 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
 
         logger.info(game.gameString())
         return ResponseEntity
-            .status(HttpStatus.OK)
+            .status(HttpStatus.CREATED)
             .body(game.toGameOut())
     }
 
