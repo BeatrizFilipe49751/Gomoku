@@ -4,6 +4,7 @@ import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.game.*
+import daw.isel.pt.gomoku.domain.game.GameState.*
 
 fun Game.toGameSerialized(): GameSerialized {
     return GameSerialized(
@@ -30,6 +31,8 @@ fun Game.toGameOut(): GameOut {
     return GameOut(
         id = this.id,
         name = this.name,
+        currentTurn = this.currentTurn.color,
+        state = if (this.state == ACTIVE) "Game is Active" else "Game is Finished, winner: ${this.currentTurn}"
     )
 }
 
@@ -53,11 +56,11 @@ fun Game.gameString(): String {
     val game = this
     var boardString = ""
     boardString +=
-        "GAME: ${game.name} IS ${if (game.state == GameState.ACTIVE) "ACTIVE" else "FINISHED"} \n "
+        "GAME: ${game.name} IS ${if (game.state == ACTIVE) "ACTIVE" else "FINISHED"} \n "
 
-    repeat(BOARD_DIM) { col ->
+    repeat(BOARD_DIM) { row ->
         boardString += boardLine
-        repeat(BOARD_DIM) { row ->
+        repeat(BOARD_DIM) { col ->
             val piece = game.board.pieces.find { it.position == Position(row, col) }
             boardString += if (piece != null)
                 if (piece.color == PieceColor.BLACK) blackPiece
@@ -67,7 +70,7 @@ fun Game.gameString(): String {
         boardString += "| \n "
     }
     boardString += boardLine
-    if (game.state == GameState.FINISHED)
+    if (game.state == FINISHED)
         boardString += "WINNER: ${game.currentTurn} \n"
     return boardString
 }

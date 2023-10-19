@@ -11,6 +11,6 @@ data class PlayIn(val gameId: String, val row: Int, val col: Int)
 data class LobbyOut(val lobbyId: Int, val p1: Int, val name: String)
 
 data class ErrorResponse(val status: Int, val message: String = "No message provided")
-data class GameOut(val id: String, val name: String)
+data class GameOut(val id: String, val name: String, val currentTurn: Char, val state: String)
 
 data class GameInfo(val game : String, val player_black : Int, val player_white : Int)

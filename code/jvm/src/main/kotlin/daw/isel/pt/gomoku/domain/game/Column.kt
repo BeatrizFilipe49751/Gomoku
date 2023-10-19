@@ -13,9 +13,5 @@ data class Column(val symbol: Char) {
     }
 }
 
-fun Char.toColumnOrNull() =
-    Column.columns.find { it.symbol == this }
-
-
 fun Int.indexToColumn() = Column.columns.find { it.index == this }
-    ?: throw IndexOutOfBoundsException("Index must be between 0 and $BOARD_DIM")
+    ?: throw IndexOutOfBoundsException("Index must be between 0 and $LAST_INDEX")

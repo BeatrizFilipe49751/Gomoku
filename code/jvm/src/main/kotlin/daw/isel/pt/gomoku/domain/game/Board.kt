@@ -12,7 +12,7 @@ data class Board(val pieces: List<Piece> = emptyList()) {
     companion object {
         fun deserialize(b: String): Board {
             val params = b.replace(" ", "").split(",")
-            return if (params.isEmpty()) {
+            return if (params.size == 1) {
                 if (b != "")
                     Board(listOf(Piece.deserialize(b)))
                 else Board(emptyList())
