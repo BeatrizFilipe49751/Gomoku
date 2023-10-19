@@ -1,22 +1,18 @@
 package daw.isel.pt.gomoku.controllers
 
-import daw.isel.pt.gomoku.domain.Lobby
-import daw.isel.pt.gomoku.domain.User
-import daw.isel.pt.gomoku.repository.dataJDBI.transactions.JdbiTransactionManager
-import daw.isel.pt.gomoku.services.LobbyServices
-import daw.isel.pt.gomoku.services.UserServices
-import org.jdbi.v3.core.Jdbi
-import org.jdbi.v3.core.kotlin.KotlinPlugin
-import org.jdbi.v3.postgres.PostgresPlugin
-import org.postgresql.ds.PGSimpleDataSource
+import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.createLobby
+import daw.isel.pt.gomoku.utils.TestUtils.createNewClient
+import daw.isel.pt.gomoku.utils.TestUtils.createUser
+import daw.isel.pt.gomoku.utils.TestUtils.joinLobby
+import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.test.web.reactive.server.WebTestClient
-import kotlin.math.abs
-import kotlin.random.Random
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,6 +20,9 @@ import kotlin.test.Test
 class LobbyControllerTest {
     @LocalServerPort
     var port: Int = 0
+
+    @BeforeTest
+    fun resetInit() = TestUtils.resetDatabase()
 
     @Test
     fun `create Lobby Successfully`() {
@@ -131,12 +130,12 @@ class LobbyControllerTest {
         val client = createNewClient(port)
         val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
         client.put().uri(uri)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
             .exchange()
             .expectStatus().isCreated
             .expectBody()
             .jsonPath("name").isEqualTo(lobby.name)
-            .jsonPath("gameId").exists()
+            .jsonPath("id").exists()
     }
 
     @Test
@@ -171,11 +170,11 @@ class LobbyControllerTest {
 
     @Test
     fun `p2 quits lobby`() {
-        val user = createUser()
-        val otherUser = createUser()
-        val lobby = createLobby(user)
+        val user =  createUser()
+        val otherUser =  createUser()
+        val lobby =  createLobby(user)
         joinLobby(otherUser, lobby)
-        val client = createNewClient(port)
+        val client =  createNewClient(port)
         val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
         client.delete().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
@@ -184,43 +183,8 @@ class LobbyControllerTest {
             .expectBody()
     }
 
-
-    companion object {
-        private val jdbi = Jdbi.create(
-            PGSimpleDataSource().apply {
-                setURL(System.getenv("JDBC_DATABASE_URL"))
-            }
-        )
-            .installPlugin(KotlinPlugin())
-            .installPlugin(PostgresPlugin())
-
-        fun createUser() = userServices.createUser(
-            username = newTestUserName(),
-            email = newTestEmail(),
-        )
-
-        fun createLobby(user: User): Lobby {
-            return lobbyServices
-                .createLobby(
-                    userId = user.userId,
-                    name = newLobbyName()
-                )
-        }
-
-        fun joinLobby(user: User, lobby: Lobby): Boolean {
-            return lobbyServices
-                .joinLobby(
-                    userId = user.userId,
-                    lobbyId = lobby.lobbyId
-                )
-        }
-        private val userServices = UserServices(JdbiTransactionManager(jdbi))
-        private val lobbyServices = LobbyServices(JdbiTransactionManager(jdbi))
-        private fun newLobbyName() = "lobby-${abs(Random.nextLong())}"
-        private fun newTestUserName() = "user-${abs(Random.nextLong())}"
-        private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
-        private fun createNewClient(port: Int): WebTestClient {
-            return WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
-        }
+    @AfterTest
+    fun resetAgain() {
+        TestUtils.resetDatabase()
     }
 }

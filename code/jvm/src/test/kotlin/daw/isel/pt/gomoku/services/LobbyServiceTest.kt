@@ -1,20 +1,16 @@
 package daw.isel.pt.gomoku.services
 
-import daw.isel.pt.gomoku.domain.User
-import daw.isel.pt.gomoku.repository.dataJDBI.transactions.JdbiTransactionManager
+import daw.isel.pt.gomoku.utils.TestUtils.createUser
+import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
-import org.jdbi.v3.core.Jdbi
-import org.jdbi.v3.core.kotlin.KotlinPlugin
-import org.jdbi.v3.postgres.PostgresPlugin
-import org.postgresql.ds.PGSimpleDataSource
-import kotlin.math.abs
-import kotlin.random.Random
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
+import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.lobbyServices
+import kotlin.test.*
 
 class LobbyServiceTest {
+
+    @BeforeTest
+    fun resetInit() = TestUtils.resetDatabase()
 
     @Test
     fun `Create a lobby Successfully`() {
@@ -31,6 +27,7 @@ class LobbyServiceTest {
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         assertTrue { lobbyServices.joinLobby(lobbyId = lobby.lobbyId, userId = otherUser.userId) }
     }
+
     @Test
     fun `Try to create a lobby when you are already in one`() {
         val user = createUser()
@@ -41,14 +38,15 @@ class LobbyServiceTest {
     @Test
     fun `Try to join a lobby when you are already in one`() {
         val user = createUser()
-        val otherUser  = createUser()
+        val otherUser = createUser()
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         val otherUserLobby = lobbyServices.createLobby(otherUser.userId, newLobbyName())
         assertFailsWith<AlreadyInLobbyException> {
             lobbyServices.joinLobby(
                 userId = otherUser.userId,
                 lobbyId = lobby.lobbyId
-        ) }
+            )
+        }
 
         assertFailsWith<AlreadyInLobbyException> {
             lobbyServices.joinLobby(
@@ -71,23 +69,23 @@ class LobbyServiceTest {
     }
 
     @Test
-    fun `User deletes lobby successfully`(){
+    fun `User deletes lobby successfully`() {
         val user = createUser()
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
-        assertTrue { lobbyServices.deleteLobby(user.userId, lobby.lobbyId)}
+        assertTrue { lobbyServices.deleteLobby(user.userId, lobby.lobbyId) }
     }
 
     @Test
-    fun `User quits lobby successfully`(){
+    fun `User quits lobby successfully`() {
         val user = createUser()
         val otherUser = createUser()
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
         lobbyServices.joinLobby(otherUser.userId, lobby.lobbyId)
-        assertTrue {lobbyServices.deleteLobby(otherUser.userId, lobby.lobbyId)}
+        assertTrue { lobbyServices.deleteLobby(otherUser.userId, lobby.lobbyId) }
     }
 
     @Test
-    fun `lobby admin quits lobby and other user becomes admin`(){
+    fun `lobby admin quits lobby and other user becomes admin`() {
         val user = createUser()
         val otherUser = createUser()
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
@@ -99,7 +97,7 @@ class LobbyServiceTest {
     }
 
     @Test
-    fun `p2 quits lobby successfully`(){
+    fun `p2 quits lobby successfully`() {
         val user = createUser()
         val otherUser = createUser()
         val lobby = lobbyServices.createLobby(user.userId, newLobbyName())
@@ -110,29 +108,6 @@ class LobbyServiceTest {
         assertTrue { changedLobby.p2 == null }
     }
 
-
-    companion object {
-
-        private fun createUser(): User {
-            return userServices.createUser(
-                newTestUserName(),
-                newTestEmail()
-            )
-        }
-        private fun newTestUserName() = "user-${abs(Random.nextLong())}"
-        private fun newLobbyName() = "lobby-${abs(Random.nextLong())}"
-        private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
-
-
-        private val jdbi = Jdbi.create(
-            PGSimpleDataSource().apply {
-                setURL(System.getenv("JDBC_DATABASE_URL"))
-            }
-        )
-            .installPlugin(KotlinPlugin())
-            .installPlugin(PostgresPlugin())
-
-        private val lobbyServices = LobbyServices(JdbiTransactionManager(jdbi))
-        private val userServices = UserServices(JdbiTransactionManager(jdbi))
-    }
+    @AfterTest
+    fun resetAgain() = TestUtils.resetDatabase()
 }

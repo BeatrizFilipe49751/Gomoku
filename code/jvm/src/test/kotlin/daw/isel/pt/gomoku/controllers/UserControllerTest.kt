@@ -1,14 +1,17 @@
 package daw.isel.pt.gomoku.controllers
 
+import daw.isel.pt.gomoku.utils.TestUtils.createNewClient
+import daw.isel.pt.gomoku.utils.TestUtils.newTestEmail
+import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.services.exceptions.UserErrorMessages
+import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.createUser
 
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.test.web.reactive.server.WebTestClient
-import kotlin.math.abs
-import kotlin.random.Random
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -16,6 +19,9 @@ import kotlin.test.Test
 class UserControllerTest {
     @LocalServerPort
     var port: Int = 0
+
+    @BeforeTest
+    fun resetInit() = TestUtils.resetDatabase()
     @Test
     fun `Create User Successfully`() {
         val newClient = createNewClient(port)
@@ -82,14 +88,14 @@ class UserControllerTest {
 
     @Test
     fun `Get user successfully`() {
-        val id = 1
-        val path = "/users/$id"
+        val user = createUser()
+        val path = "/users/${user.userId}"
         val newClient = createNewClient(port)
         newClient.get().uri(path)
             .exchange()
             .expectStatus().isOk
             .expectBody()
-            .jsonPath("username").isEqualTo("Dummy")
+            .jsonPath("username").isEqualTo(user.username)
 
     }
 
@@ -104,11 +110,7 @@ class UserControllerTest {
             .expectBody()
             .jsonPath("message").isEqualTo(UserErrorMessages.USER_NOT_FOUND)
     }
-    companion object {
-        private fun newTestUserName() = "user-${abs(Random.nextLong())}"
-        private fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
-        private fun createNewClient(port: Int): WebTestClient {
-            return WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
-        }
-    }
+
+    @BeforeTest
+    fun resetAgain() = TestUtils.resetDatabase()
 }
