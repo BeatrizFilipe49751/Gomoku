@@ -1,10 +1,10 @@
 package daw.isel.pt.gomoku.controllers
 
 
-import daw.isel.pt.gomoku.controllers.models.UserIn
-import daw.isel.pt.gomoku.controllers.models.UserOut
+import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
+import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.http.HttpStatus
@@ -23,13 +23,29 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.CREATE_USER)
-    fun createUser(@RequestBody userIn: UserIn): ResponseEntity<User> =
+    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<User> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
                 userServices.createUser(
                     username = userIn.username,
-                    email = userIn.email
+                    email = userIn.email,
+                    password = userIn.password
                 )
             )
+
+    @PostMapping(UserRoutes.CREATE_TOKEN)
+    fun createToken(@RequestBody userInLogin: UserInLogin): ResponseEntity<TokenCreationResult> =
+        ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                userServices.createToken(
+                    email = userInLogin.email,
+                    password = userInLogin.password
+                )
+            )
+
+    @PostMapping(UserRoutes.LOGOUT)
+    fun logout(user : AuthUser) = userServices.removeToken(user.token)
+
 }

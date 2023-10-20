@@ -1,7 +1,11 @@
 package daw.isel.pt.gomoku.controllers.models
 
+import kotlinx.datetime.Instant
+
 data class UserOut(val userId: Int, val username: String, val email: String)
-data class UserIn(val username: String?, val email: String?)
+data class UserInCreate(val username: String?, val email: String?, val password: String?)
+
+data class UserInLogin(val email: String?, val password: String?)
 
 data class LobbyIn(val name: String?)
 
@@ -14,3 +18,5 @@ data class ErrorResponse(val status: Int, val message: String = "No message prov
 data class GameOut(val id: String, val name: String, val currentTurn: Char, val state: String)
 
 data class GameInfo(val game : String, val player_black : Int, val player_white : Int)
+
+data class TokenCreationResult(val token: String, val expiration: Instant) //

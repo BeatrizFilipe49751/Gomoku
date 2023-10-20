@@ -2,7 +2,14 @@ CREATE TABLE IF NOT EXISTS users (
     userId  SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    token VARCHAR(36) UNIQUE NOT NULL
+    password_validation VARCHAR(256) not null
+);
+
+CREATE TABLE IF NOT EXISTS tokens(
+    token_validation VARCHAR(256) primary key,
+    user_id int references users(userId),
+    created_at bigint not null,
+    last_used_at bigint not null
 );
 
 CREATE TABLE IF NOT EXISTS lobby (

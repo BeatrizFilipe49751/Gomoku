@@ -17,10 +17,12 @@ class AuthInterceptor(private val tokenValidator: RequestTokenValidator): Handle
             throw UnauthorizedException("Unauthorized Access")
         }
         logger.info("Handling Auth interceptor")
-        val userId = request.requestURI.split("/")[2]
-        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authorizationHeader, userId)
+        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authorizationHeader)
         return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
-        else true
+        else {
+            AuthUserArgumentResolver.addUserTo(authenticatedUser, request)
+            true
+        }
     }
 
     companion object {

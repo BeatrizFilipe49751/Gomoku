@@ -25,6 +25,13 @@ dependencies {
 	implementation("org.jdbi:jdbi3-postgres:3.32.0")
 	implementation("org.postgresql:postgresql:42.5.1")
 
+	// To use Kotlin specific date and time functions
+	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+
+	// To get password encode
+	implementation("org.springframework.security:spring-security-core:6.0.2")
+
+	implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

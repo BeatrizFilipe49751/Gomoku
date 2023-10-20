@@ -1,14 +1,14 @@
 package daw.isel.pt.gomoku.controllers.pipeline
 
 
-import daw.isel.pt.gomoku.domain.User
+import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.stereotype.Component
 
 @Component
 class RequestTokenValidator(val userServices: UserServices) {
-    fun processAuthorizationHeaderValue(authorizationValue: String?, userId: String): User? {
-        if (authorizationValue == null || !userId.all { it.isDigit() }) {
+    fun processAuthorizationHeaderValue(authorizationValue: String?): AuthUser? {
+        if (authorizationValue == null) {
             return null
         }
         val parts = authorizationValue.trim().split(" ")
@@ -18,7 +18,7 @@ class RequestTokenValidator(val userServices: UserServices) {
         if (parts[0].lowercase() != SCHEME) {
             return null
         }
-        return userServices.checkUserToken(parts[1], userId.toInt())
+        return userServices.checkUserToken(parts[1])
     }
 
     companion object {
