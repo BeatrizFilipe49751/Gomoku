@@ -5,5 +5,4 @@ object UserRoutes {
     const val CREATE_USER= "/users"
     const val CREATE_TOKEN = "/users/token"
     const val LOGOUT = "/users/logout"
-    const val AUTH_NEEDED = "/users/lobby/**"
 }

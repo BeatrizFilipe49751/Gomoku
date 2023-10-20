@@ -7,4 +7,5 @@ object LobbyRoutes {
     const val GET_AVAILABLE_LOBBIES = "/users/lobbies"
     const val JOIN_LOBBY = "/users/lobby/{lobbyId}"
     const val DELETE_LOBBY = "/users/lobby/{lobbyId}"
+    const val AUTH_NEEDED = "/users/lobby/**"
 }

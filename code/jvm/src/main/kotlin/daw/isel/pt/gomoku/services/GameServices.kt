@@ -67,11 +67,6 @@ class GameServices(private val transactionManager: TransactionManager) {
     private fun playChecks(game: Game, pieceToPlay: Piece, userId: Int, turn: GameInfo) {
         if (game.state == GameState.FINISHED)
             throw GameError(GameErrorMessages.GAME_FINISHED)
-        if (game.currentTurn != pieceToPlay.color)
-            throw GameError(GameErrorMessages.NOT_YOUR_TURN)
-        if (game.board.hasPiece(pieceToPlay))
-            throw GameError(GameErrorMessages.INVALID_PLAY)
-
         when (game.currentTurn) {
             BLACK -> {
                 if (turn.player_black != userId) {
@@ -84,5 +79,8 @@ class GameServices(private val transactionManager: TransactionManager) {
                 }
             }
         }
+        if (game.board.hasPiece(pieceToPlay))
+            throw GameError(GameErrorMessages.INVALID_PLAY)
+
     }
 }
