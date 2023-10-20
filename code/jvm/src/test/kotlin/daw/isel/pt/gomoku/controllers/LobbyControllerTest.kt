@@ -3,7 +3,7 @@ package daw.isel.pt.gomoku.controllers
 import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createLobby
 import daw.isel.pt.gomoku.utils.TestUtils.createNewClient
-import daw.isel.pt.gomoku.utils.TestUtils.createUser
+import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.joinLobby
 import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -27,9 +27,9 @@ class LobbyControllerTest {
     @Test
     fun `create Lobby Successfully`() {
         val client = createNewClient(port)
-        val user = createUser()
+        val user = createUserAndLogin()
         val lobbyName = newLobbyName()
-        val uri = "/users/${user.userId}/lobby"
+        val uri = "/users/lobby"
         client.post().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .bodyValue(
@@ -41,15 +41,15 @@ class LobbyControllerTest {
             .expectStatus().isCreated
             .expectBody()
             .jsonPath("name").isEqualTo(lobbyName)
-            .jsonPath("p1").isEqualTo(user.userId)
+            .jsonPath("p1").isEqualTo(user.user.userId)
     }
 
     @Test
     fun `create Lobby without token`() {
         val client = createNewClient(port)
-        val user = createUser()
+        val user = createUserAndLogin()
         val lobbyName = newLobbyName()
-        val uri = "/users/${user.userId}/lobby"
+        val uri = "/users/lobby"
         client.post().uri(uri)
             .bodyValue(
                 mapOf(
@@ -65,8 +65,8 @@ class LobbyControllerTest {
     @Test
     fun `create Lobby without name`() {
         val client = createNewClient(port)
-        val user = createUser()
-        val uri = "/users/${user.userId}/lobby"
+        val user = createUserAndLogin()
+        val uri = "/users/lobby"
         client.post().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .bodyValue(
@@ -82,10 +82,10 @@ class LobbyControllerTest {
 
     @Test
     fun `createLobby and get it`() {
-        val user = createUser()
+        val user = createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = "/users/${user.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/lobby/${lobby.lobbyId}"
         client.get().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .exchange()
@@ -98,10 +98,10 @@ class LobbyControllerTest {
 
     @Test
     fun `createLobby and get it without token when getting it`() {
-        val user = createUser()
+        val user = createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = "/users/${user.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/lobby/${lobby.lobbyId}"
         client.get().uri(uri)
             .exchange()
             .expectStatus().isUnauthorized
@@ -111,9 +111,9 @@ class LobbyControllerTest {
 
     @Test
     fun `get non-existentLobby`() {
-        val user = createUser()
+        val user = createUserAndLogin()
         val client = createNewClient(port)
-        val uri = "/users/${user.userId}/lobby/${Int.MAX_VALUE}"
+        val uri = "/users/lobby/${Int.MAX_VALUE}"
         client.get().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .exchange()
@@ -124,11 +124,11 @@ class LobbyControllerTest {
 
     @Test
     fun `join lobby successfully`() {
-        val user = createUser()
-        val otherUser = createUser()
+        val user = createUserAndLogin()
+        val otherUser = createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/lobby/${lobby.lobbyId}"
         client.put().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
             .exchange()
@@ -140,11 +140,11 @@ class LobbyControllerTest {
 
     @Test
     fun `join lobby unauthorized`() {
-        val user = createUser()
-        val otherUser = createUser()
+        val user = createUserAndLogin()
+        val otherUser = createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/lobby/${lobby.lobbyId}"
         client.put().uri(uri)
             .exchange()
             .expectStatus().isUnauthorized
@@ -154,28 +154,28 @@ class LobbyControllerTest {
 
     @Test
     fun `p1 quits lobby and p2 becomes lobby admin`() {
-        val user = createUser()
-        val otherUser = createUser()
+        val user = createUserAndLogin()
+        val otherUser = createUserAndLogin()
         val lobby = createLobby(user)
         joinLobby(otherUser, lobby)
         val client = createNewClient(port)
-        val uri = "/users/${user.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/lobby/${lobby.lobbyId}"
         client.delete().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .exchange()
             .expectStatus().isOk
             .expectBody()
-            .jsonPath("p1").isEqualTo(otherUser.userId)
+            .jsonPath("p1").isEqualTo(otherUser.user.userId)
     }
 
     @Test
     fun `p2 quits lobby`() {
-        val user =  createUser()
-        val otherUser =  createUser()
+        val user =  createUserAndLogin()
+        val otherUser =  createUserAndLogin()
         val lobby =  createLobby(user)
         joinLobby(otherUser, lobby)
         val client =  createNewClient(port)
-        val uri = "/users/${otherUser.userId}/lobby/${lobby.lobbyId}"
+        val uri = "/users/lobby/${lobby.lobbyId}"
         client.delete().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
             .exchange()

@@ -4,7 +4,6 @@ import daw.isel.pt.gomoku.domain.PasswordValidationInfo
 import daw.isel.pt.gomoku.domain.User
 import java.sql.ResultSet
 
-
 class UserMapper {
     fun mapResultSetToUser(rs: ResultSet): User {
         return User(

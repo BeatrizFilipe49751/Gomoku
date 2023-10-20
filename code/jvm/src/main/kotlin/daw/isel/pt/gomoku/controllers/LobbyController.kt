@@ -5,11 +5,14 @@ import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.utils.gameString
+import daw.isel.pt.gomoku.controllers.utils.getTokenFromRequest
 import daw.isel.pt.gomoku.controllers.utils.toGameOut
 import daw.isel.pt.gomoku.controllers.utils.toLobbyOut
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
+import daw.isel.pt.gomoku.services.UserServices
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,27 +25,37 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class LobbyController(private val lobbyServices: LobbyServices, private val gameServices: GameServices) {
+class LobbyController(
+    private val lobbyServices: LobbyServices,
+    private val gameServices: GameServices,
+    private val userServices: UserServices
+) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
-    fun createLobby(@PathVariable userId: Int, @RequestBody lobbyIn: LobbyIn): ResponseEntity<LobbyOut> {
+    fun createLobby(
+        request: HttpServletRequest,
+        @RequestBody lobbyIn: LobbyIn
+    ): ResponseEntity<LobbyOut> {
+        val user = userServices.getUserByToken(
+            token = request.getTokenFromRequest()
+        )
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
-                    userId = userId,
+                    userId = user.userId,
                     name = lobbyIn.name
                 ).toLobbyOut()
             )
     }
 
     @GetMapping(LobbyRoutes.GET_AVAILABLE_LOBBIES)
-    fun getLobbies(@PathVariable userId: Int): ResponseEntity<List<Lobby>> {
+    fun getLobbies(): ResponseEntity<List<Lobby>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobbies())
     }
 
     @GetMapping(LobbyRoutes.GET_LOBBY)
-    fun getLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Lobby> {
+    fun getLobby(@PathVariable lobbyId: Int): ResponseEntity<Lobby> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobby(
@@ -52,19 +65,26 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
     }
 
     @PutMapping(LobbyRoutes.JOIN_LOBBY)
-    fun joinLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<GameOut> {
+    fun joinLobby(
+        request: HttpServletRequest,
+        @PathVariable lobbyId: Int
+    ): ResponseEntity<GameOut> {
+        val user = userServices.getUserByToken(
+            token = request.getTokenFromRequest()
+        )
         val lobby = lobbyServices.getLobby(
             lobbyId = lobbyId
         )
+
         lobbyServices.joinLobby(
-            userId = userId,
+            userId = user.userId,
             lobbyId = lobby.lobbyId
         )
         val game = gameServices.createGame(
             name = lobby.name,
             playerBlack = lobby.p1,
             gameNumber = lobbyId,
-            playerWhite = userId
+            playerWhite = user.userId
         )
 
         logger.info(game.gameString())
@@ -74,9 +94,15 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
     }
 
     @DeleteMapping(LobbyRoutes.DELETE_LOBBY)
-    fun quitLobby(@PathVariable userId: Int, @PathVariable lobbyId: Int): ResponseEntity<Lobby> {
+    fun quitLobby(
+        request: HttpServletRequest,
+        @PathVariable lobbyId: Int
+    ): ResponseEntity<Lobby> {
+        val user = userServices.getUserByToken(
+            token = request.getTokenFromRequest()
+        )
         lobbyServices.deleteLobby(
-            userId = userId,
+            userId = user.userId,
             lobbyId = lobbyId
         )
         return ResponseEntity
@@ -86,12 +112,15 @@ class LobbyController(private val lobbyServices: LobbyServices, private val game
             )
     }
     @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
-    fun checkFullLobby(@PathVariable lobbyId: Int, @PathVariable userId: Int): ResponseEntity<GameOut> {
+    fun checkFullLobby(request: HttpServletRequest, @PathVariable lobbyId: Int): ResponseEntity<GameOut> {
+        val user = userServices.getUserByToken(
+            token = request.getTokenFromRequest()
+        )
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
                 lobbyServices.checkFullLobby(
-                    userId = userId,
+                    userId = user.userId,
                     lobbyId = lobbyId
                 ).toGameOut()
         )

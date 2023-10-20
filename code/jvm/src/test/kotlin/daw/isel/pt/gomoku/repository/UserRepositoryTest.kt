@@ -1,12 +1,9 @@
 package daw.isel.pt.gomoku.repository
 
-import daw.isel.pt.gomoku.utils.TestUtils.newTestEmail
-import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
-import daw.isel.pt.gomoku.utils.TestUtils.newToken
 import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
 import daw.isel.pt.gomoku.repository.dataJDBI.UsersDataJDBI
 import daw.isel.pt.gomoku.utils.TestUtils
-import daw.isel.pt.gomoku.utils.TestUtils.createUser
+import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import kotlin.test.*
 
 class UserRepositoryTest {
@@ -15,20 +12,10 @@ class UserRepositoryTest {
     fun resetInit() = TestUtils.resetDatabase()
 
     @Test
-    fun `create user successfully`() = runWithHandle {
-        val repo = UsersDataJDBI(it)
-        val userName = newTestUserName()
-        val email = newTestEmail()
-        val token = newToken()
-        val newUser = repo.createUser(userName, email, token)
-        assertNotNull(newUser)
-    }
-
-    @Test
     fun `get user successfully`() = runWithHandle {
-        val user = createUser()
+        val user = createUserAndLogin()
         val repo = UsersDataJDBI(it)
-        assertNotNull(repo.getUser(user.userId))
+        assertNotNull(repo.getUser(user.user.userId))
     }
 
     @Test

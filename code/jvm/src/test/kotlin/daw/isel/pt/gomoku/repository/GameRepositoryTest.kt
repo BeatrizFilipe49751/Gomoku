@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.repository
 
-import daw.isel.pt.gomoku.utils.TestUtils.createUser
+import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.newGameName
 import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
@@ -24,9 +24,9 @@ class GameRepositoryTest {
                 board = Board(),
                 name = newGameName(),
             )
-        val user = createUser()
-        val otherUser = createUser()
-        assertTrue {  repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.userId, otherUser.userId)}
+        val user = createUserAndLogin()
+        val otherUser = createUserAndLogin()
+        assertTrue {  repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)}
     }
 
     @Test
@@ -37,10 +37,10 @@ class GameRepositoryTest {
             board = Board(),
             name = newGameName(),
         )
-        val user = createUser()
-        val otherUser = createUser()
+        val user = createUserAndLogin()
+        val otherUser = createUserAndLogin()
         val serializedGame = game.toGameSerialized()
-        repo.createGame(serializedGame, Random.nextLong().toInt(), user.userId, otherUser.userId)
+        repo.createGame(serializedGame, Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)
 
         assertEquals(serializedGame, repo.getGame(game.id))
     }
@@ -53,9 +53,9 @@ class GameRepositoryTest {
             board = Board(),
             name = newGameName(),
         )
-        val user = createUser()
-        val otherUser = createUser()
-        repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.userId, otherUser.userId)
+        val user = createUserAndLogin()
+        val otherUser = createUserAndLogin()
+        repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)
         val newGame = game.play(Piece(position = Position(0, 0), BLACK))
         assertTrue { repo.updateGame(newGame.toGameSerialized()) }
     }

@@ -24,6 +24,20 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .singleOrNull()
     }
 
+    override fun getUserByToken(token: String): User? {
+        return handle.createQuery("""
+            SELECT * FROM users 
+            WHERE userid = (
+                SELECT user_id from tokens
+                WHERE token_validation = :token 
+            )
+        """.trimIndent())
+            .bind("token", token)
+            .mapTo(User::class.java)
+            .singleOrNull()
+
+    }
+
     override fun createUser(username: String, email: String, passwordValidation: PasswordValidationInfo): User {
         val userId: Int = handle.createQuery(
                 "INSERT INTO users (username, email, password_validation) values (:username, :email, :password_validation) RETURNING userId")
@@ -39,6 +53,7 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             passwordValidation = passwordValidation
         )
     }
+
 
     override fun createToken(token: Token, maxTokens : Int){
         handle.createUpdate(
@@ -77,6 +92,8 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .bind("validation_information", token.validationInfo)
             .execute()
     }
+
+
 
     override fun checkUserToken(tokenValidationInfo: TokenValidationInfo): Pair<User, Token>? {
         return handle.createQuery(

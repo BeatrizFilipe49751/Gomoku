@@ -22,6 +22,14 @@ class UserServices(private val transactionManager: TransactionManager, private v
         }
     }
 
+    fun getUserByToken(token: String) : User {
+        return transactionManager.run {
+            val tokenEncoded = usersDomain.createTokenValidationInformation(token)
+            it.usersRepository.getUserByToken(tokenEncoded.validationInfo) ?:
+                throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
+        }
+    }
+
     fun createUser(username: String?, email: String?, password:String?): User {
         if (username.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty())
             throw InvalidCredentialsException(UserErrorMessages.PARAMETERS_MISSING)

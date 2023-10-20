@@ -1,10 +1,17 @@
 package daw.isel.pt.gomoku.controllers.utils
 
 import daw.isel.pt.gomoku.controllers.models.*
+import daw.isel.pt.gomoku.controllers.pipeline.AuthInterceptor
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.domain.game.GameState.*
+import jakarta.servlet.http.HttpServletRequest
+
+fun HttpServletRequest.getTokenFromRequest(): String =
+    this.getHeader(AuthInterceptor.NAME_AUTHORIZATION_HEADER)
+        .replace("Bearer ", "")
+
 
 fun Game.toGameSerialized(): GameSerialized {
     return GameSerialized(

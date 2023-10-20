@@ -6,7 +6,8 @@ import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.services.exceptions.UserErrorMessages
 import daw.isel.pt.gomoku.utils.TestUtils
-import daw.isel.pt.gomoku.utils.TestUtils.createUser
+import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
+import daw.isel.pt.gomoku.utils.TestUtils.newTestPassword
 
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,11 +28,13 @@ class UserControllerTest {
         val newClient = createNewClient(port)
         val userName = newTestUserName()
         val email = newTestEmail()
+        val password = newTestPassword()
         newClient.post().uri(UserRoutes.CREATE_USER)
             .bodyValue(
                 mapOf(
                     "username" to userName,
-                    "email" to email
+                    "email" to email,
+                    "password" to password
                 )
             )
             .exchange()
@@ -72,12 +75,14 @@ class UserControllerTest {
     fun `Create user with invalid email`() {
         val newClient = createNewClient(port)
         val userName = newTestUserName()
+        val password = newTestPassword()
         val email = "WrongEmailFormat.com"
         newClient.post().uri(UserRoutes.CREATE_USER)
             .bodyValue(
                 mapOf(
                     "username" to userName,
-                    "email" to email
+                    "email" to email,
+                    "password" to password
                 )
             )
             .exchange()
@@ -88,14 +93,14 @@ class UserControllerTest {
 
     @Test
     fun `Get user successfully`() {
-        val user = createUser()
-        val path = "/users/${user.userId}"
+        val user = createUserAndLogin()
+        val path = "/users/${user.user.userId}"
         val newClient = createNewClient(port)
         newClient.get().uri(path)
             .exchange()
             .expectStatus().isOk
             .expectBody()
-            .jsonPath("username").isEqualTo(user.username)
+            .jsonPath("username").isEqualTo(user.user.username)
 
     }
 
