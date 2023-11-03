@@ -2,12 +2,10 @@ package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
+import daw.isel.pt.gomoku.controllers.models.LobbyInfo
 import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
-import daw.isel.pt.gomoku.controllers.utils.gameString
-import daw.isel.pt.gomoku.controllers.utils.getTokenFromRequest
-import daw.isel.pt.gomoku.controllers.utils.toGameOut
-import daw.isel.pt.gomoku.controllers.utils.toLobbyOut
+import daw.isel.pt.gomoku.controllers.utils.*
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
@@ -112,7 +110,7 @@ class LobbyController(
             )
     }
     @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
-    fun checkFullLobby(request: HttpServletRequest, @PathVariable lobbyId: Int): ResponseEntity<GameOut> {
+    fun checkFullLobby(request: HttpServletRequest, @PathVariable lobbyId: Int): ResponseEntity<LobbyInfo> {
         val user = userServices.getUserByToken(
             token = request.getTokenFromRequest()
         )
@@ -122,7 +120,7 @@ class LobbyController(
                 lobbyServices.checkFullLobby(
                     userId = user.userId,
                     lobbyId = lobbyId
-                ).toGameOut()
+                ).toLobbyInfo()
         )
     }
 

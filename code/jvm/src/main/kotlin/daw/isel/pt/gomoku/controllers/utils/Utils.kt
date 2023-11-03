@@ -33,6 +33,18 @@ fun GameSerialized.toGame(): Game {
     )
 }
 
+fun Game?.toLobbyInfo(): LobbyInfo {
+    return if (this == null)
+        LobbyInfo(
+            message = "Lobby has one player",
+            gameId = "Game has not been created"
+        )
+    else LobbyInfo(
+        message = "Game ${this.name} has started",
+        gameId = this.id
+    )
+}
+
 
 fun Game.toGameOut(): GameOut {
     return GameOut(
