@@ -30,14 +30,14 @@ class LobbyServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun checkFullLobby(userId: Int, lobbyId: Int): Game {
+    fun checkFullLobby(userId: Int, lobbyId: Int): Game? {
         return transactionManager.run {
             val lobby = it.lobbyRepository.getLobby(lobbyId = lobbyId)
             if(lobby == null) {
                 val gameSerialized = it.gameRepository.checkGameStarted(gameNumber = lobbyId)
-                    ?: throw GameError(GameErrorMessages.GAME_NOT_STARTED)
+                    ?: throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
                 gameSerialized.toGame()
-            } else throw GameError(GameErrorMessages.GAME_NOT_STARTED)
+            } else null
         }
     }
 
