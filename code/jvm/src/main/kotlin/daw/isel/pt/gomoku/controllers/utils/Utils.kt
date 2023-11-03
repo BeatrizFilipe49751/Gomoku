@@ -39,6 +39,7 @@ fun Game.toGameOut(): GameOut {
         id = this.id,
         name = this.name,
         currentTurn = this.currentTurn.color,
+        pieces = this.board.serialize(),
         state = if (this.state == ACTIVE) "Game is Active" else "Game is Finished, winner: ${this.currentTurn}"
     )
 }

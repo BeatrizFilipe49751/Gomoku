@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -21,14 +22,14 @@ class GameController(val gameServices: GameServices, val userServices: UserServi
     @PutMapping(GameRoutes.PLAY)
     fun play(
         request : HttpServletRequest,
+        @PathVariable gameId: String,
         @RequestBody playIn: PlayIn
     ): ResponseEntity<GameOut> {
         val user = userServices.getUserByToken(
             request.getTokenFromRequest()
         )
-
         val game = gameServices.getGame(
-            gameId = playIn.gameId
+            gameId = gameId
         )
         val newGame = gameServices.play(
             game = game,
