@@ -5,9 +5,7 @@ import daw.isel.pt.gomoku.controllers.hypermedia.HyperMedia
 import daw.isel.pt.gomoku.controllers.hypermedia.toUserHyperMedia
 import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
-import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.domain.AuthUser
-import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

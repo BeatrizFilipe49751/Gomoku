@@ -5,7 +5,6 @@ import kotlinx.datetime.Instant
 interface UserRepository {
     fun getUser(userId: Int): User?
     fun getUserByEmail(email: String) : User?
-    fun getUserByToken(token: String) : User?
     fun getUsername(userId: Int): String
     fun createUser(username: String, email: String, passwordValidation: PasswordValidationInfo): User
     fun createToken(token : Token, maxTokens : Int)

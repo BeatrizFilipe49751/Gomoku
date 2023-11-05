@@ -24,19 +24,6 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .singleOrNull()
     }
 
-    override fun getUserByToken(token: String): User? {
-        return handle.createQuery("""
-            SELECT * FROM users 
-            WHERE userid = (
-                SELECT user_id from tokens
-                WHERE token_validation = :token 
-            )
-        """.trimIndent())
-            .bind("token", token)
-            .mapTo(User::class.java)
-            .singleOrNull()
-    }
-
     override fun getUsername(userId: Int): String {
         return handle.createQuery("SELECT username FROM users WHERE userid = :userId")
             .bind("userId", userId)
