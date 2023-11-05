@@ -4,6 +4,7 @@ import daw.isel.pt.gomoku.controllers.models.GameInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
+import daw.isel.pt.gomoku.domain.game.GameState.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.*
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.*
@@ -58,6 +59,13 @@ class GameServices(private val transactionManager: TransactionManager) {
                 turn = turn
             )
             val newGame = game.play(pieceToPlay)
+            if (newGame.state == FINISHED) {
+                val points = winPoints + bonusPoints
+                val username = it.usersRepository.getUsername(userId)
+                if (it.gameRepository.getLeaderboardUsername(username) != null)
+                    it.gameRepository.addUserPoints(username, points)
+                else it.gameRepository.addUserToLeaderboard(username, points)
+            }
             if (it.gameRepository.updateGame(newGame.toGameSerialized()))
                 newGame
             else throw IllegalStateException("Game failed to update")
@@ -65,7 +73,7 @@ class GameServices(private val transactionManager: TransactionManager) {
     }
 
     private fun playChecks(game: Game, pieceToPlay: Piece, userId: Int, turn: GameInfo) {
-        if (game.state == GameState.FINISHED)
+        if (game.state == FINISHED)
             throw GameError(GameErrorMessages.GAME_FINISHED)
         when (game.currentTurn) {
             BLACK -> {

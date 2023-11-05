@@ -3,6 +3,9 @@ package daw.isel.pt.gomoku.domain.game
 import daw.isel.pt.gomoku.domain.game.GameState.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
 
+const val winPoints = 15
+val bonusPoints get() = (0..10).random()
+
 data class Game(
         val id : String,
         val board : Board,

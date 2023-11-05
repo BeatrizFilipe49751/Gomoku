@@ -35,7 +35,13 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .bind("token", token)
             .mapTo(User::class.java)
             .singleOrNull()
+    }
 
+    override fun getUsername(userId: Int): String {
+        return handle.createQuery("SELECT username FROM users WHERE userid = :userId")
+            .bind("userId", userId)
+            .mapTo(String::class.java)
+            .single()
     }
 
     override fun createUser(username: String, email: String, passwordValidation: PasswordValidationInfo): User {
@@ -55,7 +61,7 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
     }
 
 
-    override fun createToken(token: Token, maxTokens : Int){
+    override fun createToken(token: Token, maxTokens : Int) {
         handle.createUpdate(
             """
             delete from tokens 
