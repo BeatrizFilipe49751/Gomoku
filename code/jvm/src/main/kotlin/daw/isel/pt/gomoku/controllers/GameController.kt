@@ -6,6 +6,7 @@ import daw.isel.pt.gomoku.controllers.routes.GameRoutes
 import daw.isel.pt.gomoku.controllers.utils.gameString
 import daw.isel.pt.gomoku.controllers.utils.getTokenFromRequest
 import daw.isel.pt.gomoku.controllers.utils.toGameOut
+import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.UserServices
 import jakarta.servlet.http.HttpServletRequest
@@ -21,13 +22,11 @@ import org.springframework.web.bind.annotation.RestController
 class GameController(val gameServices: GameServices, val userServices: UserServices) {
     @PutMapping(GameRoutes.PLAY)
     fun play(
-        request : HttpServletRequest,
+        authUser: AuthUser,
         @PathVariable gameId: String,
         @RequestBody playIn: PlayIn
     ): ResponseEntity<GameOut> {
-        val user = userServices.getUserByToken(
-            request.getTokenFromRequest()
-        )
+        val user = authUser.user
         val game = gameServices.getGame(
             gameId = gameId
         )

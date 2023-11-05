@@ -1,6 +1,8 @@
 package daw.isel.pt.gomoku.controllers
 
 
+import daw.isel.pt.gomoku.controllers.hypermedia.HyperMedia
+import daw.isel.pt.gomoku.controllers.hypermedia.toUserHyperMedia
 import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
@@ -15,15 +17,16 @@ import org.springframework.web.bind.annotation.*
 class UserController(val userServices: UserServices) {
 
     @GetMapping(UserRoutes.GET_USER)
-    fun getUser(@PathVariable userId: Int): ResponseEntity<UserOut> =
+    fun getUser(@PathVariable userId: Int): ResponseEntity<HyperMedia> =
         ResponseEntity
             .status(HttpStatus.OK) // to be defined
             .body(
-                userServices.getUser(id = userId).toUserOut()
+                userServices.getUser(id = userId)
+                    .toUserHyperMedia(UserRoutes.GET_USER)
             )
 
     @PostMapping(UserRoutes.CREATE_USER)
-    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<User> =
+    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<HyperMedia> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
@@ -31,7 +34,7 @@ class UserController(val userServices: UserServices) {
                     username = userIn.username,
                     email = userIn.email,
                     password = userIn.password
-                )
+                ).toUserHyperMedia(UserRoutes.CREATE_USER)
             )
 
     @PostMapping(UserRoutes.CREATE_TOKEN)
@@ -46,6 +49,11 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.LOGOUT)
-    fun logout(user : AuthUser) = userServices.removeToken(user.token)
+    fun logout(user : AuthUser): ResponseEntity<Boolean>  {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userServices.removeToken(user.token))
+    }
+
 
 }

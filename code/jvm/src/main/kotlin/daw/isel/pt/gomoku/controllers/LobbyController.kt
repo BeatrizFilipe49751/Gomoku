@@ -6,6 +6,7 @@ import daw.isel.pt.gomoku.controllers.models.LobbyInfo
 import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.utils.*
+import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
@@ -30,16 +31,13 @@ class LobbyController(
 ) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
     fun createLobby(
-        request: HttpServletRequest,
+        authUser : AuthUser,
         @RequestBody lobbyIn: LobbyIn
     ): ResponseEntity<LobbyOut> {
-        val user = userServices.getUserByToken(
-            token = request.getTokenFromRequest()
-        )
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
-                    userId = user.userId,
+                    userId = authUser.user.userId,
                     name = lobbyIn.name
                 ).toLobbyOut()
             )
@@ -64,12 +62,10 @@ class LobbyController(
 
     @PutMapping(LobbyRoutes.JOIN_LOBBY)
     fun joinLobby(
-        request: HttpServletRequest,
+        authUser: AuthUser,
         @PathVariable lobbyId: Int
     ): ResponseEntity<GameOut> {
-        val user = userServices.getUserByToken(
-            token = request.getTokenFromRequest()
-        )
+        val user = authUser.user
         val lobby = lobbyServices.getLobby(
             lobbyId = lobbyId
         )
@@ -93,12 +89,10 @@ class LobbyController(
 
     @DeleteMapping(LobbyRoutes.DELETE_LOBBY)
     fun quitLobby(
-        request: HttpServletRequest,
+        authUser: AuthUser,
         @PathVariable lobbyId: Int
     ): ResponseEntity<Lobby> {
-        val user = userServices.getUserByToken(
-            token = request.getTokenFromRequest()
-        )
+        val user = authUser.user
         lobbyServices.deleteLobby(
             userId = user.userId,
             lobbyId = lobbyId
@@ -110,10 +104,11 @@ class LobbyController(
             )
     }
     @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
-    fun checkFullLobby(request: HttpServletRequest, @PathVariable lobbyId: Int): ResponseEntity<LobbyInfo> {
-        val user = userServices.getUserByToken(
-            token = request.getTokenFromRequest()
-        )
+    fun checkFullLobby(
+        authUser: AuthUser,
+        @PathVariable lobbyId: Int
+    ): ResponseEntity<LobbyInfo> {
+        val user = authUser.user
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
