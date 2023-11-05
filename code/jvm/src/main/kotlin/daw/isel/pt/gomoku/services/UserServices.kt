@@ -44,7 +44,7 @@ class UserServices(private val transactionManager: TransactionManager, private v
         }
     }
 
-    fun createToken(email: String?, password:String?) : TokenCreationResult {
+    fun createToken(email: String?, password:String?) : AuthUser {
         if (email.isNullOrEmpty() || password.isNullOrEmpty())
             throw InvalidCredentialsException(UserErrorMessages.PARAMETERS_MISSING)
 
@@ -68,9 +68,9 @@ class UserServices(private val transactionManager: TransactionManager, private v
                 lastUsedAt = now
             )
             repo.createToken(newToken, usersDomain.maxNumberOfTokensPerUser)
-            TokenCreationResult(
+            AuthUser(
                 token = tokenValue,
-                expiration = usersDomain.getTokenExpiration(newToken)
+                user = user
             )
         }
     }

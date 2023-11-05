@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.controllers
 
-import daw.isel.pt.gomoku.controllers.hypermedia.HyperMedia
+import daw.isel.pt.gomoku.controllers.hypermedia.Siren
+import daw.isel.pt.gomoku.controllers.hypermedia.toLoginSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toUserHyperMedia
 import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
@@ -13,16 +14,16 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class UserController(val userServices: UserServices) {
     @GetMapping(UserRoutes.GET_USER)
-    fun getUser(@PathVariable userId: Int): ResponseEntity<HyperMedia> =
+    fun getUser(@PathVariable userId: Int): ResponseEntity<Siren> =
         ResponseEntity
             .status(HttpStatus.OK) // to be defined
             .body(
                 userServices.getUser(id = userId)
-                    .toUserHyperMedia(UserRoutes.GET_USER)
+                    .toUserHyperMedia()
             )
 
     @PostMapping(UserRoutes.CREATE_USER)
-    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<HyperMedia> =
+    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<Siren> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
@@ -30,18 +31,18 @@ class UserController(val userServices: UserServices) {
                     username = userIn.username,
                     email = userIn.email,
                     password = userIn.password
-                ).toUserHyperMedia(UserRoutes.CREATE_USER)
+                ).toUserHyperMedia()
             )
 
     @PostMapping(UserRoutes.CREATE_TOKEN)
-    fun createToken(@RequestBody userInLogin: UserInLogin): ResponseEntity<TokenCreationResult> =
+    fun createToken(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(
                 userServices.createToken(
                     email = userInLogin.email,
                     password = userInLogin.password
-                )
+                ).toLoginSiren()
             )
 
     @PostMapping(UserRoutes.LOGOUT)

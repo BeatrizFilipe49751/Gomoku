@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
 
-data class HyperMedia(
+data class Siren(
     val cls: String,
     val properties: Map<String, String>,
     val actions: List<Action>,
@@ -20,7 +20,7 @@ data class Action(
 
 data class Field(
     val name: String,
-    val type: String
+    val type: String,
 )
 
 data class Entity(

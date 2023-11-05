@@ -1,25 +1,29 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
+import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.UserInCreate
 import daw.isel.pt.gomoku.controllers.models.UserInLogin
+import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
+import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.User
-fun User.toUserHyperMedia(path: String): HyperMedia {
+fun User.toUserHyperMedia(): Siren {
     val className = this::class.java.simpleName
-    return HyperMedia(
+    return Siren(
         cls = className,
-        properties = this.getProperties(),
+        properties = this.getProperties().filter {
+            it.value == this.passwordValidation.validationInfo },
         entities = listOf(
             Entity(
                 cls = className,
                 rel = this::class.java.simpleName,
-                href = UserRoutes.GET_USER,
+                href = UserRoutes.GET_USER.putParameters("userId", this.userId.toString()),
             )
         ),
         actions = listOf(
             Action(
-                name = "create_user",
+                name = "createUser",
                 title = "Create a User",
                 method = "POST",
                 href = UserRoutes.CREATE_USER,
@@ -31,33 +35,80 @@ fun User.toUserHyperMedia(path: String): HyperMedia {
                 method = "POST",
                 href = UserRoutes.CREATE_TOKEN,
                 fields = getFields(UserInLogin::class.java),
-
             ),
             Action(
-                name = "logout",
-                title = "Logout",
-                method = "POST",
-                href = UserRoutes.LOGOUT,
-                fields = getFields(AuthUser::class.java)
-            ),
-            Action(
-                name = "get_user",
-                title = "Get user",
+                name = "getLeaderBoards",
+                title = "Get the leaderboards of gomoku game",
                 method = "GET",
-                href = UserRoutes.GET_USER,
-                fields = listOf(
-                    Field(
-                        name = "userId",
-                        type = "Int"
-                    )
-                ),
-            )
+                href = UserRoutes.GET_LEADERBOARD,
+                fields = listOf(),
+            ),
         ),
         links = listOf(
             Link(
                 rel = "self",
-                href = path
+                href = UserRoutes.GET_USER.putParameters("userId", this.userId.toString())
+            ),
+            Link(
+                rel = "self",
+                href = UserRoutes.GET_LEADERBOARD
             )
+        )
+    )
+}
+
+fun AuthUser.toLoginSiren(): Siren {
+    val className = this::class.java.simpleName
+    return Siren(
+        cls = className,
+        properties = this.getProperties(),
+        entities = listOf(
+            Entity(
+                cls = className,
+                rel = this::class.java.simpleName,
+                href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
+            ),
+            Entity(
+                cls = className,
+                rel = this::class.java.simpleName,
+                href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
+            )
+        ),
+        actions = listOf(
+            Action(
+                name = "getLeaderBoards",
+                title = "Get the leaderboards of gomoku game",
+                method = "GET",
+                href = UserRoutes.GET_LEADERBOARD,
+                fields = listOf(),
+            ),
+            Action(
+                name="logout",
+                title = "Logout",
+                method = "POST",
+                href = UserRoutes.LOGOUT,
+                fields = listOf()
+            ),
+            Action(
+                name = "creatLobby",
+                title = "Create a lobby for somebody to join in",
+                method = "POST",
+                href = LobbyRoutes.CREATE_LOBBY,
+                fields = getFields(LobbyIn::class.java)
+            ),
+            Action(
+                name = "joinLobby",
+                title = "Join an existingLobby",
+                method = "PUT",
+                href = LobbyRoutes.JOIN_LOBBY.putParameters("lobbyId", "123"),
+                fields = listOf(),
+            ),
+        ),
+        links = listOf(
+            Link(
+                rel = "self",
+                href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString())
+            ),
         )
     )
 }

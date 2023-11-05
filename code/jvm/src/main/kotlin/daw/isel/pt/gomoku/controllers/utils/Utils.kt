@@ -67,6 +67,10 @@ fun Lobby.toLobbyOut(): LobbyOut =
         name = this.name
     )
 
+fun String.putParameters(key: String, value: String) : String {
+    return this.replace("{$key}", value)
+}
+
 const val emptySquare = "| "
 const val blackPiece = "|B"
 const val whitePiece = "|W"
