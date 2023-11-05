@@ -46,10 +46,12 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.LOGOUT)
-    fun logout(user : AuthUser): ResponseEntity<Boolean>  {
+    fun logout(authedUser : AuthUser): ResponseEntity<Siren>  {
+        val loggedOut = userServices.removeToken(authedUser.token)
+        val user = authedUser.user
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(userServices.removeToken(user.token))
+            .body(user.toUserHyperMedia())
     }
 
     @GetMapping(UserRoutes.GET_LEADERBOARD)
