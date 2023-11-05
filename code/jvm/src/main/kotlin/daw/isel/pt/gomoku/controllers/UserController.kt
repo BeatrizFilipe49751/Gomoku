@@ -1,6 +1,5 @@
 package daw.isel.pt.gomoku.controllers
 
-
 import daw.isel.pt.gomoku.controllers.hypermedia.HyperMedia
 import daw.isel.pt.gomoku.controllers.hypermedia.toUserHyperMedia
 import daw.isel.pt.gomoku.controllers.models.*
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(val userServices: UserServices) {
-
     @GetMapping(UserRoutes.GET_USER)
     fun getUser(@PathVariable userId: Int): ResponseEntity<HyperMedia> =
         ResponseEntity
@@ -53,5 +51,11 @@ class UserController(val userServices: UserServices) {
             .body(userServices.removeToken(user.token))
     }
 
-
+    @GetMapping(UserRoutes.GET_LEADERBOARD)
+    fun getLeaderboard(): ResponseEntity<List<UserPoints>> =
+        ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                userServices.getLeaderboard()
+            )
 }

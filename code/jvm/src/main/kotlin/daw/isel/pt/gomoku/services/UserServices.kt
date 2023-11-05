@@ -2,6 +2,7 @@ package daw.isel.pt.gomoku.services
 
 
 import daw.isel.pt.gomoku.controllers.models.TokenCreationResult
+import daw.isel.pt.gomoku.controllers.models.UserPoints
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.Token
 import daw.isel.pt.gomoku.domain.User
@@ -95,5 +96,10 @@ class UserServices(private val transactionManager: TransactionManager, private v
                 null
             }
         }
+    }
+
+    fun getLeaderboard(): List<UserPoints> =
+        transactionManager.run {
+            it.usersRepository.getLeaderboard()
     }
 }

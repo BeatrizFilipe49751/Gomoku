@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.repository.dataJDBI
 
+import daw.isel.pt.gomoku.controllers.models.UserPoints
 import daw.isel.pt.gomoku.domain.*
 import daw.isel.pt.gomoku.repository.dataJDBI.mappers.TokenMapper
 import daw.isel.pt.gomoku.repository.dataJDBI.mappers.UserMapper
@@ -118,4 +119,9 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
             .execute()
     }
 
+    override fun getLeaderboard(): List<UserPoints> {
+        return handle.createQuery("select * from leaderboard group by username order by points desc")
+            .mapTo(UserPoints::class.java)
+            .list()
+    }
 }

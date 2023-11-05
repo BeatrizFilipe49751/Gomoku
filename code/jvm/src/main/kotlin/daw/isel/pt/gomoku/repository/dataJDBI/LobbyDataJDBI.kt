@@ -11,7 +11,6 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
             .bind("name", name)
             .mapTo(Int::class.java)
             .single()
-
         return Lobby(lobbyId, name, userId, null)
     }
 
