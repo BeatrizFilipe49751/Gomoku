@@ -1,16 +1,11 @@
 package daw.isel.pt.gomoku.controllers.utils
 
 import daw.isel.pt.gomoku.controllers.models.*
-import daw.isel.pt.gomoku.controllers.pipeline.AuthInterceptor
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.domain.game.GameState.*
-import jakarta.servlet.http.HttpServletRequest
 
-fun HttpServletRequest.getTokenFromRequest(): String =
-    this.getHeader(AuthInterceptor.NAME_AUTHORIZATION_HEADER)
-        .replace("Bearer ", "")
 
 
 fun Game.toGameSerialized(): GameSerialized {
@@ -46,13 +41,18 @@ fun Game?.toLobbyInfo(): LobbyInfo {
 }
 
 
-fun Game.toGameOut(): GameOut {
+
+fun AllGameInfo.toGameOut(): GameOut{
     return GameOut(
-        id = this.id,
-        name = this.name,
-        currentTurn = this.currentTurn.color,
-        pieces = this.board.serialize(),
-        state = if (this.state == ACTIVE) "Game is Active" else "Game is Finished, winner: ${this.currentTurn}"
+        gameId = this.game.id,
+        name = this.game.name,
+        playerWhite = this.gameInfo.player_white,
+        playerBlack = this.gameInfo.player_black,
+        currentTurn = this.game.currentTurn.color,
+        pieces = this.game.board.serialize(),
+        state = if (this.game.state == ACTIVE)
+            "Game is Active"
+        else "Game is Finished, winner: ${this.game.currentTurn}"
     )
 }
 

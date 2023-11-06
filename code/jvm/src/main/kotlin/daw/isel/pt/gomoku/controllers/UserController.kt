@@ -17,7 +17,7 @@ class UserController(val userServices: UserServices) {
     @GetMapping(UserRoutes.GET_USER)
     fun getUser(@PathVariable userId: Int): ResponseEntity<Siren> =
         ResponseEntity
-            .status(HttpStatus.OK) // to be defined
+            .status(HttpStatus.OK)
             .body(
                 userServices.getUser(id = userId)
                     .toUserOut()
@@ -37,8 +37,8 @@ class UserController(val userServices: UserServices) {
                     .toUserSiren()
             )
 
-    @PostMapping(UserRoutes.CREATE_TOKEN)
-    fun createToken(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren> =
+    @PostMapping(UserRoutes.LOGIN)
+    fun login(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(

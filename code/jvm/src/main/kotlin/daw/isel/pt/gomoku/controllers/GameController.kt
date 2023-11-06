@@ -1,31 +1,31 @@
 package daw.isel.pt.gomoku.controllers
 
-import daw.isel.pt.gomoku.controllers.models.GameOut
+import daw.isel.pt.gomoku.controllers.hypermedia.Siren
+import daw.isel.pt.gomoku.controllers.hypermedia.toGameInfoSiren
+import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.models.PlayIn
 import daw.isel.pt.gomoku.controllers.routes.GameRoutes
 import daw.isel.pt.gomoku.controllers.utils.gameString
-import daw.isel.pt.gomoku.controllers.utils.getTokenFromRequest
 import daw.isel.pt.gomoku.controllers.utils.toGameOut
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.services.GameServices
-import daw.isel.pt.gomoku.services.UserServices
-import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class GameController(val gameServices: GameServices, val userServices: UserServices) {
+class GameController(val gameServices: GameServices) {
     @PutMapping(GameRoutes.PLAY)
     fun play(
         authUser: AuthUser,
         @PathVariable gameId: String,
         @RequestBody playIn: PlayIn
-    ): ResponseEntity<GameOut> {
+    ): ResponseEntity<Siren> {
         val user = authUser.user
         val game = gameServices.getGame(
             gameId = gameId
@@ -36,10 +36,20 @@ class GameController(val gameServices: GameServices, val userServices: UserServi
             row = playIn.row,
             col = playIn.col
         )
-        logger.info("\n" + newGame.gameString())
+        logger.info("\n" + newGame.game.gameString())
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(newGame.toGameOut())
+            .body(
+                newGame.toGameOut()
+                    .toGameSiren()
+            )
+    }
+
+    @GetMapping(GameRoutes.GET_GAME)
+    fun getGame(authUser: AuthUser, @PathVariable gameId: String): ResponseEntity<Siren> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(gameServices.getGameInfo(gameId).toGameInfoSiren())
     }
 
     companion object{

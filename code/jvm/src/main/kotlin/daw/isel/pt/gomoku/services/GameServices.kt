@@ -1,6 +1,8 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.controllers.models.AllGameInfo
 import daw.isel.pt.gomoku.controllers.models.GameInfo
+import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
@@ -15,7 +17,7 @@ import java.util.*
 @Component
 class GameServices(private val transactionManager: TransactionManager) {
 
-    fun createGame(name: String, gameNumber: Int, playerBlack: Int, playerWhite: Int): Game {
+    fun createGame(name: String, gameNumber: Int, playerBlack: Int, playerWhite: Int): AllGameInfo {
         return transactionManager.run {
             val newGame = Game(
                 id = UUID.randomUUID().toString(),
@@ -30,9 +32,11 @@ class GameServices(private val transactionManager: TransactionManager) {
                 playerWhite = playerWhite
             )
 
-            if(wasCreated){
+            val gameInfo = it.gameRepository.checkGameInfo(newGame.id)
+
+            if(wasCreated && gameInfo != null){
                 it.lobbyRepository.deleteLobby(gameNumber)
-                newGame
+                AllGameInfo(newGame, gameInfo)
             }
             else throw GameError(GameErrorMessages.GAME_CREATION_ERROR)
         }
@@ -47,16 +51,32 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun play(game: Game, userId: Int, row: Int, col: Int): Game {
+    fun getGameInfo(gameId: String): PublicGameInfo {
+        return transactionManager.run {
+            val game = it.gameRepository.getGame(gameId)
+            if(game != null) {
+                val gameInfo = it.gameRepository.checkGameInfo(gameId)
+                if(gameInfo!= null)
+                    PublicGameInfo(
+                        name= game.name,
+                        playerBlack = gameInfo.player_black,
+                        playerWhite = gameInfo.player_white,
+                    )
+                else throw NotFoundException(GameErrorMessages.GAME_NOT_FOUND)
+            }  else throw UnauthorizedException(GameErrorMessages.INVALID_GAME_VIEWING)
+        }
+    }
+
+    fun play(game: Game, userId: Int, row: Int, col: Int): AllGameInfo {
         return transactionManager.run {
             val pieceToPlay =
                 Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
-            val turn = it.gameRepository.checkGameInfo(game.id) ?: throw NotFoundException("Game Not Found")
+            val gameInfo = it.gameRepository.checkGameInfo(game.id) ?: throw NotFoundException("Game Not Found")
             playChecks(
                 game = game,
                 pieceToPlay = pieceToPlay,
                 userId = userId,
-                turn = turn
+                turn = gameInfo
             )
             val newGame = game.play(pieceToPlay)
             if (newGame.state == FINISHED) {
@@ -66,8 +86,10 @@ class GameServices(private val transactionManager: TransactionManager) {
                     it.gameRepository.addUserPoints(username, points)
                 else it.gameRepository.addUserToLeaderboard(username, points)
             }
-            if (it.gameRepository.updateGame(newGame.toGameSerialized()))
-                newGame
+            if (it.gameRepository.updateGame(newGame.toGameSerialized())){
+                AllGameInfo(newGame, gameInfo)
+            }
+
             else throw IllegalStateException("Game failed to update")
         }
     }

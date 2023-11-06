@@ -1,8 +1,8 @@
 package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
+import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
-import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyInfo
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
@@ -69,7 +69,7 @@ class LobbyController(
     fun joinLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
-    ): ResponseEntity<GameOut> {
+    ): ResponseEntity<Siren> {
         val user = authUser.user
         val lobby = lobbyServices.getLobby(
             lobbyId = lobbyId
@@ -79,17 +79,20 @@ class LobbyController(
             userId = user.userId,
             lobbyId = lobby.lobbyId
         )
-        val game = gameServices.createGame(
+        val newGame = gameServices.createGame(
             name = lobby.name,
             playerBlack = lobby.p1,
             gameNumber = lobbyId,
             playerWhite = user.userId
         )
 
-        logger.info(game.gameString())
+        logger.info(newGame.game.gameString())
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(game.toGameOut())
+            .body(
+                newGame.toGameOut()
+                    .toGameSiren()
+            )
     }
 
     @DeleteMapping(LobbyRoutes.DELETE_LOBBY)

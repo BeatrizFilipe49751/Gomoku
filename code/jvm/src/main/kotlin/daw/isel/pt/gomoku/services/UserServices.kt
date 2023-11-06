@@ -1,7 +1,6 @@
 package daw.isel.pt.gomoku.services
 
 
-import daw.isel.pt.gomoku.controllers.models.TokenCreationResult
 import daw.isel.pt.gomoku.controllers.models.UserPoints
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.Token

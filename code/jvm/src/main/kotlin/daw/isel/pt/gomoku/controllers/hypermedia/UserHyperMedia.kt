@@ -33,7 +33,7 @@ fun UserOut.toUserSiren(): Siren {
                 name = "login",
                 title = "Login",
                 method = "POST",
-                href = UserRoutes.CREATE_TOKEN,
+                href = UserRoutes.LOGIN,
                 fields = getFields(UserInLogin::class.java),
             ),
             Action(
