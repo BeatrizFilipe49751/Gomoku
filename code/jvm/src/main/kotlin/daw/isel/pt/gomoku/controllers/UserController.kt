@@ -2,9 +2,10 @@ package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
 import daw.isel.pt.gomoku.controllers.hypermedia.toLoginSiren
-import daw.isel.pt.gomoku.controllers.hypermedia.toUserHyperMedia
+import daw.isel.pt.gomoku.controllers.hypermedia.toUserSiren
 import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
+import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.services.UserServices
 import org.springframework.http.HttpStatus
@@ -19,7 +20,8 @@ class UserController(val userServices: UserServices) {
             .status(HttpStatus.OK) // to be defined
             .body(
                 userServices.getUser(id = userId)
-                    .toUserHyperMedia()
+                    .toUserOut()
+                    .toUserSiren()
             )
 
     @PostMapping(UserRoutes.CREATE_USER)
@@ -31,7 +33,8 @@ class UserController(val userServices: UserServices) {
                     username = userIn.username,
                     email = userIn.email,
                     password = userIn.password
-                ).toUserHyperMedia()
+                ).toUserOut()
+                    .toUserSiren()
             )
 
     @PostMapping(UserRoutes.CREATE_TOKEN)
@@ -47,11 +50,11 @@ class UserController(val userServices: UserServices) {
 
     @PostMapping(UserRoutes.LOGOUT)
     fun logout(authedUser : AuthUser): ResponseEntity<Siren>  {
-        val loggedOut = userServices.removeToken(authedUser.token)
-        val user = authedUser.user
+        userServices.removeToken(authedUser.token)
+        val user = authedUser.user.toUserOut()
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(user.toUserHyperMedia())
+            .body(user.toUserSiren())
     }
 
     @GetMapping(UserRoutes.GET_LEADERBOARD)

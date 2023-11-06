@@ -1,17 +1,16 @@
 package daw.isel.pt.gomoku.controllers
 
+import daw.isel.pt.gomoku.controllers.hypermedia.Siren
+import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyInfo
-import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.utils.*
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.GameServices
 import daw.isel.pt.gomoku.services.LobbyServices
-import daw.isel.pt.gomoku.services.UserServices
-import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,19 +26,20 @@ import org.springframework.web.bind.annotation.RestController
 class LobbyController(
     private val lobbyServices: LobbyServices,
     private val gameServices: GameServices,
-    private val userServices: UserServices
 ) {
     @PostMapping(LobbyRoutes.CREATE_LOBBY)
     fun createLobby(
         authUser : AuthUser,
         @RequestBody lobbyIn: LobbyIn
-    ): ResponseEntity<LobbyOut> {
+    ): ResponseEntity<Siren> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
                     userId = authUser.user.userId,
                     name = lobbyIn.name
-                ).toLobbyOut()
+                )
+                .toLobbyOut()
+                .toLobbySiren(authUser)
             )
     }
 
@@ -51,12 +51,17 @@ class LobbyController(
     }
 
     @GetMapping(LobbyRoutes.GET_LOBBY)
-    fun getLobby(@PathVariable lobbyId: Int): ResponseEntity<Lobby> {
+    fun getLobby(
+        authUser: AuthUser,
+        @PathVariable lobbyId: Int
+    ): ResponseEntity<Siren> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobby(
                     lobbyId = lobbyId
                 )
+                .toLobbyOut()
+                .toLobbySiren(authUser = authUser)
             )
     }
 
@@ -91,16 +96,15 @@ class LobbyController(
     fun quitLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
-    ): ResponseEntity<Lobby> {
+    ): ResponseEntity<Boolean> {
         val user = authUser.user
-        lobbyServices.deleteLobby(
-            userId = user.userId,
-            lobbyId = lobbyId
-        )
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
-                lobbyServices.getLobby(lobbyId)
+                lobbyServices.deleteLobby(
+                    userId = user.userId,
+                    lobbyId = lobbyId
+                )
             )
     }
     @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
