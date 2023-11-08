@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
-import daw.isel.pt.gomoku.controllers.hypermedia.toLoginSiren
+import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toUserSiren
 import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class UserController(val userServices: UserServices) {
     @GetMapping(UserRoutes.GET_USER)
-    fun getUser(@PathVariable userId: Int): ResponseEntity<Siren> =
+    fun getUser(@PathVariable userId: Int): ResponseEntity<Siren<UserOut>> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(
@@ -25,7 +25,7 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.CREATE_USER)
-    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<Siren> =
+    fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<Siren<UserOut>> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
@@ -38,18 +38,18 @@ class UserController(val userServices: UserServices) {
             )
 
     @PostMapping(UserRoutes.LOGIN)
-    fun login(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren> =
+    fun login(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren<AuthUser>> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(
                 userServices.createToken(
                     email = userInLogin.email,
                     password = userInLogin.password
-                ).toLoginSiren()
+                ).toAuthUserSiren()
             )
 
     @PostMapping(UserRoutes.LOGOUT)
-    fun logout(authedUser : AuthUser): ResponseEntity<Siren>  {
+    fun logout(authedUser : AuthUser): ResponseEntity<Siren<UserOut>>  {
         userServices.removeToken(authedUser.token)
         val user = authedUser.user.toUserOut()
         return ResponseEntity

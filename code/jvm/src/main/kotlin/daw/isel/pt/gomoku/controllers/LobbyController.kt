@@ -3,8 +3,11 @@ package daw.isel.pt.gomoku.controllers
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
 import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
+import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
+import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyInfo
+import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.utils.*
 import daw.isel.pt.gomoku.domain.AuthUser
@@ -31,7 +34,7 @@ class LobbyController(
     fun createLobby(
         authUser : AuthUser,
         @RequestBody lobbyIn: LobbyIn
-    ): ResponseEntity<Siren> {
+    ): ResponseEntity<Siren<LobbyOut>> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
@@ -54,7 +57,7 @@ class LobbyController(
     fun getLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
-    ): ResponseEntity<Siren> {
+    ): ResponseEntity<Siren<LobbyOut>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobby(
@@ -69,7 +72,7 @@ class LobbyController(
     fun joinLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
-    ): ResponseEntity<Siren> {
+    ): ResponseEntity<Siren<GameOut>> {
         val user = authUser.user
         val lobby = lobbyServices.getLobby(
             lobbyId = lobbyId
@@ -99,15 +102,16 @@ class LobbyController(
     fun quitLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
-    ): ResponseEntity<Boolean> {
+    ): ResponseEntity<Siren<AuthUser>> {
         val user = authUser.user
+        lobbyServices.deleteLobby(
+            userId = user.userId,
+            lobbyId = lobbyId
+        )
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
-                lobbyServices.deleteLobby(
-                    userId = user.userId,
-                    lobbyId = lobbyId
-                )
+                authUser.toAuthUserSiren()
             )
     }
     @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)

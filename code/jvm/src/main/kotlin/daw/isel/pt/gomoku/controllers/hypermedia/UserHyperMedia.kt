@@ -9,7 +9,7 @@ import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.domain.AuthUser
 
-fun UserOut.toUserSiren(): Siren {
+fun UserOut.toUserSiren(): Siren<UserOut> {
     val className = this::class.java.simpleName
     return Siren(
         cls = className,
@@ -47,7 +47,7 @@ fun UserOut.toUserSiren(): Siren {
     )
 }
 
-fun AuthUser.toLoginSiren(): Siren {
+fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
     val className = this::class.java.simpleName
     return Siren(
         cls = className,
@@ -100,7 +100,6 @@ fun AuthUser.toLoginSiren(): Siren {
                 href = LobbyRoutes.JOIN_LOBBY.putParameters("lobbyId", "123"),
                 fields = listOf(),
             ),
-
         )
     )
 }

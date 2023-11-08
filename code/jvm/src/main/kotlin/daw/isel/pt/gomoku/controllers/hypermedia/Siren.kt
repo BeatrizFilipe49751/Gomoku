@@ -1,13 +1,14 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
 
-data class Siren(
+data class Siren<T>(
     val cls: String,
     val properties: Map<String, String>,
     val actions: List<Action>,
     val entities: List<Entity>,
+) {
 
-)
+}
 
 data class Action(
     val name: String,

@@ -8,7 +8,7 @@ import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.domain.User
 
-fun GameOut.toGameSiren(): Siren {
+fun GameOut.toGameSiren(): Siren<GameOut> {
     val className = this::class.java.simpleName
     val userClassName = User::class.java.simpleName
     return Siren(
@@ -53,7 +53,7 @@ fun GameOut.toGameSiren(): Siren {
     )
 }
 
-fun PublicGameInfo.toGameInfoSiren(): Siren {
+fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
     val className = this::class.java.simpleName
     val userClassName = User::class.java.simpleName
     return Siren(

@@ -6,7 +6,7 @@ import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.domain.AuthUser
 
-fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren {
+fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren<LobbyOut> {
     val className = this::class.java.simpleName
     val userClassName = authUser.user::class.java.simpleName
     return Siren(
