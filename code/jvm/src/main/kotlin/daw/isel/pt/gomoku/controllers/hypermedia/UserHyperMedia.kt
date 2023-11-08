@@ -17,7 +17,7 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
         entities = listOf(
             Entity(
                 cls = className,
-                rel = arrayOf("user") ,
+                rel = listOf("user") ,
                 href = UserRoutes.GET_USER.putParameters("userId", this.userId.toString()),
             )
         ),
@@ -56,12 +56,12 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
         entities = listOf(
             Entity(
                 cls = className,
-                rel = arrayOf("user"),
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
             ),
             Entity(
                 cls = className,
-                rel = arrayOf("user"),
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
             )
         ),
@@ -97,7 +97,7 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
         ),
         links = listOf(
             Link(
-                rel= "",
+                rel= listOf("leaderboard"),
                 href = UserRoutes.GET_LEADERBOARD
             )
         )
