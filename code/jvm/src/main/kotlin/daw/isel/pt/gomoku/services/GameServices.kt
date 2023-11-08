@@ -77,7 +77,9 @@ class GameServices(private val transactionManager: TransactionManager) {
 
     fun play(game: Game, userId: Int, row: Int, col: Int): AllGameInfo {
         return transactionManager.run {
-            val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
+            val boardDim = game.board.size
+            val pieceToPlay =
+                Piece(Position(row.indexToRow(boardDim), col.indexToColumn(boardDim)), game.currentTurn)
             val gameInfo = it.gameRepository.checkGameInfo(game.id)
                 ?: throw NotFoundException("Game Not Found")
             userTurnCheck(game = game, userId = userId, gameInfo = gameInfo)
