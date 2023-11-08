@@ -2,6 +2,7 @@ package daw.isel.pt.gomoku.domain.game
 
 import daw.isel.pt.gomoku.domain.game.GameState.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
+import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 
 const val winPoints = 15
 val bonusPoints get() = (0..10).random()
@@ -14,6 +15,8 @@ data class Game(
         val currentTurn: PieceColor = BLACK
 ) {
         fun play(pieceToPlace: Piece): Game {
+                check(state == ACTIVE) { GameErrorMessages.GAME_FINISHED }
+                check(!board.hasPiece(pieceToPlace)) { GameErrorMessages.INVALID_PLAY }
                 val newBoard = board.copy(pieces = board.pieces + pieceToPlace)
                 if (newBoard.pieces.size < WIN_STREAK)
                         return copy(board = newBoard, currentTurn = currentTurn.switchTurn() )

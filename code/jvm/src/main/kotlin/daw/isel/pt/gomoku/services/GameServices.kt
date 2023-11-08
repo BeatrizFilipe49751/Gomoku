@@ -71,13 +71,9 @@ class GameServices(private val transactionManager: TransactionManager) {
         return transactionManager.run {
             val pieceToPlay =
                 Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
-            val gameInfo = it.gameRepository.checkGameInfo(game.id) ?: throw NotFoundException("Game Not Found")
-            playChecks(
-                game = game,
-                pieceToPlay = pieceToPlay,
-                userId = userId,
-                turn = gameInfo
-            )
+            val gameInfo = it.gameRepository.checkGameInfo(game.id)
+                ?: throw NotFoundException("Game Not Found")
+            userTurnCheck(game = game, userId = userId, gameInfo = gameInfo)
             val newGame = game.play(pieceToPlay)
             if (newGame.state == FINISHED) {
                 val points = winPoints + bonusPoints
@@ -89,28 +85,22 @@ class GameServices(private val transactionManager: TransactionManager) {
             if (it.gameRepository.updateGame(newGame.toGameSerialized())){
                 AllGameInfo(newGame, gameInfo)
             }
-
             else throw IllegalStateException("Game failed to update")
         }
     }
 
-    private fun playChecks(game: Game, pieceToPlay: Piece, userId: Int, turn: GameInfo) {
-        if (game.state == FINISHED)
-            throw GameError(GameErrorMessages.GAME_FINISHED)
+    private fun userTurnCheck(game: Game, userId: Int, gameInfo: GameInfo) {
         when (game.currentTurn) {
             BLACK -> {
-                if (turn.player_black != userId) {
+                if (gameInfo.player_black != userId) {
                     throw GameError(GameErrorMessages.NOT_YOUR_TURN)
                 }
             }
             WHITE -> {
-                if (turn.player_white != userId) {
+                if (gameInfo.player_white != userId) {
                     throw GameError(GameErrorMessages.NOT_YOUR_TURN)
                 }
             }
         }
-        if (game.board.hasPiece(pieceToPlay))
-            throw GameError(GameErrorMessages.INVALID_PLAY)
-
     }
 }
