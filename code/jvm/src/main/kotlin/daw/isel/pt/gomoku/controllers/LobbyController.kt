@@ -39,7 +39,10 @@ class LobbyController(
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
                     userId = authUser.user.userId,
-                    name = lobbyIn.name
+                    name = lobbyIn.name,
+                    opening = lobbyIn.opening,
+                    variant = lobbyIn.variant,
+                    boardSize = lobbyIn.size
                 )
                 .toLobbyOut()
                 .toLobbySiren(authUser)
@@ -85,6 +88,8 @@ class LobbyController(
         val newGame = gameServices.createGame(
             name = lobby.name,
             playerBlack = lobby.p1,
+            opening= lobby.opening,
+            variant = lobby.variant,
             gameNumber = lobbyId,
             playerWhite = user.userId
         )

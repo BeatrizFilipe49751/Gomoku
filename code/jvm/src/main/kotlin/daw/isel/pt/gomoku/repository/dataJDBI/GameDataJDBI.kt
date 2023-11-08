@@ -16,13 +16,15 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
 
     override fun createGame(game: GameSerialized, gameNumber: Int, playerBlack: Int, playerWhite: Int): Boolean {
         val numRowsGame = handle.createUpdate( """
-            INSERT into games(gameid, board, name, state, turn)  
+            INSERT into games(gameid, board, name, opening, variant, state, turn)  
             VALUES (:gameId, :board, :name, :state, :turn)
         """.trimIndent()
         )
             .bind("gameId", game.gameId)
             .bind("board", game.board)
             .bind("name", game.name)
+            .bind("opening", game.opening)
+            .bind("variant", game.variant)
             .bind("state", game.state)
             .bind("turn", game.turn)
             .execute()

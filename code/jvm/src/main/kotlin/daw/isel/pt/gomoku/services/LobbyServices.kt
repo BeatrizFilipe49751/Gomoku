@@ -3,22 +3,32 @@ package daw.isel.pt.gomoku.services
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.game.Game
+import daw.isel.pt.gomoku.domain.game.Variant
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.*
 import org.springframework.stereotype.Component
 
 @Component
 class LobbyServices(private val transactionManager: TransactionManager) {
-    fun createLobby(userId: Int, name: String?): Lobby {
+    fun createLobby(userId: Int, name: String?, opening: Int?, variant: Int?, boardSize: Int?): Lobby {
         return transactionManager.run {
             if(it.usersRepository.getUser(userId) == null)
                 throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
-            if(name.isNullOrEmpty())
-                throw InvalidCredentialsException(LobbyErrorMessages.INVALID_NAME)
+            if(name.isNullOrEmpty() ||
+                opening == null ||
+                variant == null ||
+                boardSize == null
+                ) throw InvalidCredentialsException(LobbyErrorMessages.MISSING_PARAMETERS)
+            if( variant !in 1..Variant.values().last().id ||
+                opening !in 1..Variant.values().last().id
+                ) throw InvalidCredentialsException(LobbyErrorMessages.INVALID_RULES)
             if(it.lobbyRepository.isNotInLobby(userId))
                 it.lobbyRepository.createLobby(
                     userId = userId,
-                    name = name
+                    name = name,
+                    opening = opening,
+                    variant = variant,
+                    boardSize = boardSize
                 )
             else throw AlreadyInLobbyException(LobbyErrorMessages.USER_ALREADY_IN_LOBBY)
         }

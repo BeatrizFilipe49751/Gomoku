@@ -12,6 +12,8 @@ data class Game(
         val board : Board,
         val name: String,
         val state: GameState = ACTIVE,
+        val opening: Opening,
+        val variant: Variant,
         val currentTurn: PieceColor = BLACK
 ) {
         fun play(pieceToPlace: Piece): Game {

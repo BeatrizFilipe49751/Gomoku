@@ -5,7 +5,6 @@ import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 
 data class Row(val identifier: Int) {
     val index = BOARD_DIM - identifier
-
     companion object {
         val rows = (0 until BOARD_DIM).map { idx -> Row(BOARD_DIM - idx) }
         operator fun invoke(id: Int): Row {

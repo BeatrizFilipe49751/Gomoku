@@ -17,12 +17,20 @@ import java.util.*
 @Component
 class GameServices(private val transactionManager: TransactionManager) {
 
-    fun createGame(name: String, gameNumber: Int, playerBlack: Int, playerWhite: Int): AllGameInfo {
+    fun createGame(
+        name: String, gameNumber: Int,
+        opening: Int,
+        variant: Int,
+        playerBlack: Int,
+        playerWhite: Int
+    ): AllGameInfo {
         return transactionManager.run {
             val newGame = Game(
                 id = UUID.randomUUID().toString(),
                 board = Board(),
-                name = name
+                name = name,
+                opening = opening.toOpening(),
+                variant = variant.toVariant()
             )
 
             val wasCreated = it.gameRepository.createGame(
@@ -69,23 +77,26 @@ class GameServices(private val transactionManager: TransactionManager) {
 
     fun play(game: Game, userId: Int, row: Int, col: Int): AllGameInfo {
         return transactionManager.run {
-            val pieceToPlay =
-                Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
+            val pieceToPlay = Piece(Position(row.indexToRow(), col.indexToColumn()), game.currentTurn)
             val gameInfo = it.gameRepository.checkGameInfo(game.id)
                 ?: throw NotFoundException("Game Not Found")
             userTurnCheck(game = game, userId = userId, gameInfo = gameInfo)
-            val newGame = game.play(pieceToPlay)
-            if (newGame.state == FINISHED) {
-                val points = winPoints + bonusPoints
-                val username = it.usersRepository.getUsername(userId)
-                if (it.gameRepository.getLeaderboardUsername(username) != null)
-                    it.gameRepository.addUserPoints(username, points)
-                else it.gameRepository.addUserToLeaderboard(username, points)
+            try{
+                val newGame = game.play(pieceToPlay)
+                if (newGame.state == FINISHED) {
+                    val points = winPoints + bonusPoints
+                    val username = it.usersRepository.getUsername(userId)
+                    if (it.gameRepository.getLeaderboardUsername(username) != null)
+                        it.gameRepository.addUserPoints(username, points)
+                    else it.gameRepository.addUserToLeaderboard(username, points)
+                }
+                if (it.gameRepository.updateGame(newGame.toGameSerialized())){
+                    AllGameInfo(newGame, gameInfo)
+                }
+                else throw IllegalStateException("Game failed to update")
+            } catch(ex: IllegalStateException) {
+                throw GameError(ex.message ?: "No message provided")
             }
-            if (it.gameRepository.updateGame(newGame.toGameSerialized())){
-                AllGameInfo(newGame, gameInfo)
-            }
-            else throw IllegalStateException("Game failed to update")
         }
     }
 

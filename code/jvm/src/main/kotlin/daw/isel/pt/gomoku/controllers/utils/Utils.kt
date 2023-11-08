@@ -14,7 +14,9 @@ fun Game.toGameSerialized(): GameSerialized {
         name = this.name,
         board = this.board.serialize(),
         state = this.state.stateChar,
-        turn = this.currentTurn.color
+        turn = this.currentTurn.color,
+        opening = this.opening.id,
+        variant = this.variant.id
     )
 }
 
@@ -24,7 +26,9 @@ fun GameSerialized.toGame(): Game {
         board = Board.deserialize(this.board),
         name = name,
         state = this.state.toGameState(),
-        currentTurn = this.turn.toPieceColor()
+        currentTurn = this.turn.toPieceColor(),
+        opening = this.opening.toOpening(),
+        variant = this.variant.toVariant()
     )
 }
 
