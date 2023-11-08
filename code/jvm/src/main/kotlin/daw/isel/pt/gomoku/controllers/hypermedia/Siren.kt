@@ -6,6 +6,7 @@ data class Siren<T>(
     val properties: Map<String, String>,
     val actions: List<Action>,
     val entities: List<Entity>,
+    val links: List<Link>
 ) {
 
 }
@@ -25,11 +26,11 @@ data class Field(
 
 data class Entity(
     val cls: String,
-    val rel: String,
+    val rel: List<String>,
     val href: String
 )
 data class Link(
-    val rel: String,
+    val rel: List<String>,
     val href: String
 )
 

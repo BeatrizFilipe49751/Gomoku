@@ -43,7 +43,7 @@ class UserServices(private val transactionManager: TransactionManager, private v
         }
     }
 
-    fun createToken(email: String?, password:String?) : AuthUser {
+    fun login(email: String?, password:String?) : AuthUser {
         if (email.isNullOrEmpty() || password.isNullOrEmpty())
             throw InvalidCredentialsException(UserErrorMessages.PARAMETERS_MISSING)
 
@@ -74,7 +74,7 @@ class UserServices(private val transactionManager: TransactionManager, private v
         }
     }
 
-    fun removeToken(token: String): Boolean {
+    fun logout(token: String): Boolean {
         val tokenValidationInfo = usersDomain.createTokenValidationInformation(token)
         return transactionManager.run {
             it.usersRepository.removeToken(tokenValidationInfo)

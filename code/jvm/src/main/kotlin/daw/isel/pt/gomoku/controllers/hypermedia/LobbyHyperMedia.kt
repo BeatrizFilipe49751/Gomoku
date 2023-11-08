@@ -16,7 +16,7 @@ fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren<LobbyOut> {
         entities = listOf(
             Entity(
                 cls = userClassName,
-                rel = userClassName,
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= authUser.user.userId.toString()
@@ -24,7 +24,7 @@ fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren<LobbyOut> {
             ),
             Entity(
                 cls = className,
-                rel = "self",
+                rel = listOf("lobby"),
                 href = LobbyRoutes.GET_LOBBY.putParameters(
                     key= "lobbyId",
                     value= this.lobbyId.toString()
@@ -33,15 +33,8 @@ fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren<LobbyOut> {
         ),
         actions = listOf(
             Action(
-                name = "getLeaderBoards",
-                title = "Get the leaderboards of gomoku game",
-                method = "GET",
-                href = UserRoutes.GET_LEADERBOARD,
-                fields = listOf(),
-            ),
-            Action(
                 name= "logout",
-                title = "Logout",
+                title = "Logout of your account",
                 method = "POST",
                 href = UserRoutes.LOGOUT,
                 fields = listOf()
@@ -55,6 +48,12 @@ fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren<LobbyOut> {
                 ),
                 fields = listOf()
             )
+        ),
+        links = listOf(
+            Link(
+                rel= listOf("leaderboard"),
+                href = UserRoutes.GET_LEADERBOARD,
+            ),
         ),
     )
 }

@@ -17,7 +17,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
         entities = listOf(
             Entity(
                 cls = userClassName,
-                rel = userClassName,
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerBlack.toString()
@@ -25,7 +25,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
             ),
             Entity(
                 cls = userClassName,
-                rel = userClassName,
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerWhite.toString()
@@ -33,7 +33,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
             ),
             Entity(
                 cls = className,
-                rel = "self",
+                rel = listOf("game"),
                 href = GameRoutes.GET_GAME.putParameters(
                     key= "gameId",
                     value= this.gameId,
@@ -48,8 +48,8 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
                 href = GameRoutes.PLAY.putParameters(key="gameId", value=this.gameId),
                 fields = getFields(PlayIn::class.java)
             )
-
         ),
+        links = listOf()
     )
 }
 
@@ -62,7 +62,7 @@ fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
         entities = listOf(
             Entity(
                 cls = userClassName,
-                rel = userClassName,
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerBlack.toString()
@@ -70,7 +70,7 @@ fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
             ),
             Entity(
                 cls = userClassName,
-                rel = userClassName,
+                rel = listOf("user"),
                 href = UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerWhite.toString()
@@ -78,5 +78,6 @@ fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
             )
         ),
         actions = listOf(),
+        links = listOf()
     )
 }

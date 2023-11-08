@@ -42,7 +42,7 @@ class UserController(val userServices: UserServices) {
         ResponseEntity
             .status(HttpStatus.OK)
             .body(
-                userServices.createToken(
+                userServices.login(
                     email = userInLogin.email,
                     password = userInLogin.password
                 ).toAuthUserSiren()
@@ -50,7 +50,7 @@ class UserController(val userServices: UserServices) {
 
     @PostMapping(UserRoutes.LOGOUT)
     fun logout(authedUser : AuthUser): ResponseEntity<Siren<UserOut>>  {
-        userServices.removeToken(authedUser.token)
+        userServices.logout(authedUser.token)
         val user = authedUser.user.toUserOut()
         return ResponseEntity
             .status(HttpStatus.OK)

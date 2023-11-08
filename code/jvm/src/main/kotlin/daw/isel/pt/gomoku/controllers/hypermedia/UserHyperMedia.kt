@@ -17,7 +17,7 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
         entities = listOf(
             Entity(
                 cls = className,
-                rel = this::class.java.simpleName,
+                rel = arrayOf("user") ,
                 href = UserRoutes.GET_USER.putParameters("userId", this.userId.toString()),
             )
         ),
@@ -43,7 +43,8 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
                 href = UserRoutes.GET_LEADERBOARD,
                 fields = listOf(),
             ),
-        )
+        ),
+        links = listOf()
     )
 }
 
@@ -55,23 +56,16 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
         entities = listOf(
             Entity(
                 cls = className,
-                rel = this::class.java.simpleName,
+                rel = arrayOf("user"),
                 href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
             ),
             Entity(
                 cls = className,
-                rel = this::class.java.simpleName,
+                rel = arrayOf("user"),
                 href = UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
             )
         ),
         actions = listOf(
-            Action(
-                name = "getLeaderBoards",
-                title = "Get the leaderboards of gomoku game",
-                method = "GET",
-                href = UserRoutes.GET_LEADERBOARD,
-                fields = listOf(),
-            ),
             Action(
                 name="logout",
                 title = "Logout",
@@ -100,6 +94,12 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
                 href = LobbyRoutes.JOIN_LOBBY.putParameters("lobbyId", "123"),
                 fields = listOf(),
             ),
+        ),
+        links = listOf(
+            Link(
+                rel= "",
+                href = UserRoutes.GET_LEADERBOARD
+            )
         )
     )
 }

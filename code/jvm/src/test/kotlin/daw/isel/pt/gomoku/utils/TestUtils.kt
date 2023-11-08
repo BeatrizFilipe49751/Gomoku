@@ -71,7 +71,7 @@ object TestUtils {
             newTestEmail(),
             password
         )
-        val tokenRes = userServices.createToken(user.email, password)
+        val tokenRes = userServices.login(user.email, password)
         return UserInfo(user, tokenRes.token)
     }
     fun joinLobby(userInfo: UserInfo, lobby: Lobby): Boolean {
