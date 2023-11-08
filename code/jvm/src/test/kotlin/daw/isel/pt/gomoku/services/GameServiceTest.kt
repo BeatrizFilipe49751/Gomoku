@@ -98,7 +98,7 @@ class GameServiceTest {
         val game = gameInfo.game
         val user1 = gameInfo.user1
         val ex = assertFailsWith<GameError> { gameServices.play(game, user1.user.userId, 15, 15)  }
-        assertEquals(GameErrorMessages.INDEX_OUT_OF_BOUNDS, ex.message)
+        assertEquals(GameErrorMessages.indexOutOfBoundsMessage, ex.message)
     }
 
     @Test

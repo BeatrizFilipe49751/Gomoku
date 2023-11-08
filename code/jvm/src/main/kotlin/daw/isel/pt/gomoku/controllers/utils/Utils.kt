@@ -78,18 +78,19 @@ fun String.putParameters(key: String, value: String) : String {
 const val emptySquare = "| "
 const val blackPiece = "|B"
 const val whitePiece = "|W"
-val boardLine = "--".repeat(BOARD_DIM) + " \n"
+val boardLine = "--".repeat(BOARD_DIM_MIN) + " \n"
 
 fun Game.gameString(): String {
     val game = this
+    val boardDim = game.board.size
     var boardString = ""
     boardString +=
         "GAME: ${game.name} IS ${if (game.state == ACTIVE) "ACTIVE" else "FINISHED"} \n "
 
-    repeat(BOARD_DIM) { row ->
+    repeat(boardDim) { row ->
         boardString += boardLine
-        repeat(BOARD_DIM) { col ->
-            val piece = game.board.pieces.find { it.position == Position(row, col) }
+        repeat(boardDim) { col ->
+            val piece = game.board.pieces.find { it.position == Position(row, col, boardDim) }
             boardString += if (piece != null)
                 if (piece.color == PieceColor.BLACK) blackPiece
                 else whitePiece

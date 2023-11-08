@@ -3,17 +3,12 @@ package daw.isel.pt.gomoku.domain.game
 import daw.isel.pt.gomoku.services.exceptions.GameError
 import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 
-data class Row(val identifier: Int) {
-    val index = BOARD_DIM - identifier
+data class Row(val identifier: Int, val boardDim: Int) {
+    val index = boardDim - identifier
     companion object {
-        val rows = (0 until BOARD_DIM).map { idx -> Row(BOARD_DIM - idx) }
-        operator fun invoke(id: Int): Row {
-            require(id in 1..BOARD_DIM)
-            val idx = id - 1
-            return rows[idx - 1]
-        }
+        fun rows(boardDim: Int) = (0 until boardDim).map { idx -> Row(boardDim - idx, boardDim) }
     }
 }
 
-fun Int.indexToRow() = Row.rows.find { it.index == this }
-    ?: throw GameError(GameErrorMessages.INDEX_OUT_OF_BOUNDS)
+fun Int.indexToRow(boardDim: Int) = Row.rows(boardDim).find { it.index == this }
+    ?: throw GameError(GameErrorMessages.indexOutOfBoundsMessage(boardDim - 1))
