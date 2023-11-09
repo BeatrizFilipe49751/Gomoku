@@ -17,8 +17,8 @@ class LobbyServices(private val transactionManager: TransactionManager) {
             if(it.usersRepository.getUser(userId) == null)
                 throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
             if(name.isNullOrEmpty()) throw InvalidCredentialsException(LobbyErrorMessages.MISSING_PARAMETERS)
-            if( variant !in 1..Variant.values().last().id ||
-                opening !in 1..Variant.values().last().id
+            if( (variant != null && variant !in 1..Variant.values().last().id) ||
+                (variant != null && variant !in 1..Variant.values().last().id)
                 ) throw InvalidCredentialsException(LobbyErrorMessages.INVALID_RULES)
             if(it.lobbyRepository.isNotInLobby(userId))
                 it.lobbyRepository.createLobby(

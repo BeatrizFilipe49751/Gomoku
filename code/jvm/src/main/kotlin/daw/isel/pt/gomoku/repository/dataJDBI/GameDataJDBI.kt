@@ -62,7 +62,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
 
     override fun checkGameStarted(gameNumber: Int): GameSerialized? {
         return handle.createQuery("""
-             SELECT gameid, board, name, state, turn  from games where gameid =
+             SELECT gameid, name, opening, variant, board, state, turn from games where gameid =
              (
                  SELECT game from game_users 
                  where  game_number = :gameNumber
