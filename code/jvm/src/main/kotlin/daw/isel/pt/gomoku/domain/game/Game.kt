@@ -34,8 +34,8 @@ data class Game(
                                 val pair = element.pair
                                 val currentCheck =
                                         board.positionHasColoredPiece(
-                                                p.position.row.index + (i * pair.first) ,
                                                 p.position.column.index + (i * pair.second),
+                                                p.position.row.index + (i * pair.first) ,
                                                 p.color
                                         )
                                 if (currentCheck)

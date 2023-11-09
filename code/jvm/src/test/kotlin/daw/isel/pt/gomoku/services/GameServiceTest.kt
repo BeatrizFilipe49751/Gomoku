@@ -60,8 +60,8 @@ class GameServiceTest {
         assertTrue(playedGameB.game.board.pieces.contains(
             Piece(
                 Position(
-                    0.indexToRow(smallBoard),
-                    0.indexToColumn(smallBoard)
+                    row =0.indexToRow(smallBoard),
+                    column = 0.indexToColumn(smallBoard)
                 ),
                 PieceColor.BLACK
             )
@@ -73,15 +73,15 @@ class GameServiceTest {
             listOf(
                 Piece(
                     Position(
+                        0.indexToColumn(smallBoard),
                         0.indexToRow(smallBoard),
-                        0.indexToColumn(smallBoard)
                     ),
                     PieceColor.BLACK
                 ),
                 Piece(
                     Position(
-                        12.indexToRow(smallBoard),
-                        12.indexToColumn(smallBoard)
+                        12.indexToColumn(smallBoard),
+                        12.indexToRow(smallBoard)
                     ),
                     PieceColor.WHITE
                 )
@@ -104,7 +104,7 @@ class GameServiceTest {
         val allGameInfo = createNewGame()
         val game = allGameInfo.game
         val user1 = allGameInfo.gameInfo.player_black
-        val ex = assertFailsWith<GameError> { gameServices.play(game, user1, 15, 15)  }
+        val ex = assertFailsWith<GameError> { gameServices.play(game, user1, 30, 30)  }
         assertEquals(GameErrorMessages.indexOutOfBoundsMessage(smallBoard - 1), ex.message)
     }
 

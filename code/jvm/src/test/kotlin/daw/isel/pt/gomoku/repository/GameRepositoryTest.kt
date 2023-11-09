@@ -72,7 +72,7 @@ class GameRepositoryTest {
             user.user.userId,
             otherUser.user.userId
         )
-        val pos = Position(0.indexToRow(smallBoard), 0.indexToColumn(smallBoard))
+        val pos = Position( row= 0.indexToRow(smallBoard), column= 0.indexToColumn(smallBoard))
         val piece = Piece(
             position = pos,
             BLACK

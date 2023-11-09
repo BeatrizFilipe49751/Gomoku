@@ -1,16 +1,16 @@
 package daw.isel.pt.gomoku.domain.game
 
 
-data class Position(val row: Row, val column: Column){
+data class Position(val column: Column, val row: Row){
     companion object {
         fun deserialize(pos: String, boardDim: Int): Position {
             val params = pos.split(":")
             check(params.size == 2) {"Position Parameter size wrong"}
-            check(params[0].all { it.isDigit() }) {"Row index is not a number"}
-            check(params[1].all { it.isDigit() }) {"Column index is not a number"}
+            check(params[0].all { it.isDigit() }) {"Column index is not a number"}
+            check(params[1].all { it.isDigit() }) {"Row index is not a number"}
             return Position(
-                params[0].toInt().indexToRow(boardDim),
-                params[1].toInt().indexToColumn(boardDim)
+                params[0].toInt().indexToColumn(boardDim),
+                params[1].toInt().indexToRow(boardDim),
             )
         }
     }
@@ -26,5 +26,5 @@ data class Position(val row: Row, val column: Column){
         DOWN_RIGHT(Pair(1, -1))
     }
 
-    override fun toString() = "${row.index}:${column.index}"
+    override fun toString() = "${column.index}:${row.index}"
 }

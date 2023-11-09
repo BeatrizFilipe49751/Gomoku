@@ -25,9 +25,9 @@ data class Board(val size: Int = BOARD_DIM_MIN, val pieces: List<Piece> = emptyL
 
     fun hasPiece(p: Piece) = pieces.find { it.position == p.position } != null
 
-    fun positionHasColoredPiece(row: Int, col: Int, color: PieceColor) =
+    fun positionHasColoredPiece(col: Int, row: Int, color: PieceColor) =
         try {
-            val piece = pieces.find { it.position == Position(row.indexToRow(size), col.indexToColumn(size)) }
+            val piece = pieces.find { it.position == Position(col.indexToColumn(size), row.indexToRow(size),) }
             piece != null && piece.color == color
         } catch (_: Exception) {
             false

@@ -91,8 +91,8 @@ fun Game.gameString(): String {
         repeat(boardDim) { col ->
             val piece = game.board.pieces.find {
                 it.position == Position(
+                    col.indexToColumn(boardDim),
                     row.indexToRow(boardDim),
-                    col.indexToColumn(boardDim)
                 )
             }
             boardString += if (piece != null)

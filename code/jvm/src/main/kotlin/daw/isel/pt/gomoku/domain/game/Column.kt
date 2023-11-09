@@ -12,4 +12,4 @@ data class Column(val symbol: Char) {
 }
 
 fun Int.indexToColumn(boardDim: Int) = Column.columns(boardDim).find { it.index == this }
-    ?: throw GameError(GameErrorMessages.indexOutOfBoundsMessage(boardDim))
+    ?: throw GameError(GameErrorMessages.indexOutOfBoundsMessage(boardDim - 1))
