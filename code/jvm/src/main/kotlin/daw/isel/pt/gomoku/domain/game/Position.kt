@@ -2,6 +2,9 @@ package daw.isel.pt.gomoku.domain.game
 
 
 data class Position(val column: Column, val row: Row){
+    constructor(x: Int, y: Int, boardDim: Int)
+            : this(x.indexToColumn(boardDim), y.indexToRow(boardDim))
+
     companion object {
         fun deserialize(pos: String, boardDim: Int): Position {
             val params = pos.split(":")
