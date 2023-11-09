@@ -8,6 +8,7 @@ import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.*
 import daw.isel.pt.gomoku.repository.dataJDBI.GameDataJDBI
 import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.smallBoard
 import java.util.*
 import kotlin.random.Random
 import kotlin.test.*
@@ -23,10 +24,17 @@ class GameRepositoryTest {
                 id = UUID.randomUUID().toString(),
                 board = Board(),
                 name = newGameName(),
+                opening = Opening.PRO,
+                variant = Variant.FREESTYLE
             )
         val user = createUserAndLogin()
         val otherUser = createUserAndLogin()
-        assertTrue {  repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)}
+        assertTrue {  repo.createGame(
+            game.toGameSerialized(),
+            Random.nextLong().toInt(),
+            user.user.userId,
+            otherUser.user.userId)
+        }
     }
 
     @Test
@@ -36,12 +44,13 @@ class GameRepositoryTest {
             id = UUID.randomUUID().toString(),
             board = Board(),
             name = newGameName(),
+            opening = Opening.PRO,
+            variant = Variant.FREESTYLE
         )
         val user = createUserAndLogin()
         val otherUser = createUserAndLogin()
         val serializedGame = game.toGameSerialized()
         repo.createGame(serializedGame, Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)
-
         assertEquals(serializedGame, repo.getGame(game.id))
     }
 
@@ -52,11 +61,23 @@ class GameRepositoryTest {
             id = UUID.randomUUID().toString(),
             board = Board(),
             name = newGameName(),
+            opening = Opening.FREESTYLE,
+            variant = Variant.FREESTYLE
         )
         val user = createUserAndLogin()
         val otherUser = createUserAndLogin()
-        repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)
-        val newGame = game.play(Piece(position = Position(0, 0), BLACK))
+        repo.createGame(
+            game.toGameSerialized(),
+            Random.nextLong().toInt(),
+            user.user.userId,
+            otherUser.user.userId
+        )
+        val pos = Position(0.indexToRow(smallBoard), 0.indexToColumn(smallBoard))
+        val piece = Piece(
+            position = pos,
+            BLACK
+        )
+        val newGame = game.play(piece)
         assertTrue { repo.updateGame(newGame.toGameSerialized()) }
     }
 

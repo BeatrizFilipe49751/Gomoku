@@ -1,10 +1,13 @@
 package daw.isel.pt.gomoku.repository
 
+import daw.isel.pt.gomoku.domain.game.Opening
+import daw.isel.pt.gomoku.domain.game.Variant
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
 import daw.isel.pt.gomoku.repository.dataJDBI.LobbyDataJDBI
 import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.smallBoard
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -19,7 +22,13 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
 
         val user = createUserAndLogin()
-        val newLobby = lobbyRepo.createLobby(user.user.userId, newLobbyName())
+        val newLobby = lobbyRepo.createLobby(
+            userId = user.user.userId,
+            name= newLobbyName(),
+            opening = Opening.PRO.id,
+            variant = Variant.FREESTYLE.id,
+            boardSize = smallBoard
+            )
         assertTrue {  newLobby.p1 == user.user.userId && newLobby.p2 == null }
     }
 
@@ -28,7 +37,13 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
 
         val user = createUserAndLogin()
-        val newLobby = lobbyRepo.createLobby(user.user.userId, newLobbyName())
+        val newLobby = lobbyRepo.createLobby(
+            userId = user.user.userId,
+            name = newLobbyName(),
+            opening = Opening.PRO.id,
+            variant = Variant.FREESTYLE.id,
+            boardSize = smallBoard
+        )
 
         val otherUser = createUserAndLogin()
         assertTrue { lobbyRepo.joinLobby(newLobby.lobbyId, otherUser.user.userId) }
@@ -41,9 +56,17 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
 
         val user = createUserAndLogin()
-        val newLobby = lobbyRepo.createLobby(user.user.userId, newLobbyName())
+        val newLobby = lobbyRepo.createLobby(
+            userId= user.user.userId,
+            name= newLobbyName(),
+            opening = Opening.PRO.id,
+            variant = Variant.FREESTYLE.id,
+            boardSize = smallBoard
+            )
 
-        assertTrue {lobbyRepo.deleteLobby(newLobby.lobbyId)}
+        assertTrue {
+            lobbyRepo.deleteLobby(newLobby.lobbyId)
+        }
     }
 
     @Test
@@ -51,7 +74,13 @@ class LobbyRepositoryTests {
         val lobbyRepo = LobbyDataJDBI(it)
         val user = createUserAndLogin()
         val otherUser = createUserAndLogin()
-        val newLobby = lobbyRepo.createLobby(user.user.userId, newLobbyName())
+        val newLobby = lobbyRepo.createLobby(
+            userId = user.user.userId,
+            name = newLobbyName(),
+            opening = Opening.PRO.id,
+            variant = Variant.FREESTYLE.id,
+            boardSize = smallBoard
+        )
         lobbyRepo.joinLobby(newLobby.lobbyId, otherUser.user.userId)
         assertTrue {lobbyRepo.quitLobby(newLobby.lobbyId, otherUser.user.userId)}
     }

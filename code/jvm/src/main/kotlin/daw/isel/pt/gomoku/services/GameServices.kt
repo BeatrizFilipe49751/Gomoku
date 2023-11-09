@@ -18,7 +18,8 @@ import java.util.*
 class GameServices(private val transactionManager: TransactionManager) {
 
     fun createGame(
-        name: String, gameNumber: Int,
+        name: String,
+        gameNumber: Int,
         opening: Int,
         variant: Int,
         playerBlack: Int,

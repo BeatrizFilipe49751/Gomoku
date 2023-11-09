@@ -5,7 +5,13 @@ import daw.isel.pt.gomoku.repository.interfaces.LobbyRepository
 import org.jdbi.v3.core.Handle
 
 class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
-    override fun createLobby(userId: Int, name: String, opening: Int, variant: Int, boardSize: Int): Lobby {
+    override fun createLobby(
+        userId: Int,
+        name: String,
+        opening: Int,
+        variant: Int,
+        boardSize: Int
+    ): Lobby {
         val lobbyId = handle.createQuery("""
             insert into lobby(p1,p2,name, opening, variant, boardSize)
             values (:p1, null, :name, :opening, :variant, :boardSize) RETURNING lobbyId
@@ -14,7 +20,7 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
             .bind("name", name)
             .bind("opening", opening)
             .bind("variant", variant)
-            .bind("size", boardSize)
+            .bind("boardSize", boardSize)
             .mapTo(Int::class.java)
             .single()
         return Lobby(

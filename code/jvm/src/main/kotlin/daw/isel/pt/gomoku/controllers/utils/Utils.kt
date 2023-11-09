@@ -86,11 +86,15 @@ fun Game.gameString(): String {
     var boardString = ""
     boardString +=
         "GAME: ${game.name} IS ${if (game.state == ACTIVE) "ACTIVE" else "FINISHED"} \n "
-
     repeat(boardDim) { row ->
         boardString += boardLine
         repeat(boardDim) { col ->
-            val piece = game.board.pieces.find { it.position == Position(row, col, boardDim) }
+            val piece = game.board.pieces.find {
+                it.position == Position(
+                    row.indexToRow(boardDim),
+                    col.indexToColumn(boardDim)
+                )
+            }
             boardString += if (piece != null)
                 if (piece.color == PieceColor.BLACK) blackPiece
                 else whitePiece

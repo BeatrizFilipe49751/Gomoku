@@ -13,23 +13,6 @@ data class Position(val row: Row, val column: Column){
                 params[1].toInt().indexToColumn(boardDim)
             )
         }
-
-        private fun grid(bd: Int) = (0 until (bd*bd)).map{
-                idx -> Position((idx / bd).indexToRow(bd), (idx % bd).indexToColumn(bd), bd)
-        }
-
-        operator fun invoke(r: Int, c: Int, bd: Int): Position {
-            require(r in 0 until bd) { "Illegal coordinates must be between 0 and ${bd - 1}" }
-            require(c in 0 until bd) { "Illegal coordinates must be between 0 and ${bd - 1}" }
-            val index = r * bd + c
-            return grid(bd)[index]
-        }
-        operator fun invoke(r: Row, c: Column, bd: Int): Position {
-            require(r.index in 0 until bd) { "Illegal coordinates must be between 0 and ${bd - 1}" }
-            require(c.index in 0 until bd) { "Illegal coordinates must be between 0 and ${bd - 1}" }
-            val index = r.index * bd + c.index
-            return grid(bd)[index]
-        }
     }
 
     enum class DirectionMath(val pair: Pair<Int, Int>) {

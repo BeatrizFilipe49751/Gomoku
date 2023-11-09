@@ -1,6 +1,8 @@
 package daw.isel.pt.gomoku.utils
 
 import daw.isel.pt.gomoku.domain.*
+import daw.isel.pt.gomoku.domain.game.Opening
+import daw.isel.pt.gomoku.domain.game.Variant
 import daw.isel.pt.gomoku.repository.dataJDBI.mappers.PasswordValidationInfoMapper
 import daw.isel.pt.gomoku.repository.dataJDBI.transactions.JdbiTransactionManager
 import daw.isel.pt.gomoku.services.GameServices
@@ -64,17 +66,16 @@ object TestUtils {
     ),
 
     )
-    fun createUserAndLogin(): UserInfo {
+    fun createUserAndLogin(): AuthUser {
         val password = newTestPassword()
         val user = userServices.createUser(
             newTestUserName(),
             newTestEmail(),
             password
         )
-        val tokenRes = userServices.login(user.email, password)
-        return UserInfo(user, tokenRes.token)
+        return userServices.login(user.email, password)
     }
-    fun joinLobby(userInfo: UserInfo, lobby: Lobby): Boolean {
+    fun joinLobby(userInfo: AuthUser, lobby: Lobby): Boolean {
         return lobbyServices
             .joinLobby(
                 userId = userInfo.user.userId,
@@ -82,21 +83,24 @@ object TestUtils {
             )
     }
 
-    fun createLobby(userInfo: UserInfo): Lobby {
+    fun  createLobby(userInfo: AuthUser): Lobby {
         return lobbyServices
             .createLobby(
                 userId = userInfo.user.userId,
-                name = newLobbyName()
+                name = newLobbyName(),
+                Opening.PRO.id,
+                Variant.FREESTYLE.id,
+                smallBoard
             )
     }
-
-    data class UserInfo(val user: User, val token: String)
-
 
     fun newGameName() = "game-${abs(Random.nextLong())}"
     fun newTestUserName() = "user-${abs(Random.nextLong())}"
     fun newTestPassword() = "password-A#${abs(Random.nextLong())}"
     fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
     fun newLobbyName() = "lobby-${abs(Random.nextLong())}"
+
+    val bigBoard = 19
+    val smallBoard = 15
 
 }
