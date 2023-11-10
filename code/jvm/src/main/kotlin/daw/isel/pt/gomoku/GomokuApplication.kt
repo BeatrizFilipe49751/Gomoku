@@ -10,8 +10,8 @@ import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import kotlin.time.Duration.Companion.hours
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import kotlin.time.Duration.Companion.hours
 
 @SpringBootApplication
 class GomokuApplication{

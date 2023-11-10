@@ -7,9 +7,11 @@ import daw.isel.pt.gomoku.domain.Token
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.UserLogic
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
-import daw.isel.pt.gomoku.services.exceptions.*
-import org.springframework.stereotype.Component
+import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
+import daw.isel.pt.gomoku.services.exceptions.NotFoundException
+import daw.isel.pt.gomoku.services.exceptions.UserErrorMessages
 import kotlinx.datetime.Clock
+import org.springframework.stereotype.Component
 
 @Component
 class UserServices(private val transactionManager: TransactionManager, private val clock: Clock,

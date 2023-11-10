@@ -1,10 +1,10 @@
 package daw.isel.pt.gomoku.repository
 
+import daw.isel.pt.gomoku.repository.dataJDBI.LobbyDataJDBI
+import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
-import daw.isel.pt.gomoku.repository.dataJDBI.LobbyDataJDBI
-import daw.isel.pt.gomoku.utils.TestUtils
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

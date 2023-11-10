@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.repository.interfaces
 
-import daw.isel.pt.gomoku.controllers.models.GameSerialized
 import daw.isel.pt.gomoku.controllers.models.GameInfo
+import daw.isel.pt.gomoku.controllers.models.GameSerialized
 
 interface GameRepository {
     fun getGame(gameId: String): GameSerialized?

@@ -1,9 +1,9 @@
 package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
+import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
-import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyInfo
@@ -17,13 +17,7 @@ import daw.isel.pt.gomoku.services.LobbyServices
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class LobbyController(

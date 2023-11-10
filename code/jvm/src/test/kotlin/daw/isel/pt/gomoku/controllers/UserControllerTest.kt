@@ -1,14 +1,13 @@
 package daw.isel.pt.gomoku.controllers
 
-import daw.isel.pt.gomoku.utils.TestUtils.createNewClient
-import daw.isel.pt.gomoku.utils.TestUtils.newTestEmail
-import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
 import daw.isel.pt.gomoku.services.exceptions.UserErrorMessages
 import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.createNewClient
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
+import daw.isel.pt.gomoku.utils.TestUtils.newTestEmail
 import daw.isel.pt.gomoku.utils.TestUtils.newTestPassword
-
+import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort

@@ -1,7 +1,5 @@
 package daw.isel.pt.gomoku.domain.game
 
-import java.lang.IllegalStateException
-
 enum class Opening(val id: Int) {
     PRO(1),
     LONG_PRO(2),

@@ -4,8 +4,8 @@ import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.game.*
-import daw.isel.pt.gomoku.domain.game.GameState.*
-
+import daw.isel.pt.gomoku.domain.game.GameState.ACTIVE
+import daw.isel.pt.gomoku.domain.game.GameState.FINISHED
 
 
 fun Game.toGameSerialized(): GameSerialized {

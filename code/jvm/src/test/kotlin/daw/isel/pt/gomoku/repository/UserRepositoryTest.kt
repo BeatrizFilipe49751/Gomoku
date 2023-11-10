@@ -1,9 +1,9 @@
 package daw.isel.pt.gomoku.repository
 
-import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
 import daw.isel.pt.gomoku.repository.dataJDBI.UsersDataJDBI
 import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
+import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
 import kotlin.test.*
 
 class UserRepositoryTest {

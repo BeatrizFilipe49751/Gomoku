@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.domain.game
 
-import daw.isel.pt.gomoku.domain.game.GameState.*
+import daw.isel.pt.gomoku.domain.game.GameState.ACTIVE
+import daw.isel.pt.gomoku.domain.game.GameState.FINISHED
 import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
 import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 

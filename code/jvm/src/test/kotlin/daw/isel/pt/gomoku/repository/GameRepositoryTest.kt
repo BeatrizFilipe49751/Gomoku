@@ -1,13 +1,16 @@
 package daw.isel.pt.gomoku.repository
 
+import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
+import daw.isel.pt.gomoku.domain.game.Board
+import daw.isel.pt.gomoku.domain.game.Game
+import daw.isel.pt.gomoku.domain.game.Piece
+import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
+import daw.isel.pt.gomoku.domain.game.Position
+import daw.isel.pt.gomoku.repository.dataJDBI.GameDataJDBI
+import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.newGameName
 import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
-import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
-import daw.isel.pt.gomoku.domain.game.*
-import daw.isel.pt.gomoku.domain.game.PieceColor.*
-import daw.isel.pt.gomoku.repository.dataJDBI.GameDataJDBI
-import daw.isel.pt.gomoku.utils.TestUtils
 import java.util.*
 import kotlin.random.Random
 import kotlin.test.*

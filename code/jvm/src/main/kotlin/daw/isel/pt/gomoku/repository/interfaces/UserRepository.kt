@@ -1,6 +1,9 @@
 package daw.isel.pt.gomoku.repository.interfaces
 import daw.isel.pt.gomoku.controllers.models.UserPoints
-import daw.isel.pt.gomoku.domain.*
+import daw.isel.pt.gomoku.domain.PasswordValidationInfo
+import daw.isel.pt.gomoku.domain.Token
+import daw.isel.pt.gomoku.domain.TokenValidationInfo
+import daw.isel.pt.gomoku.domain.User
 import kotlinx.datetime.Instant
 
 interface UserRepository {

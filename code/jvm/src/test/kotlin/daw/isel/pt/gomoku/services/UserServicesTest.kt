@@ -1,10 +1,10 @@
 package daw.isel.pt.gomoku.services
 
-import daw.isel.pt.gomoku.utils.TestUtils.newTestEmail
-import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.newTestEmail
 import daw.isel.pt.gomoku.utils.TestUtils.newTestPassword
+import daw.isel.pt.gomoku.utils.TestUtils.newTestUserName
 import daw.isel.pt.gomoku.utils.TestUtils.userServices
 import kotlin.test.*
 

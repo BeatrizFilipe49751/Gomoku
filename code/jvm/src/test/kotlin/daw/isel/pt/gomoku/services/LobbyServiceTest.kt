@@ -1,10 +1,10 @@
 package daw.isel.pt.gomoku.services
 
-import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
-import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
 import daw.isel.pt.gomoku.utils.TestUtils
+import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.lobbyServices
+import daw.isel.pt.gomoku.utils.TestUtils.newLobbyName
 import kotlin.test.*
 
 class LobbyServiceTest {

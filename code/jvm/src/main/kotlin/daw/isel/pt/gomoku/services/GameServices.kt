@@ -6,12 +6,15 @@ import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
-import daw.isel.pt.gomoku.domain.game.GameState.*
-import daw.isel.pt.gomoku.domain.game.PieceColor.*
+import daw.isel.pt.gomoku.domain.game.GameState.FINISHED
+import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
+import daw.isel.pt.gomoku.domain.game.PieceColor.WHITE
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
-import daw.isel.pt.gomoku.services.exceptions.*
+import daw.isel.pt.gomoku.services.exceptions.GameError
+import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
+import daw.isel.pt.gomoku.services.exceptions.NotFoundException
+import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import org.springframework.stereotype.Component
-import java.lang.IllegalStateException
 import java.util.*
 
 @Component

@@ -1,6 +1,5 @@
 package daw.isel.pt.gomoku.controllers.models
 
-import com.fasterxml.jackson.core.Base64Variant
 import daw.isel.pt.gomoku.domain.game.Game
 
 data class UserOut(val userId: Int, val username: String, val email: String)

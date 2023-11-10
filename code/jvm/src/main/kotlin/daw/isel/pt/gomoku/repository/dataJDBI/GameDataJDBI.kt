@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.repository.dataJDBI
 
-import daw.isel.pt.gomoku.controllers.models.GameSerialized
 import daw.isel.pt.gomoku.controllers.models.GameInfo
+import daw.isel.pt.gomoku.controllers.models.GameSerialized
 import daw.isel.pt.gomoku.repository.interfaces.GameRepository
 import org.jdbi.v3.core.Handle
 
