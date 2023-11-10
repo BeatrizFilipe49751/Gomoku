@@ -11,6 +11,7 @@ import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.newGameName
 import daw.isel.pt.gomoku.utils.TestUtils.runWithHandle
+import daw.isel.pt.gomoku.utils.TestUtils.smallBoard
 import java.util.*
 import kotlin.random.Random
 import kotlin.test.*
@@ -59,7 +60,7 @@ class GameRepositoryTest {
         val user = createUserAndLogin()
         val otherUser = createUserAndLogin()
         repo.createGame(game.toGameSerialized(), Random.nextLong().toInt(), user.user.userId, otherUser.user.userId)
-        val newGame = game.play(Piece(position = Position(0, 0), BLACK))
+        val newGame = game.play(Piece(position = Position(0, 0, smallBoard), BLACK))
         assertTrue { repo.updateGame(newGame.toGameSerialized()) }
     }
 
