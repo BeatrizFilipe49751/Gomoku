@@ -1,16 +1,16 @@
 package daw.isel.pt.gomoku.services
 
-import daw.isel.pt.gomoku.domain.Lobby
+import daw.isel.pt.gomoku.controllers.models.AllGameInfo
 import daw.isel.pt.gomoku.domain.game.*
 import daw.isel.pt.gomoku.services.exceptions.GameError
 import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
 import daw.isel.pt.gomoku.utils.TestUtils
-import daw.isel.pt.gomoku.utils.TestUtils.UserInfo
 import daw.isel.pt.gomoku.utils.TestUtils.createLobby
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
 import daw.isel.pt.gomoku.utils.TestUtils.gameServices
 import daw.isel.pt.gomoku.utils.TestUtils.newGameName
+import daw.isel.pt.gomoku.utils.TestUtils.smallBoard
 import kotlin.test.*
 
 class GameServiceTest {
@@ -18,15 +18,22 @@ class GameServiceTest {
     fun resetInit() = TestUtils.resetDatabase()
     @Test
     fun `Create a game successfully`() {
-        val user1 = createUserAndLogin()
-        val user2 = createUserAndLogin()
-        val lobby = createLobby(user1)
+        val authedUser1 = createUserAndLogin()
+        val authedUser2 = createUserAndLogin()
+        val lobby = createLobby(authedUser1)
         val gameName = newGameName()
-        val game = gameServices.createGame(gameName, lobby.lobbyId, user1.user.userId, user2.user.userId)
-        assertEquals(gameName, game.name)
-        assertTrue(game.board.isEmptyBoard)
-        assertEquals('A', game.state.stateChar)
-        assertEquals('b', game.currentTurn.color)
+        val allgameinfo = gameServices.createGame(
+            name=gameName,
+            gameNumber= lobby.lobbyId,
+            opening = Opening.FREESTYLE.id,
+            variant = Variant.FREESTYLE.id,
+            playerBlack = authedUser1.user.userId,
+            playerWhite = authedUser2.user.userId
+        )
+        assertEquals(gameName, allgameinfo.game.name)
+        assertTrue(allgameinfo.game.board.isEmptyBoard)
+        assertEquals('A', allgameinfo.game.state.stateChar)
+        assertEquals('b', allgameinfo.game.currentTurn.color)
     }
 
     @Test
@@ -42,39 +49,39 @@ class GameServiceTest {
 
     @Test
     fun `Execute two plays successfully`() {
-        val gameInfo = createNewGame()
-        val game = gameInfo.game
-        val user1 = gameInfo.user1
-        val user2 = gameInfo.user2
-        val playedGameB = gameServices.play(game, user1.user.userId, 0, 0)
-        assertGameInfoAfterPlay(game, playedGameB)
-        assertFalse(playedGameB.board.isEmptyBoard)
-        assertTrue(playedGameB.board.pieces.size == 1)
-        assertTrue(playedGameB.board.pieces.contains(
+        val allGameInfo = createNewGame()
+        val game = allGameInfo.game
+        val user1 = allGameInfo.gameInfo.player_black
+        val user2 = allGameInfo.gameInfo.player_white
+        val playedGameB = gameServices.play(game, user1, 0, 0)
+        assertGameInfoAfterPlay(game, playedGameB.game)
+        assertFalse(playedGameB.game.board.isEmptyBoard)
+        assertTrue(playedGameB.game.board.pieces.size == 1)
+        assertTrue(playedGameB.game.board.pieces.contains(
             Piece(
                 Position(
-                    0.indexToRow(),
-                    0.indexToColumn()
+                    row =0.indexToRow(smallBoard),
+                    column = 0.indexToColumn(smallBoard)
                 ),
                 PieceColor.BLACK
             )
         ))
-        val playedGameW = gameServices.play(playedGameB, user2.user.userId, 12, 12)
-        assertGameInfoAfterPlay(playedGameB, playedGameW)
-        assertTrue(playedGameW.board.pieces.size == 2)
-        assertTrue(playedGameW.board.pieces.containsAll(
+        val playedGameW = gameServices.play(playedGameB.game, user2, 12, 12)
+        assertGameInfoAfterPlay(playedGameB.game, playedGameW.game)
+        assertTrue(playedGameW.game.board.pieces.size == 2)
+        assertTrue(playedGameW.game.board.pieces.containsAll(
             listOf(
                 Piece(
                     Position(
-                        0.indexToRow(),
-                        0.indexToColumn()
+                        0.indexToColumn(smallBoard),
+                        0.indexToRow(smallBoard),
                     ),
                     PieceColor.BLACK
                 ),
                 Piece(
                     Position(
-                        12.indexToRow(),
-                        12.indexToColumn()
+                        12.indexToColumn(smallBoard),
+                        12.indexToRow(smallBoard)
                     ),
                     PieceColor.WHITE
                 )
@@ -84,31 +91,31 @@ class GameServiceTest {
 
     @Test
     fun `Execute wrong turn play`() {
-        val gameInfo = createNewGame()
-        val game = gameInfo.game
-        val user1 = gameInfo.user1
-        val playedGameB = gameServices.play(game, user1.user.userId, 0, 0)
-        val ex = assertFailsWith<GameError> { gameServices.play(playedGameB, user1.user.userId, 12, 12)  }
+        val allGameInfo = createNewGame()
+        val game = allGameInfo.game
+        val user1 = allGameInfo.gameInfo.player_black
+        val playedGameB = gameServices.play(game, user1, 0, 0)
+        val ex = assertFailsWith<GameError> { gameServices.play(playedGameB.game, user1, 12, 12)  }
         assertEquals(GameErrorMessages.NOT_YOUR_TURN, ex.message)
     }
 
     @Test
     fun `Play out of bounds`() {
-        val gameInfo = createNewGame()
-        val game = gameInfo.game
-        val user1 = gameInfo.user1
-        val ex = assertFailsWith<GameError> { gameServices.play(game, user1.user.userId, 15, 15)  }
-        assertEquals(GameErrorMessages.indexOutOfBoundsMessage, ex.message)
+        val allGameInfo = createNewGame()
+        val game = allGameInfo.game
+        val user1 = allGameInfo.gameInfo.player_black
+        val ex = assertFailsWith<GameError> { gameServices.play(game, user1, 30, 30)  }
+        assertEquals(GameErrorMessages.indexOutOfBoundsMessage(smallBoard - 1), ex.message)
     }
 
     @Test
     fun `Play in occupied space`() {
-        val gameInfo = createNewGame()
-        val game = gameInfo.game
-        val user1 = gameInfo.user1
-        val user2 = gameInfo.user2
-        val playedGameB = gameServices.play(game, user1.user.userId, 0, 0)
-        val ex = assertFailsWith<GameError> { gameServices.play(playedGameB, user2.user.userId, 0, 0)  }
+        val allGameInfo = createNewGame()
+        val game = allGameInfo.game
+        val user1 = allGameInfo.gameInfo.player_black
+        val user2 = allGameInfo.gameInfo.player_white
+        val playedGameB = gameServices.play(game, user1, 0, 0)
+        val ex = assertFailsWith<GameError> { gameServices.play(playedGameB.game, user2, 0, 0)  }
         assertEquals(GameErrorMessages.INVALID_PLAY, ex.message)
     }
 
@@ -125,14 +132,19 @@ class GameServiceTest {
             assertNotEquals(beforeGame.currentTurn, afterGame.currentTurn)
         }
 
-        data class GameInfo(val user1: UserInfo, val user2: UserInfo, val lobby: Lobby, val game: Game)
-
-        fun createNewGame(): GameInfo {
+        fun createNewGame(): AllGameInfo {
             val user1 = createUserAndLogin()
             val user2 = createUserAndLogin()
             val lobby = createLobby(user1)
-            val game = gameServices.createGame(newGameName(), lobby.lobbyId, user1.user.userId, user2.user.userId)
-            return GameInfo(user1, user2, lobby, game)
+            return gameServices.createGame(
+                name= newGameName(),
+                gameNumber = lobby.lobbyId,
+                opening = Opening.FREESTYLE.id,
+                variant = Variant.FREESTYLE.id,
+                playerBlack= user1.user.userId,
+                playerWhite= user2.user.userId,
+
+            )
         }
     }
 

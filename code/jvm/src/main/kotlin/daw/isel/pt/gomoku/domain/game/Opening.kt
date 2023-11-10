@@ -1,9 +1,10 @@
 package daw.isel.pt.gomoku.domain.game
 
 enum class Opening(val id: Int) {
-    PRO(1),
-    LONG_PRO(2),
-    SWAP(3),
+    FREESTYLE(1),
+    PRO(2),
+    LONG_PRO(3),
+    SWAP(4)
 }
 
 fun Int.toOpening(): Opening {

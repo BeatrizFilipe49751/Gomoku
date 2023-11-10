@@ -2,7 +2,9 @@ package daw.isel.pt.gomoku.services
 
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.domain.Lobby
+import daw.isel.pt.gomoku.domain.game.BOARD_DIM_MIN
 import daw.isel.pt.gomoku.domain.game.Game
+import daw.isel.pt.gomoku.domain.game.Opening
 import daw.isel.pt.gomoku.domain.game.Variant
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.*
@@ -14,21 +16,17 @@ class LobbyServices(private val transactionManager: TransactionManager) {
         return transactionManager.run {
             if(it.usersRepository.getUser(userId) == null)
                 throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
-            if(name.isNullOrEmpty() ||
-                opening == null ||
-                variant == null ||
-                boardSize == null
-                ) throw InvalidCredentialsException(LobbyErrorMessages.MISSING_PARAMETERS)
-            if( variant !in 1..Variant.values().last().id ||
-                opening !in 1..Variant.values().last().id
+            if(name.isNullOrEmpty()) throw InvalidCredentialsException(LobbyErrorMessages.MISSING_PARAMETERS)
+            if( (variant != null && variant !in 1..Variant.values().last().id) ||
+                (variant != null && variant !in 1..Variant.values().last().id)
                 ) throw InvalidCredentialsException(LobbyErrorMessages.INVALID_RULES)
             if(it.lobbyRepository.isNotInLobby(userId))
                 it.lobbyRepository.createLobby(
                     userId = userId,
                     name = name,
-                    opening = opening,
-                    variant = variant,
-                    boardSize = boardSize
+                    opening = opening ?: Opening.FREESTYLE.id,
+                    variant = variant ?: Variant.FREESTYLE.id,
+                    boardSize = boardSize ?: BOARD_DIM_MIN
                 )
             else throw AlreadyInLobbyException(LobbyErrorMessages.USER_ALREADY_IN_LOBBY)
         }

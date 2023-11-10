@@ -8,7 +8,7 @@ import org.jdbi.v3.core.Handle
 
 class GameDataJDBI(private val handle: Handle): GameRepository {
     override fun getGame(gameId: String): GameSerialized? {
-        return handle.createQuery("SELECT gameId, name, board, state, turn FROM games WHERE gameid = :id")
+        return handle.createQuery("SELECT gameId, name, opening, variant, board, state, turn FROM games WHERE gameid = :id")
             .bind("id", gameId)
             .mapTo(GameSerialized::class.java)
             .singleOrNull()
@@ -17,7 +17,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
     override fun createGame(game: GameSerialized, gameNumber: Int, playerBlack: Int, playerWhite: Int): Boolean {
         val numRowsGame = handle.createUpdate( """
             INSERT into games(gameid, board, name, opening, variant, state, turn)  
-            VALUES (:gameId, :board, :name, :state, :turn)
+            VALUES (:gameId, :board, :name, :opening, :variant, :state, :turn)
         """.trimIndent()
         )
             .bind("gameId", game.gameId)
@@ -62,7 +62,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
 
     override fun checkGameStarted(gameNumber: Int): GameSerialized? {
         return handle.createQuery("""
-             SELECT gameid, board, name, state, turn  from games where gameid =
+             SELECT gameid, name, opening, variant, board, state, turn from games where gameid =
              (
                  SELECT game from game_users 
                  where  game_number = :gameNumber

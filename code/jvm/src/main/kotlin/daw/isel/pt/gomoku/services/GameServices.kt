@@ -21,7 +21,8 @@ import java.util.*
 class GameServices(private val transactionManager: TransactionManager) {
 
     fun createGame(
-        name: String, gameNumber: Int,
+        name: String,
+        gameNumber: Int,
         opening: Int,
         variant: Int,
         playerBlack: Int,
@@ -78,11 +79,17 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun play(game: Game, userId: Int, row: Int, col: Int): AllGameInfo {
+    fun play(game: Game, userId: Int, col: Int, row: Int): AllGameInfo {
         return transactionManager.run {
             val boardDim = game.board.size
             val pieceToPlay =
-                Piece(Position(row.indexToRow(boardDim), col.indexToColumn(boardDim)), game.currentTurn)
+                Piece(
+                    Position(
+                    column = col.indexToColumn(boardDim),
+                    row = row.indexToRow(boardDim)),
+                    color= game.currentTurn
+                )
+
             val gameInfo = it.gameRepository.checkGameInfo(game.id)
                 ?: throw NotFoundException("Game Not Found")
             userTurnCheck(game = game, userId = userId, gameInfo = gameInfo)

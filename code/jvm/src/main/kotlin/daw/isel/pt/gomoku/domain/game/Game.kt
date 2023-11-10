@@ -13,8 +13,8 @@ data class Game(
         val board : Board,
         val name: String,
         val state: GameState = ACTIVE,
-        val opening: Opening,
-        val variant: Variant,
+        val opening: Opening = Opening.FREESTYLE,
+        val variant: Variant = Variant.FREESTYLE,
         val currentTurn: PieceColor = BLACK
 ) {
         fun play(pieceToPlace: Piece): Game {
@@ -35,8 +35,8 @@ data class Game(
                                 val pair = element.pair
                                 val currentCheck =
                                         board.positionHasColoredPiece(
-                                                p.position.row.index + (i * pair.first) ,
                                                 p.position.column.index + (i * pair.second),
+                                                p.position.row.index + (i * pair.first) ,
                                                 p.color
                                         )
                                 if (currentCheck)

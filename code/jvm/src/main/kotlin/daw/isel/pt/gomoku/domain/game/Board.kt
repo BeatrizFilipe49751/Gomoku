@@ -21,13 +21,13 @@ data class Board(val size: Int = BOARD_DIM_MIN, val pieces: List<Piece> = emptyL
         }
     }
 
-    private val isEmptyBoard get() = pieces.isEmpty()
+    val isEmptyBoard get() = pieces.isEmpty()
 
     fun hasPiece(p: Piece) = pieces.find { it.position == p.position } != null
 
-    fun positionHasColoredPiece(row: Int, col: Int, color: PieceColor) =
+    fun positionHasColoredPiece(col: Int, row: Int, color: PieceColor) =
         try {
-            val piece = pieces.find { it.position == Position(row, col, size) }
+            val piece = pieces.find { it.position == Position(col.indexToColumn(size), row.indexToRow(size),) }
             piece != null && piece.color == color
         } catch (_: Exception) {
             false
