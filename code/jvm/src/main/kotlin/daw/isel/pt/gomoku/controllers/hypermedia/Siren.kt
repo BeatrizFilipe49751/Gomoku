@@ -1,15 +1,13 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
-
+typealias Properties = Map<String, Any>
 data class Siren<T>(
     val cls: String,
-    val properties: Map<String, Any>,
+    val properties: Properties,
     val actions: List<Action>,
     val entities: List<Entity>,
     val links: List<Link>
-) {
-
-}
+)
 
 data class Action(
     val name: String,
@@ -34,30 +32,4 @@ data class Link(
     val href: String
 )
 
-fun Any.getProperties(): Map<String, Any> {
-    val declaredField = this::class.java.declaredFields
-    val propertyMap: MutableMap<String, Any> = mutableMapOf()
-    declaredField.forEach { field ->
-        if(field.trySetAccessible()){
-            val value = field.get(this)
-            if(value != null){
-                propertyMap[field.name] = value
-            }
-        }
-    }
-    return propertyMap
-}
 
-fun getFields(cls: Class<*>): List<Field> {
-    val constructor = cls.constructors[0]
-    val list = mutableListOf<Field>()
-    constructor.parameters.forEach { field ->
-        list.add(
-            Field(
-                name = field.name,
-                type = field.type.simpleName
-            )
-        )
-    }
-    return list
-}

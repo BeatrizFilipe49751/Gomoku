@@ -1,5 +1,7 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
+import daw.isel.pt.gomoku.controllers.hypermedia.serialization.Serializer.getFields
+import daw.isel.pt.gomoku.controllers.hypermedia.serialization.Serializer.getProperties
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.PlayIn
 import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
@@ -13,7 +15,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
     val userClassName = User::class.java.simpleName
     return Siren(
         cls = className,
-        properties = this.getProperties(),
+        properties = getProperties(this),
         entities = listOf(
             Entity(
                 cls = userClassName,
@@ -58,7 +60,7 @@ fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
     val userClassName = User::class.java.simpleName
     return Siren(
         cls = className,
-        properties = this.getProperties(),
+        properties = getProperties(this),
         entities = listOf(
             Entity(
                 cls = userClassName,

@@ -1,12 +1,12 @@
 package daw.isel.pt.gomoku.repository.dataJDBI.mappers
 
-import daw.isel.pt.gomoku.domain.Token
-import daw.isel.pt.gomoku.domain.TokenValidationInfo
+import daw.isel.pt.gomoku.domain.authentication.Token
+import daw.isel.pt.gomoku.domain.authentication.TokenValidationInfo
 import kotlinx.datetime.Instant
 import java.sql.ResultSet
 
 class TokenMapper {
-    fun mapResultSetToToken(rs: ResultSet, ): Token {
+    fun mapResultSetToToken(rs: ResultSet): Token {
         return Token(
             tokenValidationInfo = TokenValidationInfo(
                 validationInfo = rs.getString("token_validation")

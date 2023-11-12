@@ -1,6 +1,10 @@
 package daw.isel.pt.gomoku.utils
 
-import daw.isel.pt.gomoku.domain.*
+import daw.isel.pt.gomoku.domain.AuthUser
+import daw.isel.pt.gomoku.domain.Lobby
+import daw.isel.pt.gomoku.domain.authentication.Sha256TokenEncoder
+import daw.isel.pt.gomoku.domain.authentication.UserLogic
+import daw.isel.pt.gomoku.domain.authentication.UsersDomainConfig
 import daw.isel.pt.gomoku.domain.game.Opening
 import daw.isel.pt.gomoku.domain.game.Variant
 import daw.isel.pt.gomoku.repository.dataJDBI.mappers.PasswordValidationInfoMapper
@@ -100,7 +104,7 @@ object TestUtils {
     fun newTestEmail() = "email-${abs(Random.nextLong())}@gmail.com"
     fun newLobbyName() = "lobby-${abs(Random.nextLong())}"
 
-    val bigBoard = 19
-    val smallBoard = 15
+    const val bigBoard = 19
+    const val smallBoard = 15
 
 }

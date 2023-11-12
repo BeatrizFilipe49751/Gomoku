@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
+import daw.isel.pt.gomoku.controllers.hypermedia.serialization.Serializer.getProperties
 import daw.isel.pt.gomoku.controllers.models.LobbyOut
 import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
 import daw.isel.pt.gomoku.controllers.routes.UserRoutes
@@ -11,8 +12,7 @@ fun LobbyOut.toLobbySiren(authUser: AuthUser): Siren<LobbyOut> {
     val userClassName = authUser.user::class.java.simpleName
     return Siren(
         cls = className,
-        properties = this.getProperties().filter {
-            it.value != authUser.user.passwordValidation.validationInfo },
+        properties = getProperties(this),
         entities = listOf(
             Entity(
                 cls = userClassName,

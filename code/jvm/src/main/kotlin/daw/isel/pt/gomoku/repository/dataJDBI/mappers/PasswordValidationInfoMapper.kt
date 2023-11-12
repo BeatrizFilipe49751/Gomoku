@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.repository.dataJDBI.mappers
 
-import daw.isel.pt.gomoku.domain.PasswordValidationInfo
+import daw.isel.pt.gomoku.domain.authentication.PasswordValidationInfo
 import org.jdbi.v3.core.mapper.ColumnMapper
 import org.jdbi.v3.core.statement.StatementContext
 import java.sql.ResultSet

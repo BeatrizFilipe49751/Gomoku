@@ -3,9 +3,9 @@ package daw.isel.pt.gomoku.services
 
 import daw.isel.pt.gomoku.controllers.models.UserPoints
 import daw.isel.pt.gomoku.domain.AuthUser
-import daw.isel.pt.gomoku.domain.Token
 import daw.isel.pt.gomoku.domain.User
-import daw.isel.pt.gomoku.domain.UserLogic
+import daw.isel.pt.gomoku.domain.authentication.Token
+import daw.isel.pt.gomoku.domain.authentication.UserLogic
 import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.InvalidCredentialsException
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException

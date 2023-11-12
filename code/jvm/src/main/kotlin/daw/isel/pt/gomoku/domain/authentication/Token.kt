@@ -1,4 +1,4 @@
-package daw.isel.pt.gomoku.domain
+package daw.isel.pt.gomoku.domain.authentication
 
 import kotlinx.datetime.Instant
 

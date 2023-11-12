@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.repository.dataJDBI.mappers
 
-import daw.isel.pt.gomoku.domain.PasswordValidationInfo
 import daw.isel.pt.gomoku.domain.User
+import daw.isel.pt.gomoku.domain.authentication.PasswordValidationInfo
 import java.sql.ResultSet
 
 class UserMapper {

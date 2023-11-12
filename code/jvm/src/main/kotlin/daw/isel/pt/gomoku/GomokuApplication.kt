@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku
 
-import daw.isel.pt.gomoku.domain.Sha256TokenEncoder
-import daw.isel.pt.gomoku.domain.UsersDomainConfig
+import daw.isel.pt.gomoku.domain.authentication.Sha256TokenEncoder
+import daw.isel.pt.gomoku.domain.authentication.UsersDomainConfig
 import daw.isel.pt.gomoku.repository.dataJDBI.mappers.PasswordValidationInfoMapper
 import kotlinx.datetime.Clock
 import org.jdbi.v3.core.Jdbi

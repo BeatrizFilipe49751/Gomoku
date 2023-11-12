@@ -1,5 +1,7 @@
 package daw.isel.pt.gomoku.controllers.hypermedia
 
+import daw.isel.pt.gomoku.controllers.hypermedia.serialization.Serializer.getFields
+import daw.isel.pt.gomoku.controllers.hypermedia.serialization.Serializer.getProperties
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.UserInCreate
 import daw.isel.pt.gomoku.controllers.models.UserInLogin
@@ -13,7 +15,7 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
     val className = this::class.java.simpleName
     return Siren(
         cls = className,
-        properties = this.getProperties(),
+        properties = getProperties(this),
         entities = listOf(
             Entity(
                 cls = className,
@@ -36,15 +38,13 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
                 href = UserRoutes.LOGIN,
                 fields = getFields(UserInLogin::class.java),
             ),
-            Action(
-                name = "getLeaderBoards",
-                title = "Get the leaderboards of gomoku game",
-                method = "GET",
-                href = UserRoutes.GET_LEADERBOARD,
-                fields = listOf(),
-            ),
         ),
-        links = listOf()
+        links = listOf(
+            Link(
+                rel = listOf("leaderboard"),
+                href = UserRoutes.GET_LEADERBOARD,
+            )
+        )
     )
 }
 
@@ -52,7 +52,7 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
     val className = this::class.java.simpleName
     return Siren(
         cls = className,
-        properties = this.getProperties(),
+        properties = getProperties(this),
         entities = listOf(
             Entity(
                 cls = className,
@@ -81,13 +81,6 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
                 fields = getFields(LobbyIn::class.java)
             ),
             Action(
-                name = "getLobbies",
-                title = "get all Available lobbies to join in",
-                method = "GET",
-                href = LobbyRoutes.GET_AVAILABLE_LOBBIES,
-                fields = listOf(),
-            ),
-            Action(
                 name = "joinLobby",
                 title = "Join an existingLobby",
                 method = "PUT",
@@ -99,6 +92,10 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
             Link(
                 rel= listOf("leaderboard"),
                 href = UserRoutes.GET_LEADERBOARD
+            ),
+            Link(
+                rel= listOf("lobbies"),
+                href = LobbyRoutes.GET_AVAILABLE_LOBBIES,
             )
         )
     )

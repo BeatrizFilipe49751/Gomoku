@@ -1,4 +1,4 @@
-package daw.isel.pt.gomoku.domain
+package daw.isel.pt.gomoku.domain.authentication
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -10,7 +10,8 @@ import java.util.*
 @Component
 class UserLogic (private val passwordEncoder: PasswordEncoder,
                  private val tokenEncoder: TokenEncoder,
-                 private val config: UsersDomainConfig) {
+                 private val config: UsersDomainConfig
+) {
 
     fun isSafePassword (password: String) : Boolean {
         return (password.length > 4) &&
