@@ -17,8 +17,7 @@ object Serializer {
                         propertyMap[field.name] = value
                     } else {
                         val properties = getProperties(value)
-                        for(property in properties)
-                            propertyMap[property.key] = property.value
+                        propertyMap[field.name] = properties
                     }
 
                 }
