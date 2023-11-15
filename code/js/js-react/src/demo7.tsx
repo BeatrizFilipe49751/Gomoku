@@ -9,9 +9,16 @@ function InputForm(){
         console.log("onChangeHandler")
         setText(event.target.value)
     }
+	
+	function onChangeHandler1(event){
+        console.log("onChangeHandler1")
+		setText1("")
+        setText(event.target.value)
+    }
 
     function onClickHandler(){
         console.log("onClickHandler")
+		setText1(text)
         console.log(text)
     }
 
@@ -22,7 +29,7 @@ function InputForm(){
         <div>
             <input onChange={onChangeHandler} type="text" value={text} />
             <button onClick={onClickHandler}>Click</button>
-            <input onChange={onChangeHandler} type="text" value={text1} />
+            <input onChange={onChangeHandler1} type="text" value={text1} />
         </div>
     )
 }
