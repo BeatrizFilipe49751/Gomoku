@@ -7,6 +7,7 @@
 //import {demo} from './demo8'
 //import {demo} from './demo9'
 //import {demo} from './demo10-1'
-import {demo} from './fetch'
+//import {demo} from './fetch'
+import {demo} from './fetchButton'
 
 demo()
