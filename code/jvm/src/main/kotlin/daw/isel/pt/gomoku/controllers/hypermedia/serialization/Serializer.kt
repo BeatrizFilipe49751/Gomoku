@@ -2,6 +2,7 @@ package daw.isel.pt.gomoku.controllers.hypermedia.serialization
 
 import daw.isel.pt.gomoku.controllers.hypermedia.Field
 import daw.isel.pt.gomoku.controllers.hypermedia.Properties
+import java.util.*
 
 
 object Serializer {
@@ -17,7 +18,7 @@ object Serializer {
                         propertyMap[field.name] = value
                     } else {
                         val properties = getProperties(value)
-                        propertyMap[field.name] = properties
+                        propertyMap[cls.simpleName.replaceFirstChar { it.lowercase(Locale.getDefault()) }] = properties
                     }
 
                 }
