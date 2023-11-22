@@ -8,6 +8,8 @@
 //import {demo} from './demo9'
 //import {demo} from './demo10-1'
 //import {demo} from './fetch'
-import {demo} from './fetchButton'
+//import {demo} from './fetchButton'
+//import {main} from './counter'
+import{main} from './observer'
 
-demo()
+main()
