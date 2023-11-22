@@ -16,6 +16,9 @@ module.exports = {
     }, 
 
     devServer: {
-        static: path.resolve(__dirname, 'dist')
+        static: path.resolve(__dirname, 'dist'),
+        proxy: {
+            '/api': 'http://localhost:3000',
+        },
     },
 };
