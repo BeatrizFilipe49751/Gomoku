@@ -104,8 +104,7 @@ class GameServices(private val transactionManager: TransactionManager) {
                 }
                 if (it.gameRepository.updateGame(newGame.toGameSerialized())){
                     AllGameInfo(newGame, gameInfo)
-                }
-                else throw IllegalStateException("Game failed to update")
+                } else throw IllegalStateException("Game failed to update")
             } catch(ex: IllegalStateException) {
                 throw GameError(ex.message ?: "No message provided")
             }

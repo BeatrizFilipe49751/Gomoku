@@ -6,6 +6,7 @@ const val WIN_STREAK = 5
 const val DIRECTIONS = 8
 
 data class Board(val size: Int = BOARD_DIM_MIN, val pieces: List<Piece> = emptyList()) {
+    val maxPieces = size*size
 
     companion object {
         fun deserialize(b: String): Board {

@@ -1,7 +1,6 @@
 package daw.isel.pt.gomoku.domain.game
 
-import daw.isel.pt.gomoku.domain.game.GameState.ACTIVE
-import daw.isel.pt.gomoku.domain.game.GameState.FINISHED
+import daw.isel.pt.gomoku.domain.game.GameState.*
 import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
 import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 
@@ -18,14 +17,24 @@ data class Game(
         val currentTurn: PieceColor = BLACK
 ) {
         fun play(pieceToPlace: Piece): Game {
-                check(state == ACTIVE) { GameErrorMessages.GAME_FINISHED }
+                check(state == ACTIVE) {
+                        if (state == FINISHED)
+                                GameErrorMessages.GAME_FINISHED
+                        else
+                                GameErrorMessages.GAME_DRAW
+                }
                 check(!board.hasPiece(pieceToPlace)) { GameErrorMessages.INVALID_PLAY }
                 val newBoard = board.copy(pieces = board.pieces + pieceToPlace)
-                if (newBoard.pieces.size < WIN_STREAK)
+                if (newBoard.pieces.size < (WIN_STREAK*2) - 1)
                         return copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
                 return if (checkWin(newBoard, pieceToPlace))
                         copy(board = newBoard, state = FINISHED)
-                else copy(board = newBoard, currentTurn = currentTurn.switchTurn() )
+                else {
+                        if (newBoard.pieces.size == board.maxPieces)
+                                copy(board = newBoard, state = DRAW)
+                        else
+                                copy(board = newBoard, currentTurn = currentTurn.switchTurn())
+                }
         }
 
         private fun checkWin(board: Board, p: Piece): Boolean {
