@@ -1,11 +1,14 @@
 package daw.isel.pt.gomoku.controllers.models
 
+import daw.isel.pt.gomoku.domain.game.BOARD_DIM_MIN
 import daw.isel.pt.gomoku.domain.game.Game
+import daw.isel.pt.gomoku.domain.game.Opening
+import daw.isel.pt.gomoku.domain.game.Variant
 
 data class UserOut(val userId: Int, val username: String, val email: String)
 data class UserInCreate(val username: String?, val email: String?, val password: String?)
 data class UserInLogin(val email: String?, val password: String?)
-data class LobbyIn(val name: String?, val opening: Int?, val variant: Int?, val size: Int?)
+data class LobbyIn(val name: String?, val opening: Int = Opening.FREESTYLE.id, val variant: Int = Variant.FREESTYLE.id, val size: Int = BOARD_DIM_MIN)
 data class GameSerialized(val gameId: String, val name: String, val opening: Int, val variant: Int, val board: String, val state: Char, val turn: Char)
 data class PlayIn(val row: Int, val col: Int)
 data class LobbyOut(val lobbyId: Int, val p1: Int, val name: String)

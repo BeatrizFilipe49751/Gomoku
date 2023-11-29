@@ -5,8 +5,7 @@ import daw.isel.pt.gomoku.controllers.hypermedia.serialization.Serializer.getPro
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.PlayIn
 import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
-import daw.isel.pt.gomoku.controllers.routes.GameRoutes
-import daw.isel.pt.gomoku.controllers.routes.UserRoutes
+import daw.isel.pt.gomoku.controllers.routes.Uris
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.domain.User
 
@@ -20,7 +19,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
             Entity(
                 cls = userClassName,
                 rel = listOf("user"),
-                href = UserRoutes.GET_USER.putParameters(
+                href = Uris.UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerBlack.toString()
                 ),
@@ -28,7 +27,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
             Entity(
                 cls = userClassName,
                 rel = listOf("user"),
-                href = UserRoutes.GET_USER.putParameters(
+                href = Uris.UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerWhite.toString()
                 ),
@@ -36,7 +35,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
             Entity(
                 cls = className,
                 rel = listOf("game"),
-                href = GameRoutes.GET_GAME.putParameters(
+                href = Uris.GameRoutes.GET_GAME.putParameters(
                     key= "gameId",
                     value= this.gameId,
                 )
@@ -47,7 +46,7 @@ fun GameOut.toGameSiren(): Siren<GameOut> {
                 name= "play",
                 title = "Play a piece into the board",
                 method = "PUT",
-                href = GameRoutes.PLAY.putParameters(key="gameId", value=this.gameId),
+                href = Uris.GameRoutes.PLAY.putParameters(key="gameId", value=this.gameId),
                 fields = getFields(PlayIn::class.java)
             )
         ),
@@ -65,7 +64,7 @@ fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
             Entity(
                 cls = userClassName,
                 rel = listOf("user"),
-                href = UserRoutes.GET_USER.putParameters(
+                href = Uris.UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerBlack.toString()
                 ),
@@ -73,7 +72,7 @@ fun PublicGameInfo.toGameInfoSiren(): Siren<PublicGameInfo> {
             Entity(
                 cls = userClassName,
                 rel = listOf("user"),
-                href = UserRoutes.GET_USER.putParameters(
+                href = Uris.UserRoutes.GET_USER.putParameters(
                     key= "userId",
                     value= this.playerWhite.toString()
                 ),

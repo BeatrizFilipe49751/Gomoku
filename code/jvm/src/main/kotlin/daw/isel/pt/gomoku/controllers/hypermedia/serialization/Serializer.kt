@@ -48,6 +48,7 @@ object Serializer {
         Boolean::class.java,
         Char::class.java,
         Byte::class.java,
+        Character::class.java,
         Short::class.java,
         Integer::class.java,
         Int::class.java,

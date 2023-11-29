@@ -8,7 +8,7 @@ import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyInfo
 import daw.isel.pt.gomoku.controllers.models.LobbyOut
-import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
+import daw.isel.pt.gomoku.controllers.routes.Uris
 import daw.isel.pt.gomoku.controllers.utils.*
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.Lobby
@@ -24,7 +24,7 @@ class LobbyController(
     private val lobbyServices: LobbyServices,
     private val gameServices: GameServices,
 ) {
-    @PostMapping(LobbyRoutes.CREATE_LOBBY)
+    @PostMapping(Uris.LobbyRoutes.CREATE_LOBBY)
     fun createLobby(
         authUser : AuthUser,
         @RequestBody lobbyIn: LobbyIn
@@ -43,14 +43,14 @@ class LobbyController(
             )
     }
 
-    @GetMapping(LobbyRoutes.GET_AVAILABLE_LOBBIES)
+    @GetMapping(Uris.LobbyRoutes.GET_AVAILABLE_LOBBIES)
     fun getLobbies(): ResponseEntity<List<Lobby>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobbies())
     }
 
-    @GetMapping(LobbyRoutes.GET_LOBBY)
+    @GetMapping(Uris.LobbyRoutes.GET_LOBBY)
     fun getLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
@@ -65,7 +65,7 @@ class LobbyController(
             )
     }
 
-    @PutMapping(LobbyRoutes.JOIN_LOBBY)
+    @PutMapping(Uris.LobbyRoutes.JOIN_LOBBY)
     fun joinLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
@@ -97,7 +97,7 @@ class LobbyController(
             )
     }
 
-    @DeleteMapping(LobbyRoutes.DELETE_LOBBY)
+    @DeleteMapping(Uris.LobbyRoutes.DELETE_LOBBY)
     fun quitLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
@@ -113,7 +113,7 @@ class LobbyController(
                 authUser.toAuthUserSiren()
             )
     }
-    @GetMapping(LobbyRoutes.CHECK_FULL_LOBBY)
+    @GetMapping(Uris.LobbyRoutes.CHECK_FULL_LOBBY)
     fun checkFullLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int

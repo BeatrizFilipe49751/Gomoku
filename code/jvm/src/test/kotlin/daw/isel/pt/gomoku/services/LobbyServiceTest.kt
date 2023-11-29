@@ -15,7 +15,10 @@ class LobbyServiceTest {
     @Test
     fun `Create a lobby Successfully`() {
         val user = createUserAndLogin()
-        val lobby = lobbyServices.createLobby(user.user.userId, newLobbyName())
+        val lobby = lobbyServices.createLobby(
+            userId = user.user.userId,
+            name = newLobbyName()
+        )
         assertEquals(lobby.p1, user.user.userId)
 
     }

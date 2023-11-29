@@ -2,7 +2,6 @@ package daw.isel.pt.gomoku.services
 
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.domain.Lobby
-import daw.isel.pt.gomoku.domain.game.BOARD_DIM_MIN
 import daw.isel.pt.gomoku.domain.game.Game
 import daw.isel.pt.gomoku.domain.game.Opening
 import daw.isel.pt.gomoku.domain.game.Variant
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class LobbyServices(private val transactionManager: TransactionManager) {
-    fun createLobby(userId: Int, name: String?, opening: Int?, variant: Int?, boardSize: Int?): Lobby {
+    fun createLobby(userId: Int, name: String?, opening: Int? = null, variant: Int? = null, boardSize: Int = 15): Lobby {
         return transactionManager.run {
             if(it.usersRepository.getUser(userId) == null)
                 throw NotFoundException(UserErrorMessages.USER_NOT_FOUND)
@@ -26,7 +25,7 @@ class LobbyServices(private val transactionManager: TransactionManager) {
                     name = name,
                     opening = opening ?: Opening.FREESTYLE.id,
                     variant = variant ?: Variant.FREESTYLE.id,
-                    boardSize = boardSize ?: BOARD_DIM_MIN
+                    boardSize = boardSize
                 )
             else throw AlreadyInLobbyException(LobbyErrorMessages.USER_ALREADY_IN_LOBBY)
         }

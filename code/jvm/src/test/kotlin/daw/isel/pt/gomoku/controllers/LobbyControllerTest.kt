@@ -1,7 +1,7 @@
 package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
-import daw.isel.pt.gomoku.controllers.routes.LobbyRoutes
+import daw.isel.pt.gomoku.controllers.routes.Uris
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.controllers.utils.toLobbyOut
 import daw.isel.pt.gomoku.utils.TestUtils
@@ -34,7 +34,7 @@ class LobbyControllerTest {
         val client = createNewClient(port)
         val user = createUserAndLogin()
         val lobbyName = newLobbyName()
-        val uri = LobbyRoutes.CREATE_LOBBY
+        val uri = Uris.LobbyRoutes.CREATE_LOBBY
         client.post().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .bodyValue(
@@ -53,9 +53,9 @@ class LobbyControllerTest {
     @Test
     fun `create Lobby without token`() {
         val client = createNewClient(port)
-        val user = createUserAndLogin()
+        createUserAndLogin()
         val lobbyName = newLobbyName()
-        val uri = LobbyRoutes.CREATE_LOBBY
+        val uri = Uris.LobbyRoutes.CREATE_LOBBY
         client.post().uri(uri)
             .bodyValue(
                 mapOf(
@@ -75,7 +75,7 @@ class LobbyControllerTest {
     fun `create Lobby without name`() {
         val client = createNewClient(port)
         val user = createUserAndLogin()
-        val uri = LobbyRoutes.CREATE_LOBBY
+        val uri = Uris.LobbyRoutes.CREATE_LOBBY
         client.post().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .bodyValue(
@@ -95,7 +95,7 @@ class LobbyControllerTest {
         val lobby = createLobby(user)
         val client = createNewClient(port)
         lobby.toLobbyOut().toLobbySiren(user)
-        val uri = LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
+        val uri = Uris.LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
         client.get().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .exchange()
@@ -111,7 +111,7 @@ class LobbyControllerTest {
         val user = createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
+        val uri = Uris.LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
         client.get().uri(uri)
             .exchange()
             .expectStatus().isUnauthorized
@@ -138,7 +138,7 @@ class LobbyControllerTest {
         val otherUser = createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
+        val uri = Uris.LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
         client.put().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
             .exchange()
@@ -151,10 +151,10 @@ class LobbyControllerTest {
     @Test
     fun `join lobby unauthorized`() {
         val user = createUserAndLogin()
-        val otherUser = createUserAndLogin()
+        createUserAndLogin()
         val lobby = createLobby(user)
         val client = createNewClient(port)
-        val uri = LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
+        val uri = Uris.LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
         client.put().uri(uri)
             .exchange()
             .expectStatus().isUnauthorized
@@ -169,7 +169,7 @@ class LobbyControllerTest {
         val lobby = createLobby(user)
         joinLobby(otherUser, lobby)
         val client = createNewClient(port)
-        val uri = LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
+        val uri = Uris.LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
         client.delete().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
             .exchange()
@@ -185,7 +185,7 @@ class LobbyControllerTest {
         val lobby =  createLobby(user)
         joinLobby(otherUser, lobby)
         val client =  createNewClient(port)
-        val uri = LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
+        val uri = Uris.LobbyRoutes.GET_LOBBY.putParameters("lobbyId", lobby.lobbyId.toString())
         client.delete().uri(uri)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + otherUser.token)
             .exchange()
