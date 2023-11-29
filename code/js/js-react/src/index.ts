@@ -1,15 +1,6 @@
-//import {demo} from './demo1'
-//import {demo} from './demo2'
-//import {demo} from './demo3'
-//import {demo} from './demo4'
-//import {demo} from './demo6'
-//import {demo} from './demo7'
-//import {demo} from './demo8'
-//import {demo} from './demo9'
-//import {demo} from './demo10-1'
-//import {demo} from './fetch'
-//import {demo} from './fetchButton'
-//import {main} from './counter'
-import{main} from './observer'
+//import {demo} from './assets/tsx/fetch'
+//import {demo} from './assets/tsx/fetchButton'
+//import {main} from './assets/tsx/counter'
+import {appRouter} from "./assets/tsx/router";
 
-main()
+appRouter()
