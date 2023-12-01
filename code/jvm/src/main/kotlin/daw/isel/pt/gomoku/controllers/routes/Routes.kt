@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.controllers.routes
 
-object Uris {
+object Routes {
 
     const val PREFIX = "/api"
     object GameRoutes {

@@ -6,7 +6,7 @@ import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.UserInCreate
 import daw.isel.pt.gomoku.controllers.models.UserInLogin
 import daw.isel.pt.gomoku.controllers.models.UserOut
-import daw.isel.pt.gomoku.controllers.routes.Uris
+import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.domain.AuthUser
 
@@ -19,7 +19,7 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
             Entity(
                 cls = className,
                 rel = listOf("user") ,
-                href = Uris.UserRoutes.GET_USER.putParameters("userId", this.userId.toString()),
+                href = Routes.UserRoutes.GET_USER.putParameters("userId", this.userId.toString()),
             )
         ),
         actions = listOf(
@@ -27,21 +27,21 @@ fun UserOut.toUserSiren(): Siren<UserOut> {
                 name = "createUser",
                 title = "Create a User",
                 method = "POST",
-                href = Uris.UserRoutes.CREATE_USER,
+                href = Routes.UserRoutes.CREATE_USER,
                 fields = getFields(UserInCreate::class.java),
                 ),
             Action(
                 name = "login",
                 title = "Login",
                 method = "POST",
-                href = Uris.UserRoutes.LOGIN,
+                href = Routes.UserRoutes.LOGIN,
                 fields = getFields(UserInLogin::class.java),
             ),
         ),
         links = listOf(
             Link(
                 rel = listOf("leaderboard"),
-                href = Uris.UserRoutes.GET_LEADERBOARD,
+                href = Routes.UserRoutes.GET_LEADERBOARD,
             )
         )
     )
@@ -56,12 +56,12 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
             Entity(
                 cls = className,
                 rel = listOf("user"),
-                href = Uris.UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
+                href = Routes.UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
             ),
             Entity(
                 cls = className,
                 rel = listOf("user"),
-                href = Uris.UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
+                href = Routes.UserRoutes.GET_USER.putParameters("userId", this.user.userId.toString()),
             )
         ),
         actions = listOf(
@@ -69,32 +69,32 @@ fun AuthUser.toAuthUserSiren(): Siren<AuthUser> {
                 name="logout",
                 title = "Logout",
                 method = "POST",
-                href = Uris.UserRoutes.LOGOUT,
+                href = Routes.UserRoutes.LOGOUT,
                 fields = listOf()
             ),
             Action(
                 name = "createLobby",
                 title = "Create a lobby for somebody to join in",
                 method = "POST",
-                href = Uris.LobbyRoutes.CREATE_LOBBY,
+                href = Routes.LobbyRoutes.CREATE_LOBBY,
                 fields = getFields(LobbyIn::class.java)
             ),
             Action(
                 name = "joinLobby",
                 title = "Join an existingLobby",
                 method = "PUT",
-                href = Uris.LobbyRoutes.JOIN_LOBBY.putParameters("lobbyId", "123"),
+                href = Routes.LobbyRoutes.JOIN_LOBBY.putParameters("lobbyId", "123"),
                 fields = listOf(),
             ),
         ),
         links = listOf(
             Link(
                 rel= listOf("leaderboard"),
-                href = Uris.UserRoutes.GET_LEADERBOARD
+                href = Routes.UserRoutes.GET_LEADERBOARD
             ),
             Link(
                 rel= listOf("lobbies"),
-                href = Uris.LobbyRoutes.GET_AVAILABLE_LOBBIES,
+                href = Routes.LobbyRoutes.GET_AVAILABLE_LOBBIES,
             )
         )
     )

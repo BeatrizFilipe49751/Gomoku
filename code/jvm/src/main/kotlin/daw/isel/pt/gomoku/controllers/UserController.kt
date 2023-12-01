@@ -4,7 +4,7 @@ import daw.isel.pt.gomoku.controllers.hypermedia.Siren
 import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toUserSiren
 import daw.isel.pt.gomoku.controllers.models.*
-import daw.isel.pt.gomoku.controllers.routes.Uris
+import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.services.UserServices
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(val userServices: UserServices) {
-    @GetMapping(Uris.UserRoutes.GET_USER)
+    @GetMapping(Routes.UserRoutes.GET_USER)
     fun getUser(@PathVariable userId: Int): ResponseEntity<Siren<UserOut>> =
         ResponseEntity
             .status(HttpStatus.OK)
@@ -24,7 +24,7 @@ class UserController(val userServices: UserServices) {
                     .toUserSiren()
             )
 
-    @PostMapping(Uris.UserRoutes.CREATE_USER)
+    @PostMapping(Routes.UserRoutes.CREATE_USER)
     fun createUser(@RequestBody userIn: UserInCreate): ResponseEntity<Siren<UserOut>> =
         ResponseEntity
             .status(HttpStatus.CREATED)
@@ -37,7 +37,7 @@ class UserController(val userServices: UserServices) {
                     .toUserSiren()
             )
 
-    @PostMapping(Uris.UserRoutes.LOGIN)
+    @PostMapping(Routes.UserRoutes.LOGIN)
     fun login(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren<AuthUser>> =
         ResponseEntity
             .status(HttpStatus.OK)
@@ -48,7 +48,7 @@ class UserController(val userServices: UserServices) {
                 ).toAuthUserSiren()
             )
 
-    @PostMapping(Uris.UserRoutes.LOGOUT)
+    @PostMapping(Routes.UserRoutes.LOGOUT)
     fun logout(authedUser : AuthUser): ResponseEntity<Siren<UserOut>>  {
         userServices.logout(authedUser.token)
         val user = authedUser.user.toUserOut()
@@ -57,7 +57,7 @@ class UserController(val userServices: UserServices) {
             .body(user.toUserSiren())
     }
 
-    @GetMapping(Uris.UserRoutes.GET_LEADERBOARD)
+    @GetMapping(Routes.UserRoutes.GET_LEADERBOARD)
     fun getLeaderboard(): ResponseEntity<List<UserPoints>> =
         ResponseEntity
             .status(HttpStatus.OK)

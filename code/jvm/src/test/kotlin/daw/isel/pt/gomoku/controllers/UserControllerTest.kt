@@ -1,6 +1,6 @@
 package daw.isel.pt.gomoku.controllers
 
-import daw.isel.pt.gomoku.controllers.routes.Uris
+import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.putParameters
 import daw.isel.pt.gomoku.services.exceptions.UserErrorMessages
 import daw.isel.pt.gomoku.utils.TestUtils
@@ -29,7 +29,7 @@ class UserControllerTest {
         val userName = newTestUserName()
         val email = newTestEmail()
         val password = newTestPassword()
-        newClient.post().uri(Uris.UserRoutes.CREATE_USER)
+        newClient.post().uri(Routes.UserRoutes.CREATE_USER)
             .bodyValue(
                 mapOf(
                     "username" to userName,
@@ -48,7 +48,7 @@ class UserControllerTest {
     fun `Create user without passing email`() {
         val newClient = createNewClient(port)
         val username = newTestUserName()
-        newClient.post().uri(Uris.UserRoutes.CREATE_USER)
+        newClient.post().uri(Routes.UserRoutes.CREATE_USER)
             .bodyValue(
                 mapOf("username" to username)
             )
@@ -62,7 +62,7 @@ class UserControllerTest {
     fun `Create user without passing username`() {
         val newClient = createNewClient(port)
         val email = newTestEmail()
-        newClient.post().uri(Uris.UserRoutes.CREATE_USER)
+        newClient.post().uri(Routes.UserRoutes.CREATE_USER)
             .bodyValue(
                 mapOf("email" to email)
             )
@@ -77,7 +77,7 @@ class UserControllerTest {
         val userName = newTestUserName()
         val password = newTestPassword()
         val email = "WrongEmailFormat.com"
-        newClient.post().uri(Uris.UserRoutes.CREATE_USER)
+        newClient.post().uri(Routes.UserRoutes.CREATE_USER)
             .bodyValue(
                 mapOf(
                     "username" to userName,
@@ -94,7 +94,7 @@ class UserControllerTest {
     @Test
     fun `Get user successfully`() {
         val user = createUserAndLogin()
-        val path = Uris.UserRoutes.GET_USER.putParameters("userId", user.user.userId.toString())
+        val path = Routes.UserRoutes.GET_USER.putParameters("userId", user.user.userId.toString())
         val newClient = createNewClient(port)
         newClient.get().uri(path)
             .exchange()
@@ -108,8 +108,8 @@ class UserControllerTest {
     fun `Get user with Invalid id`() {
         
         val id = Int.MAX_VALUE
-        Uris.UserRoutes.GET_USER.putParameters("userId", id.toString())
-        val path = Uris.UserRoutes.GET_USER.putParameters("userId", id.toString())
+        Routes.UserRoutes.GET_USER.putParameters("userId", id.toString())
+        val path = Routes.UserRoutes.GET_USER.putParameters("userId", id.toString())
         val newClient = createNewClient(port)
         newClient.get().uri(path)
             .exchange()

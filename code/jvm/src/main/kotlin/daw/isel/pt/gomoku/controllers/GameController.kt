@@ -6,7 +6,7 @@ import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.PlayIn
 import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
-import daw.isel.pt.gomoku.controllers.routes.Uris
+import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.gameString
 import daw.isel.pt.gomoku.controllers.utils.toGameOut
 import daw.isel.pt.gomoku.domain.AuthUser
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class GameController(val gameServices: GameServices) {
-    @PutMapping(Uris.GameRoutes.PLAY)
+    @PutMapping(Routes.GameRoutes.PLAY)
     fun play(
         authUser: AuthUser,
         @PathVariable gameId: String,
@@ -43,7 +43,7 @@ class GameController(val gameServices: GameServices) {
             )
     }
 
-    @GetMapping(Uris.GameRoutes.GET_GAME)
+    @GetMapping(Routes.GameRoutes.GET_GAME)
     fun getGame(authUser: AuthUser, @PathVariable gameId: String):
             ResponseEntity<Siren<PublicGameInfo>> {
         return ResponseEntity
