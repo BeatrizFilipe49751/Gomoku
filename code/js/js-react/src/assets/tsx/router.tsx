@@ -5,11 +5,32 @@ import {
     RouterProvider,
     Link,
     useParams,
-    useNavigate
+    useNavigate,
+    Outlet
 } from "react-router-dom";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.css"
+
+import Home from './home';
+import Login from './login';
+import Register from './register';
+import Navbar from './navbar';
+
+const HeaderLayout = () => (
+  <>
+    <header>
+      <Navbar />
+    </header>
+      <Outlet />
+  </>
+);
 
 const router = createBrowserRouter(
     [
+    {
+        element: <HeaderLayout />,
+        children: [
         {
             path : "/",
             element : < Home />
@@ -21,67 +42,22 @@ const router = createBrowserRouter(
         {
             path : "/users/register",
             element : < Register />
-        },
-        {
-            path : "navigate",
-            element : < Navigate />
         }
-    ]
-)
+    ],
+},
+]);
 
-function Home(){
+
+/*function Navigate(){
     return (
-        <div>
-            <h1>"Home"</h1>
-            <p><Link to="/users/login">Login</Link></p>
-            <p><Link to="/users/register">Register</Link> </p>
-            <p><Link to="/navigate">Navigate</Link> </p>
-        </div>
-
-    )
-}
-
-function Login(){
-
-    return (
-        <div>
-            <h1>Login</h1>
-            <p><Link to="/">Home</Link> </p>
-        </div>
-
-    )
-}
-
-function Register(){
-
-    return (
-        <div>
-            <h1>Register</h1>
-            <p><Link to="/">Home</Link> </p>
-        </div>
-
-    )
-}
-
-function Navigate(){
-
-    const [text,setText] = useState("")
-    const navigate = useNavigate()
-
-    function onChangeHandler(event){
-        setText(event.target.value)
-    }
-    return (
-        <div>
-            <h1>Navigate</h1>
-            <input onChange={onChangeHandler} />
-            <button onClick={()=>navigate(text)} />
-        </div>
-
-    )
-}
-
-
+        <Navbar bg="dark" variant="dark">
+            <Nav className="mr-auto">
+                <Nav.Link as={Link} to="/users/login">Login</Nav.Link>
+                <Nav.Link as={Link} to="/users/register">Register</Nav.Link>
+            </Nav>
+        </Navbar>
+        )
+}*/
 
 export function appRouter(){
     const root = createRoot(document.getElementById("container"))

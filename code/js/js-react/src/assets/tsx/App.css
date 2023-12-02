@@ -1,0 +1,100 @@
+body {
+  background-color: white;
+}
+
+/* Login/Register Forms */
+.Auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.Auth-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.Auth-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+}
+
+.Auth-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: #009b77;
+  font-weight: 800;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #008062;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #009b77;
+  color: #fff; /* Text color */
+  border: none;
+}
+
+.custom-btn:disabled {
+  background-color: #009b77;
+  cursor: not-allowed;
+}
+
+.custom-btn:hover:not(:disabled) {
+  background-color: #00e6b0;
+}
+
+/* Navbar */
+.sidenav {
+  height: 100%;
+  width: 160px;
+  position: fixed; /* (stay in place on scroll) */
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+  /* Add logo */
+  background-image: url('/public/logoGomoku.png');
+  background-size: 140px 60px;
+  background-repeat: no-repeat;
+  background-position: center bottom 15px;
+}
+
+/* Navigation menu links */
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #009b77;
+  display: block;
+}
+
+/* Mouse over, change color */
+.sidenav a:hover {
+  color: #00e6b0;
+}
+
+/* Style page content */
+.main {
+  margin-left: 160px;
+  padding: 0px 10px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
