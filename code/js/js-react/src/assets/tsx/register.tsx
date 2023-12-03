@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -7,6 +7,8 @@ function Register() {
   const [password, setPassword] = useState('');
   const [verifyPassword, verifySetPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const navigate = useNavigate();
 
   // Event handler for form submission
   const handleSubmit = async (e) => {
@@ -20,7 +22,8 @@ function Register() {
     try {
       // TODO - Call authentication API
       // Simulating successful login
-      alert('Registration successful!');
+      alert('Registration successful! Proceed to login.');
+      navigate('/users/login');
     } catch (error) {
       // TODO - Handle authentication errors
       alert('Registration failed. Please try again.');
@@ -34,9 +37,10 @@ function Register() {
 
   return (
     <div className="Auth-form-container">
+    <div className="Auth-form-wrapper">
       <form className="Auth-form" onSubmit={handleSubmit}>
         <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Sign Up</h3>
+          <h3 className="Auth-form-title">Create Account</h3>
           <div className="form-group mt-3">
             <label>Email address</label>
             <input
@@ -79,15 +83,22 @@ function Register() {
             </div>
           <div className="d-grid gap-2 mt-3">
             <button type="submit" className="btn btn-primary custom-btn" disabled={isSubmitDisabled}>
-              Submit
+              Sign Up
             </button>
           </div>
-          <p className="not-registered text-right mt-2">
-            Already a member? <Link to="/users/login" style={{ color: '#009b77' }}>Login here!</Link>
-          </p>
         </div>
       </form>
-    </div>
+          <div className="Square-register">
+                          <h3 className="Square-title">Welcome!</h3>
+                          <p className="Square-text">
+                            Already a member? Sign in here!
+                          </p>
+                          <Link to="/users/login">
+                            <button className="btn btn-outline-light custom-btn-transparent">Sign In</button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
   );
 }
 
