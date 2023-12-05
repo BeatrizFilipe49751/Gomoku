@@ -1,0 +1,70 @@
+version: '3.3'
+
+services:
+  postgredb:
+    container_name: postgredb
+    hostname: postgredb
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ola123
+      - POSTGRES_DB=gomokuDAW
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  gomoku-service-1:
+    container_name: gomoku-service-1
+    hostname: gomoku-service-1
+    build:
+      context: gomoku_web_app
+      dockerfile: Dockerfile-spring
+    environment:
+      JDBC_DATABASE_URL: "jdbc:postgresql://postgres:5432/gomokuDAW?user=postgres&password=ola123"
+      port: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgredb
+
+  gomoku-service-2:
+    container_name: gomoku-service-2
+    hostname: gomoku-service-2
+    build:
+      context: gomoku_web_app
+      dockerfile: Dockerfile-spring
+    environment:
+      port: 8082
+      JDBC_DATABASE_URL: "jdbc:postgresql://postgres:5432/gomokuDAW?user=postgres&password=ola123"
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgredb
+
+  frontend:
+    container_name: react
+    hostname: react
+    build:
+      context: frontend/js-react
+      dockerfile: Dockerfile-react
+    ports:
+      - "3000:80"
+    volumes:
+      - ./js/js-react:/app
+    depends_on:
+      - gomoku-service-1
+      - gomoku-service-2
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./js/js-react/dist:/usr/share/nginx/html
+    depends_on:
+      - gomoku-service-1
+      - gomoku-service-2
+      - react
