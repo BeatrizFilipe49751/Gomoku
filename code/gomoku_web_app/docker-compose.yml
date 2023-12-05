@@ -18,7 +18,7 @@ services:
     container_name: gomoku-service-1
     hostname: gomoku-service-1
     build:
-      context: gomoku_web_app
+      context: .
       dockerfile: Dockerfile-spring
     environment:
       JDBC_DATABASE_URL: "jdbc:postgresql://postgres:5432/gomokuDAW?user=postgres&password=ola123"
@@ -32,7 +32,7 @@ services:
     container_name: gomoku-service-2
     hostname: gomoku-service-2
     build:
-      context: gomoku_web_app
+      context: .
       dockerfile: Dockerfile-spring
     environment:
       port: 8082
@@ -42,11 +42,11 @@ services:
     depends_on:
       - postgredb
 
-  frontend:
+  react:
     container_name: react
     hostname: react
     build:
-      context: frontend/js-react
+      context: js/js-react
       dockerfile: Dockerfile-react
     ports:
       - "3000:80"
