@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 // Test data - to be removed!
 const sampleLeaderboardData = [
-  { username: 'ABC', points: 1000 },
+  { username: 'ABCD', points: 1000 },
   { username: 'Mark Lee', points: 500 },
   { username: 'Lee', points: 225 },
   { username: 'user2', points: 100 },
