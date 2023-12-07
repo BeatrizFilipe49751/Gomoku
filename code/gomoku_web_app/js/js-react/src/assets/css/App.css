@@ -346,3 +346,133 @@ td {
     transform: rotate(360deg);
   }
 }
+
+/* Join Lobby Page */
+.title-lobbies {
+  padding-left: 5%;
+  text-align: center;
+  font-size: 30px;
+  color: #009b77;
+  font-weight: 800;
+  margin-top: 3.5rem;
+}
+
+ol {
+  width: min(80rem, 90%);
+  margin-inline: auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3.5rem;
+
+  list-style: none;
+  counter-reset: cardnr;
+  justify-content: center;
+  margin-top: 7rem;
+  padding-left: 5%;
+}
+
+li {
+  --frontColor: white;
+  --width: 10.1em;
+  --inlineP: 0.5rem;
+  --borderR: 3.5rem;
+  --arrowW: 2rem;
+  --arrowH: 1.5rem;
+
+  counter-increment: cardnr;
+  width: calc(var(--width) - var(--inlineP) * 2);
+  display: grid;
+  grid-template:
+    "title"
+    "descr" 1fr;
+  margin-inline: var(--inlineP);
+  margin-bottom: calc(var(--borderR));
+  position: relative;
+}
+li .title,
+li .descr {
+  background: var(--frontColor);
+  padding-inline: 1rem;
+  padding-bottom: 1rem;
+}
+
+li .title,
+li .descr {
+  filter: drop-shadow(0.125rem 0.125rem 0.075rem rgba(0, 0, 0, 0.25));
+}
+
+li .title {
+  color: #009b77;
+  text-align: center;
+  padding-bottom: 0.2rem;
+  grid-area: title;
+  font-size: 1.1rem;
+  font-weight: bold;
+  line-height: var(--borderR);
+  border-radius: var(--borderR) 0 0 0;
+}
+
+li .descr {
+  grid-area: descr;
+  font-size: 0.85rem;
+  text-align: center;
+  height: 9em;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+li .descr span {
+  margin-bottom: 0.25em;
+}
+li .descr::before {
+  content: "";
+  width: var(--arrowW);
+  height: var(--arrowH);
+  position: absolute;
+  right: 1.5rem;
+  top: 100%;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+li::after {
+  content: counter(cardnr, decimal-leading-zero);
+  position: absolute;
+  z-index: -1;
+
+  left: calc(var(--inlineP) * -1);
+  right: calc(var(--inlineP) * -1);
+  top: var(--borderR);
+  bottom: calc(3.3rem * -1);
+
+  display: flex;
+  align-items: flex-end;
+  background: #009b77;
+  border-radius: 0 0 var(--borderR) 0;
+
+  --pad: 1rem;
+  padding: var(--pad);
+  font-size: calc(var(--borderR) - var(--pad) * 2);
+  color: white;
+}
+
+li::before {
+  content: "";
+  position: absolute;
+  height: var(--borderR);
+  top: calc(100% + var(--borderR) - 2px);
+  left: calc(var(--inlineP) * -1);
+  right: calc(var(--inlineP) * -1);
+  border-radius: 0 var(--borderR) 0 0;
+
+  background-image: linear-gradient(#009b77, transparent 60%);
+  opacity: 0.5;
+  filter: blur(2px);
+}
+
+li:hover {
+  transform: scale(1.3);
+  transition: transform 0.3s ease;
+}

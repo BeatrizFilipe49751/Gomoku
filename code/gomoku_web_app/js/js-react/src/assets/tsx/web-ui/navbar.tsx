@@ -19,6 +19,9 @@ const Navbar = () => {
         <Link to='/users/leaderboard' className="nav-link" onClick={() => navigate('/users/leaderboard')}>
           <i className="bi-trophy"></i> Leaderboard
         </Link>
+        <Link to='/users/lobbies' className="nav-link" onClick={() => navigate('/users/lobbies')}>
+          <i className="bi-controller"></i> Join Lobby
+        </Link>
       </div>
   );
 };
