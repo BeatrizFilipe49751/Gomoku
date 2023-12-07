@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { user_routes } from "../api-routes/api_routes";
+import { execute_request } from "../requests/requests";
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -33,15 +35,11 @@ function Register() {
 
     try {
       setLoading(true);
-      const response: Response = await fetch('http://localhost:8080/api/users', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
+      const response: any = await execute_request(
+        user_routes.create_user.url,
+        user_routes.create_user.method,
+        data
+      )
       // Handle the response data if needed
       console.log(response);
 
