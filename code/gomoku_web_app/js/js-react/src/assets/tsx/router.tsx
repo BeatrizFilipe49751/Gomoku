@@ -11,6 +11,7 @@ import Register from './user/register';
 import Navbar from './web-ui/navbar';
 import Leaderboard from './user/leaderboard';
 import Join_Lobby from './lobby/join_lobby';
+import Create_Lobby from './lobby/create_lobby';
 
 const HeaderLayout = () => (
   <>
@@ -46,6 +47,10 @@ const router = createBrowserRouter(
         {
           path: 'users/lobbies',
           element: <Join_Lobby />,
+        },
+        {
+          path: 'users/lobby',
+          element: <Create_Lobby />,
         },
       ],
     },
