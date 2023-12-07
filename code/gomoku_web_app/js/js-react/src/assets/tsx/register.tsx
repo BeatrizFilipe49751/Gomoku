@@ -7,64 +7,68 @@ function Register() {
   const [password, setPassword] = useState('');
   const [verifyPassword, verifySetPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [requestData, setRequestData] = useState([]);
+
+    // Update the submit button state based on the conditions
+      useEffect(() => {
+        setIsSubmitDisabled(!username || !email || !password || !verifyPassword);
+      }, [username, email, password, verifyPassword]);
+
   // Event handler for form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
 
-    if (password !== verifyPassword) {
-      alert('Passwords do not match');
-      return;
-    }
+      if (password !== verifyPassword) {
+        alert('Passwords do not match');
+        return;
+      }
 
-    const data = {
+      const data = {
         username: username,
         email: email,
-        password: password
-    }
-    const args = JSON.stringify(data)
-    useEffect(() => {
-        const fetchRegister = async () => {
-            try {
-                // Replace with actual API call
-                let response = await fetch("http://localhost:8080/api/users", {
-                    method: "POST",
-                    body: args,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'} }
-                );
-                const data = await response.json();
-                // read siren data
-                setRequestData(data);
-                setLoading(false);
-            } catch (error) {
-                setError(error);
-                setLoading(false);
-            }
-        };
-        fetchRegister();
-    }, []);
-    alert('Registration successful yay! Proceed to login.');
-    navigate('/users/login');
-  }
+        password: password,
+      };
 
-  // Update the submit button state based on the conditions
-  useEffect(() => {
-    setIsSubmitDisabled(!username || !email || !password || !verifyPassword);
-  }, [username, email, password, verifyPassword]);
+      try {
+        //setLoading(true);
+        const response = await fetch('http://localhost:8080/api/users', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-    if (loading) {
-        return (
-            <div className="spinner-container">
-                <div className="spinner"></div>
-            </div>
-        );
-    }
+        /*if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }*/
+
+        const responseData = await response.json();
+        // Handle the response data if needed
+        console.log(responseData);
+
+        alert('Registration successful! YEY! Proceed to login.');
+        navigate('/users/login');
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    /*if (loading) {
+      return (
+        <div className="spinner-container">
+          <div className="spinner"></div>
+        </div>
+      );
+    }*/
+
     if (error) {
-        return <div>Error: {error.message}</div>;
+      return <div>Error: {error.message}</div>;
     }
+
   return (
     <div className="Auth-form-container">
     <div className="Auth-form-wrapper">
