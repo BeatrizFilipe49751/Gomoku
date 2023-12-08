@@ -29,4 +29,4 @@ data class AllGameInfo(
     )
 data class PublicGameInfo(val name: String, val playerBlack : Int, val playerWhite: Int)
 data class LobbyInfo(val message: String, val gameId: String)
-data class UserPoints(val username: String, val points: Int)
+data class UserPoints(val userId: Int, val username: String, val points: Int)

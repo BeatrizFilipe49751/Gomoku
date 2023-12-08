@@ -97,10 +97,13 @@ class GameServices(private val transactionManager: TransactionManager) {
                 val newGame = game.play(pieceToPlay)
                 if (newGame.state == FINISHED) {
                     val points = winPoints + bonusPoints
-                    val username = it.usersRepository.getUsername(userId)
-                    if (it.gameRepository.getLeaderboardUsername(username) != null)
-                        it.gameRepository.addUserPoints(username, points)
-                    else it.gameRepository.addUserToLeaderboard(username, points)
+                    //Check if user is in the leaderboard already
+                    if (it.gameRepository.getLeaderboardUserId(userId) != null)
+                        it.gameRepository.addUserPoints(userId, points)
+                    else {
+                        val username = it.usersRepository.getUsername(userId)
+                        it.gameRepository.addUserToLeaderboard(userId, username, points)
+                    }
                 }
                 if (it.gameRepository.updateGame(newGame.toGameSerialized())){
                     AllGameInfo(newGame, gameInfo)

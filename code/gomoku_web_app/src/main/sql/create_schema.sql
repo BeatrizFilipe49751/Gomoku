@@ -41,6 +41,8 @@ CREATE TABLE IF NOT EXISTS game_users (
 );
 
 CREATE TABLE IF NOT EXISTS leaderboard (
-    username VARCHAR(255) PRIMARY KEY,
-    points INTEGER NOT NULL
+    userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+    username VARCHAR(255) NOT NULL,
+    points INTEGER NOT NULL,
+    PRIMARY KEY (userId)
 )

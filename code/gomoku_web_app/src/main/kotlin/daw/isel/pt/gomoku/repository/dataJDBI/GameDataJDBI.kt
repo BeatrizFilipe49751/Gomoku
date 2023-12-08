@@ -80,12 +80,13 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
             .singleOrNull()
     }
 
-    override fun addUserToLeaderboard(username: String, points: Int): Boolean {
+    override fun addUserToLeaderboard(userId: Int, username: String, points: Int): Boolean {
         val numRows = handle.createUpdate("""
-             INSERT INTO leaderboard(username, points) 
-             VALUES (:username, :points)
+             INSERT INTO leaderboard(userId, username, points) 
+             VALUES (:userId, :username, :points)
         """.trimIndent()
         )
+            .bind("userId", userId)
             .bind("username", username)
             .bind("points", points)
             .execute()
@@ -93,23 +94,23 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
         return numRows > 0
     }
 
-    override fun addUserPoints(username: String, points: Int): Boolean {
+    override fun addUserPoints(userId: Int, points: Int): Boolean {
         val numRows = handle.createUpdate(
             """
-                UPDATE leaderboard SET points = :points where username = :username
+                UPDATE leaderboard SET points = (points + :points) where userId = :userId
             """.trimIndent()
         )
             .bind("points", points)
-            .bind("username", username)
+            .bind("userId", userId)
             .execute()
 
         return numRows > 0
     }
 
-    override fun getLeaderboardUsername(username: String): String? {
-        return handle.createQuery("SELECT username FROM leaderboard WHERE username = :username")
-            .bind("username", username)
-            .mapTo(String::class.java)
+    override fun getLeaderboardUserId(userId: Int): Int? {
+        return handle.createQuery("SELECT userId FROM leaderboard WHERE userId = :userId")
+            .bind("userId", userId)
+            .mapTo(Int::class.java)
             .singleOrNull()
     }
 }
