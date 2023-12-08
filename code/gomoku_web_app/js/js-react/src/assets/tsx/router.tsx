@@ -13,6 +13,7 @@ import Leaderboard from './user/leaderboard';
 import Join_Lobby from './lobby/join_lobby';
 import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
+import NavbarLogged from "./web-ui/navbar_logged";
 
 const HeaderLayout = () => (
   <>

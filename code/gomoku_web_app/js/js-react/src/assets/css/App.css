@@ -605,3 +605,42 @@ p {
   margin-top: -10px;
   font-weight: normal;
 }
+
+
+/* Navbar logged */
+.user-profile {
+  text-align: center; /* Center the content within the div */
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  background-color: #868d9b;
+  background: url("/public/profile_pic.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #ffffff;
+  border-radius: 120px;
+  margin: 0 auto;
+  margin-top: -10px;
+  transition: transform 0.3s;
+}
+
+.user-profile h3 {
+  margin-top: 10px; /* Adjust the margin to your preference */
+  color: #009b77;
+  transition: transform 0.3s;
+}
+
+.profile-link:hover {
+  cursor: pointer;
+}
+
+.profile-link:hover .profile-pic {
+  transform: scale(1.2);
+}
+
+.profile-link:hover h3 {
+  transform: scale(1.2);
+}
