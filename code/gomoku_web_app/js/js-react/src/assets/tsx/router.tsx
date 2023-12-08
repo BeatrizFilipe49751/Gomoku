@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import {createBrowserRouter, RouterProvider, Outlet, RouteObject} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet, Route } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/App.css';
@@ -11,6 +11,7 @@ import Register from './user/register';
 import Navbar from './web-ui/navbar';
 import Leaderboard from './user/leaderboard';
 import Join_Lobby from './lobby/join_lobby';
+import Create_Lobby from './lobby/create_lobby';
 
 const HeaderLayout = () => (
   <>
@@ -21,42 +22,36 @@ const HeaderLayout = () => (
   </>
 );
 
-const home : RouteObject =  {
-      index: true,
-      element: <Home />,
-}
-
-const user_routes: RouteObject[] = [
-  {
-    path: 'users/login',
-    element: <Login />,
-  },
-  {
-    path: 'users/register',
-    element: <Register />,
-  },
-  {
-    path: 'users/leaderboard',
-    element: <Leaderboard />,
-  },
-]
-
-
-const lobby_routes: RouteObject[] = [
-  {
-    path: 'users/lobbies',
-    element: <Join_Lobby />,
-  },
-]
-
-
 const router = createBrowserRouter(
   [
     {
       path: '/',
       element: <HeaderLayout />,
       children: [
-          home, ...user_routes, ...lobby_routes
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: 'users/login',
+          element: <Login />,
+        },
+        {
+          path: 'users/register',
+          element: <Register />,
+        },
+        {
+          path: 'users/leaderboard',
+          element: <Leaderboard />,
+        },
+        {
+          path: 'users/lobbies',
+          element: <Join_Lobby />,
+        },
+        {
+          path: 'users/lobby',
+          element: <Create_Lobby />,
+        },
       ],
     },
   ]
