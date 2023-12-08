@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {execute_request_auth} from "../requests/requests";
+import {lobby_api_routes} from "../api-routes/api_routes";
 
 function Create_Lobby() {
   const [name, setName] = useState('');
@@ -13,16 +15,24 @@ function Create_Lobby() {
   // Event handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const data = {
+      name: name,
+      opening: openingType,
+      variant: variantType,
+      size: boardSize
+    }
     try {
-      // TODO - Call authentication API
-      // Simulating successful login
+      await execute_request_auth(
+          lobby_api_routes.create_lobby.url,
+          lobby_api_routes.create_lobby.method,
+          data
+      )
 
       alert('Create lobby successful!');
-      //navigate('/');
-    } catch (error) {
-      // TODO - Handle authentication errors
-      alert('Create lobby failed. Please try again.');
+      //navigate('/users/lobby');
+    } catch (rejectedPromise) {
+      const error = await rejectedPromise
+      alert(error.message)
     }
   };
 
@@ -84,9 +94,6 @@ function Create_Lobby() {
                   onChange={(e) => setBoardSize(parseInt(e.target.value, 10))}
                 >
                   <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
                   <option value="19">19</option>
                 </select>
               </div>

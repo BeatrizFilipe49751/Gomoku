@@ -1,3 +1,5 @@
+import {getAuthToken} from "./session-handler";
+
 export function formatUrl(template: string, replacements: Record<string, string>): string {
     return template.replace(/\{(\w+)}/g, (match, key) => replacements[key] || match)
 }
@@ -10,6 +12,20 @@ export async function execute_request(requestInfo: RequestInfo, method: string, 
     });
     return handleResponse(response);
 }
+
+export async function execute_request_auth(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
+    const token = getAuthToken()
+    const response: Response = await fetch(requestInfo, {
+        method: method,
+        body: JSON.stringify(data),
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    return handleResponse(response);
+}
+
 export async function handleResponse(response: Response): Promise<any> {
     let status: number = response.status
     console.log(status)
@@ -33,7 +49,7 @@ type Error = {
 function handleError(response: Response): Promise<Error> {
     return Promise.reject(response.text().then(error => {
         const jsonError = JSON.parse(error)
-        const errorMessage: Error = { message: "Invalid Request: " + jsonError.message }
+        const errorMessage: Error = { message: jsonError.message }
         return errorMessage
     }))
 }

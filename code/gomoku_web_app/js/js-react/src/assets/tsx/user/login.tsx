@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { user_routes } from '../api-routes/api_routes';
 import { execute_request } from '../requests/requests';
+import {createCookie} from "../requests/session-handler";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -22,18 +23,18 @@ function Login() {
     try {
       setLoading(true)
       const response: any = await execute_request(
-        user_routes.create_user.url,
-        user_routes.create_user.method,
+        user_routes.login.url,
+        user_routes.login.method,
         data
       )
-
-      console.log(response)
-
-      alert('Login successful!');
-      navigate('/');
-    } catch (error) {
-      setError(error)
-      alert(`Login failed. ${error.message}`);
+      //get token and create a cookie with it
+      const token = response.properties.token
+      createCookie(token)
+      alert('Login successful!')
+      navigate('/users/lobby');
+    } catch (rejectedPromise) {
+      const error = await rejectedPromise
+      alert(error.message)
     } finally {
       setLoading(false)
     }
@@ -51,10 +52,6 @@ function Login() {
         <div className="spinner"></div>
       </div>
     );
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
   }
 
   return (
