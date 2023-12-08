@@ -2,7 +2,7 @@ export function formatUrl(template: string, replacements: Record<string, string>
     return template.replace(/\{(\w+)}/g, (match, key) => replacements[key] || match)
 }
 
-export async function execute_request(requestInfo: RequestInfo, method: string, data: any) {
+export async function execute_request(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
     const response: Response = await fetch(requestInfo, {
         method: method,
         body: JSON.stringify(data),

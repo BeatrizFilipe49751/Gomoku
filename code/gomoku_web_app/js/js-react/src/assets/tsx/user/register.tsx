@@ -10,8 +10,8 @@ function Register() {
   const [verifyPassword, verifySetPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   // Update the submit button state based on the conditions
   useEffect(() => {
