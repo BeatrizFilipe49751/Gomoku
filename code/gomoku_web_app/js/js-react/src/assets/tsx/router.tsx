@@ -55,7 +55,6 @@ const lobby_routes: RouteObject[] = [
 
 const game_routes: RouteObject[] = []
 
-
 const router = createBrowserRouter(
   [
     {
@@ -70,6 +69,7 @@ const router = createBrowserRouter(
     },
   ]
 );
+
 
 export function appRouter() {
   const root = createRoot(document.getElementById('container'));

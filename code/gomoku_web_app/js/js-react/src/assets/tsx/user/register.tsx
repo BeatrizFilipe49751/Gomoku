@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { user_routes } from "../api-routes/api_routes";
 import { execute_request } from "../requests/requests";
+import {Loading} from "../web-ui/request-ui-handler";
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -41,27 +42,19 @@ function Register() {
         data
       )
       // Handle the response data if needed
-      console.log(response);
-
+      // console.log(response);
       alert('Registration successful! Proceed to login.');
       navigate('/users/login');
-    } catch (error) {
-      setError(error);
+    } catch (rejectedPromise: any) {
+      const error = await rejectedPromise
+      alert(error.message)
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return (
-      <div className="spinner-container">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
+    return <Loading />;
   }
 
   return (

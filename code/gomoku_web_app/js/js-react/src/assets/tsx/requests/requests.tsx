@@ -10,7 +10,7 @@ export async function execute_request(requestInfo: RequestInfo, method: string, 
     });
     return handleResponse(response);
 }
-export function handleResponse(response: Response): Promise<any> {
+export async function handleResponse(response: Response): Promise<any> {
     let status: number = response.status
     console.log(status)
     switch (status) {
@@ -18,7 +18,7 @@ export function handleResponse(response: Response): Promise<any> {
         case 404:
         case 401:
         case 500:
-            return handleError(response);
+            return await handleError(response);
         case 200:
         case 201:
             return response.json();
