@@ -99,7 +99,7 @@ function Create_Lobby() {
           </div>
         </form>
         <div className="Square">
-          <h3 className="Square-title">Welcome back!</h3>
+          <h3 className="Square-title-lobby">Welcome back!</h3>
           <p className="Square-text">
             Want to join a lobby instead? Choose an available one here!
           </p>

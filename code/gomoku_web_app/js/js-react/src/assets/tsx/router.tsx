@@ -12,6 +12,7 @@ import Navbar from './web-ui/navbar';
 import Leaderboard from './user/leaderboard';
 import Join_Lobby from './lobby/join_lobby';
 import Create_Lobby from "./lobby/create_lobby";
+import Profile from "./user/profile";
 
 const HeaderLayout = () => (
   <>
@@ -40,6 +41,10 @@ const user_routes: RouteObject[] = [
     path: 'users/leaderboard',
     element: <Leaderboard />,
   },
+  {
+    path: 'users/profile/:userId',
+    element: <Profile />,
+  }
 ]
 
 const lobby_routes: RouteObject[] = [
