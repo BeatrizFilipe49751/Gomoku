@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider, Outlet, RouteObject } from 'react-
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/App.css';
+import '../css/Game.css'
 
 import Home from './web-ui/home';
 import Login from './user/login';
@@ -14,6 +15,7 @@ import Join_Lobby from './lobby/join_lobby';
 import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
 import NavbarLogged from "./web-ui/navbar_logged";
+import Game from "./game/game"
 
 const HeaderLayout = () => (
   <>
@@ -59,7 +61,12 @@ const lobby_routes: RouteObject[] = [
   },
 ]
 
-const game_routes: RouteObject[] = []
+const game_routes: RouteObject[] = [
+  {
+    path: 'game',
+    element: <Game />
+  }
+]
 
 const router = createBrowserRouter(
   [
