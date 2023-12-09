@@ -123,7 +123,7 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
     }
 
     override fun getLeaderboard(): List<UserPoints> {
-        return handle.createQuery("select * from leaderboard group by username order by points desc")
+        return handle.createQuery("select userId, username, points from leaderboard group by username, userId order by points desc")
             .mapTo(UserPoints::class.java)
             .list()
     }
