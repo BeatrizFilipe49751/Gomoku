@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { user_routes } from '../api-routes/api_routes';
 import { execute_request } from '../requests/requests';
-import {createCookie} from "../requests/session-handler";
+import { createCookie } from "../requests/session-handler";
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   // Event handler for form submission

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 
-export function ViewError({error}: { error: any }) {
+export function ViewError({ error }: { error: any }) {
     return <span className="broken-component">{error.message}</span>
 }
 

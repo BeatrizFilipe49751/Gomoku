@@ -1,4 +1,4 @@
-import {getAuthToken} from "./session-handler";
+import { getAuthToken } from "./session-handler";
 
 export function formatUrl(template: string, replacements: Record<string, string>): string {
     return template.replace(/\{(\w+)}/g, (match, key) => replacements[key] || match)

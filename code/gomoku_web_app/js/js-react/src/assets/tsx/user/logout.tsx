@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { user_routes } from '../api-routes/api_routes';
-import {execute_request, execute_request_auth} from '../requests/requests';
-import {createCookie, removeToken} from "../requests/session-handler";
-import {Loading} from "../web-ui/request-ui-handler";
+import { execute_request_auth } from '../requests/requests';
+import { removeToken } from "../requests/session-handler";
+import { Loading } from "../web-ui/request-ui-handler";
 
 
 function Logout() {
@@ -30,10 +30,10 @@ function Logout() {
         }
     };
 
-    if(loading) {
-        return <Loading/>
+    if (loading) {
+        return <Loading />
     } else {
-        logout().then(() => {})
+        logout().then(() => { })
     }
 }
 

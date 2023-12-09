@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {execute_request_auth} from "../requests/requests";
-import {lobby_api_routes} from "../api-routes/api_routes";
-import {Loading} from "../web-ui/request-ui-handler";
+import { execute_request_auth } from "../requests/requests";
+import { lobby_api_routes } from "../api-routes/api_routes";
+import { Loading } from "../web-ui/request-ui-handler";
 
 function Create_Lobby() {
   const [name, setName] = useState('');
@@ -25,9 +25,9 @@ function Create_Lobby() {
     }
     try {
       await execute_request_auth(
-          lobby_api_routes.create_lobby.url,
-          lobby_api_routes.create_lobby.method,
-          data
+        lobby_api_routes.create_lobby.url,
+        lobby_api_routes.create_lobby.method,
+        data
       )
       alert('Create lobby successful!');
       setWaitingForOpponent(true)
@@ -50,8 +50,8 @@ function Create_Lobby() {
     setIsSubmitDisabled(!name);
   }, [name]);
 
-  if(waitingForOpponent) {
-    return <Loading/>
+  if (waitingForOpponent) {
+    return <Loading />
   }
 
   return (

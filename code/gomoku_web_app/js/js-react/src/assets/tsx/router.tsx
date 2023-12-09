@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, RouteObject } from 'react-router-dom';
 
@@ -16,13 +16,13 @@ import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
 import Game from "./game/game"
 import Waiting_Opponent from "./lobby/waiting_opponent";
-import {getAuthToken} from "./requests/session-handler";
+import { getAuthToken } from "./requests/session-handler";
 import HomeLogged from "./web-ui/home_logged";
 import Logout from "./user/logout";
 
 const ConditionalHomeRenderer: React.FC = () => {
   let token = getAuthToken()
-  return token ? <HomeLogged/> : <Home/>
+  return token ? <HomeLogged /> : <Home />
 }
 
 const HeaderLayout = () => (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { user_routes } from "../api-routes/api_routes";
 import { execute_request } from "../requests/requests";
-import {Loading} from "../web-ui/request-ui-handler";
+import { Loading } from "../web-ui/request-ui-handler";
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -11,7 +11,6 @@ function Register() {
   const [verifyPassword, verifySetPassword] = useState('');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   // Update the submit button state based on the conditions
@@ -36,7 +35,7 @@ function Register() {
 
     try {
       setLoading(true);
-      const response: any = await execute_request(
+      await execute_request(
         user_routes.create_user.url,
         user_routes.create_user.method,
         data

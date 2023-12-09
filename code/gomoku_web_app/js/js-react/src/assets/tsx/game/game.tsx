@@ -20,7 +20,7 @@ const GomokuBoard: React.FC<GomokuBoardProps> = ({ boardSize }) => {
 
     function dummyPlay(row: number, col: number, color: string) {
         setDummyPieces(prevPieces => [...prevPieces,
-            { position: { row: row, col: col }, color: color }
+        { position: { row: row, col: col }, color: color }
         ]);
     }
 

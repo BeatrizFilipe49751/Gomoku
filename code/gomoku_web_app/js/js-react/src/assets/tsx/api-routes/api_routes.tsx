@@ -2,26 +2,26 @@
 
 const api_route = "http://localhost:8080/api"
 export const user_routes = {
-        create_user:  {
-            method: "POST",
-            url: api_route + "/users"
-        },
-        get_user: {
-            method: "GET",
-            url: api_route + "/users/{userId}"
-        },
-        login: {
-            method: "POST",
-            url: api_route + "/users/login"
-        },
-        logout: {
-            method: "POST",
-            url: api_route + "/users/logout"
-        },
-        get_leaderboard: {
-            method: "POST",
-            url: api_route + "/users/logout"
-        }
+    create_user: {
+        method: "POST",
+        url: api_route + "/users"
+    },
+    get_user: {
+        method: "GET",
+        url: api_route + "/users/{userId}"
+    },
+    login: {
+        method: "POST",
+        url: api_route + "/users/login"
+    },
+    logout: {
+        method: "POST",
+        url: api_route + "/users/logout"
+    },
+    get_leaderboard: {
+        method: "POST",
+        url: api_route + "/users/logout"
+    }
 }
 
 export const lobby_api_routes = {
@@ -51,7 +51,7 @@ export const lobby_api_routes = {
     }
 }
 
-export const game_api_routes ={
+export const game_api_routes = {
     get_game: {
         method: "GET",
         url: api_route + "/users/game/{gameId}"
