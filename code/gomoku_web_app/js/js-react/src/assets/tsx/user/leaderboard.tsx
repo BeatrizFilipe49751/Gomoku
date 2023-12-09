@@ -7,9 +7,7 @@ function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // To be used when integration with API is ready
   useEffect(() => {
-    // Replace with actual API call
     execute_request(
         user_routes.get_leaderboard.url,
         user_routes.get_leaderboard.method,

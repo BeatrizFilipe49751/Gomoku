@@ -24,20 +24,15 @@ function Create_Lobby() {
       size: boardSize
     }
     try {
-      await execute_request_auth(
+      const response = await execute_request_auth(
         lobby_api_routes.create_lobby.url,
         lobby_api_routes.create_lobby.method,
         data
       )
+      console.log(response.properties)
       alert('Create lobby successful!');
       setWaitingForOpponent(true)
-
-      /**
-       *  TODO
-       *  - do polling
-       *  - quit waiting
-       *  - navigate to game when other user joins
-       */
+      navigate(`/users/lobby/${response.properties.lobbyId}/wait`)
 
     } catch (rejectedPromise) {
       const error = await rejectedPromise
