@@ -12,7 +12,7 @@ object Routes {
     object UserRoutes {
         const val GET_USER = "$PREFIX/users/{userId}"
         const val CREATE_USER= "$PREFIX/users"
-        const val LOGIN = "$PREFIX/users/token"
+        const val LOGIN = "$PREFIX/users/login"
         const val LOGOUT = "$PREFIX/users/logout"
         const val GET_LEADERBOARD = "$PREFIX/users/leaderboard"
     }
@@ -23,7 +23,7 @@ object Routes {
         const val CHECK_FULL_LOBBY = "$PREFIX/users/lobby/{lobbyId}/full"
         const val GET_AVAILABLE_LOBBIES = "$PREFIX/users/lobbies"
         const val JOIN_LOBBY = "$PREFIX/users/lobby/{lobbyId}"
-        const val DELETE_LOBBY = "$PREFIX/users/lobby/{lobbyId}"
+        const val QUIT_LOBBY = "$PREFIX/users/lobby/{lobbyId}"
         const val AUTH_NEEDED = "$PREFIX/users/lobby/**"
     }
 }

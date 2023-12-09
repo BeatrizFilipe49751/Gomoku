@@ -16,17 +16,21 @@ data class ErrorResponse(val status: Int, val message: String = "No message prov
 data class GameOut(
     val gameId: String,
     val name: String,
+    val opening: Int,
+    val variant: Int,
+    val boardSize: Int,
     val playerBlack: Int,
     val playerWhite: Int,
     val currentTurn: Char,
     val pieces: String,
-    val state: String
+    val state: String,
+
 )
 data class GameInfo(val game : String, val player_black : Int, val player_white : Int)
 data class AllGameInfo(
     val game: Game,
     val gameInfo: GameInfo
-    )
+)
 data class PublicGameInfo(val name: String, val playerBlack : Int, val playerWhite: Int)
 data class LobbyInfo(val message: String, val gameId: String)
 data class UserPoints(val userId: Int, val username: String, val points: Int)

@@ -143,7 +143,6 @@ class GameServiceTest {
                 variant = Variant.FREESTYLE.id,
                 playerBlack= user1.user.userId,
                 playerWhite= user2.user.userId,
-
             )
         }
     }

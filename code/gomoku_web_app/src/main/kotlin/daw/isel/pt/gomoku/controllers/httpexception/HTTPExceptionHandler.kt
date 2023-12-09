@@ -16,7 +16,7 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [NotFoundException::class] )
     fun exceptionHandlerNotFound(e: NotFoundException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.NOT_FOUND.value(),  e.message ?: "No message provided")
-        log.info("Handling NotFoundException: ${e.message}")
+        log.error("Handling NotFoundException: ${e.message}")
         return ResponseEntity
             .status(errorResponse.status)
             .body(errorResponse)
@@ -24,7 +24,7 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [AlreadyInLobbyException::class, IllegalArgumentException::class, InvalidCredentialsException::class, GameError::class] )
     fun exceptionHandlerBadRequest(e: Exception): ResponseEntity<ErrorResponse>{
         val errorResponse = ErrorResponse(HttpStatus.BAD_REQUEST.value(),  e.message ?: "No message provided")
-        log.info("Handling ${e::class.java.simpleName}: ${e.message}")
+        log.error("Handling ${e::class.java.simpleName}: ${e.message}")
         return ResponseEntity
             .status(errorResponse.status)
             .body(errorResponse)
@@ -34,7 +34,7 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [UnauthorizedException::class] )
     fun exceptionHandlerUnauthorized(e: UnauthorizedException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.message ?: "No message provided")
-        log.info("Handling UnauthorizedException ${e.message}")
+        log.error("Handling UnauthorizedException ${e.message}")
         return ResponseEntity
             .status(errorResponse.status)
             .body(errorResponse)
@@ -43,14 +43,14 @@ class HTTPExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [SQLException::class])
     fun handleSQLException(e: SQLException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "DATABASE ERROR")
-        log.info("Handling SQLException ${e.message}")
+        log.error("Handling SQLException ${e.message}")
         return ResponseEntity
             .status(errorResponse.status)
             .body(errorResponse)
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(HTTPExceptionHandler::class.java)
+        private val log = LoggerFactory
+            .getLogger(HTTPExceptionHandler::class.java)
     }
-
 }

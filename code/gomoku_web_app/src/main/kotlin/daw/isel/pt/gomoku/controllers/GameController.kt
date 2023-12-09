@@ -1,11 +1,10 @@
 package daw.isel.pt.gomoku.controllers
 
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
-import daw.isel.pt.gomoku.controllers.hypermedia.toGameInfoSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
+import daw.isel.pt.gomoku.controllers.loggin.LoggerMessages
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.PlayIn
-import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
 import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.gameString
 import daw.isel.pt.gomoku.controllers.utils.toGameOut
@@ -24,6 +23,8 @@ class GameController(val gameServices: GameServices) {
         @PathVariable gameId: String,
         @RequestBody playIn: PlayIn
     ): ResponseEntity<Siren<GameOut>> {
+        logger.info(LoggerMessages.GameLoggerMessages.PLAY)
+
         val user = authUser.user
         val game = gameServices.getGame(
             gameId = gameId
@@ -38,20 +39,39 @@ class GameController(val gameServices: GameServices) {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
-                newGame.toGameOut()
-                    .toGameSiren()
+                newGame.toGameOut().toGameSiren()
             )
     }
 
-    @GetMapping(Routes.GameRoutes.GET_GAME)
+    @GetMapping
+    fun getGame(authUser: AuthUser, @PathVariable gameId: String):
+            ResponseEntity<Siren<GameOut>> {
+        logger.info(LoggerMessages.GameLoggerMessages.GET_GAME)
+
+        val game = gameServices.getGameInfo(
+            gameId = gameId
+        )
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                game.toGameOut().toGameSiren()
+            )
+    }
+
+    /*
+    @GetMapping(Routes.GameRoutes.GET_GAME_PUBLIC)
     fun getGame(authUser: AuthUser, @PathVariable gameId: String):
             ResponseEntity<Siren<PublicGameInfo>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(gameServices.getGameInfo(gameId).toGameInfoSiren())
+            .body(
+                gameServices.getGameInfo(gameId)
+                .toGameInfoSiren()
+            )
     }
+    */
 
     companion object{
-        private val logger = LoggerFactory.getLogger(LobbyController::class.java)
+        private val logger = LoggerFactory.getLogger(GameController::class.java)
     }
 }

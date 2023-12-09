@@ -52,6 +52,9 @@ fun AllGameInfo.toGameOut(): GameOut{
         name = this.game.name,
         playerWhite = this.gameInfo.player_white,
         playerBlack = this.gameInfo.player_black,
+        opening = this.game.opening.id,
+        variant = this.game.variant.id,
+        boardSize = this.game.board.size,
         currentTurn = this.game.currentTurn.color,
         pieces = this.game.board.serialize(),
         state = if (this.game.state == ACTIVE)

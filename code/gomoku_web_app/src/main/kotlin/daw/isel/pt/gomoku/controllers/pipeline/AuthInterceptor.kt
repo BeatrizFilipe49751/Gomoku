@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.controllers.pipeline
 
+import daw.isel.pt.gomoku.controllers.loggin.LoggerMessages
 import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -16,7 +17,8 @@ class AuthInterceptor(private val tokenValidator: RequestTokenValidator): Handle
             response.status = HttpServletResponse.SC_UNAUTHORIZED
             throw UnauthorizedException("Unauthorized Access")
         }
-        logger.info("Handling Auth interceptor")
+        logger.info(LoggerMessages.AuthLoggerMessages.AUTH_INTERCEPTOR)
+
         val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authorizationHeader)
         return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
         else {

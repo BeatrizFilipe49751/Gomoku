@@ -4,6 +4,7 @@ import daw.isel.pt.gomoku.controllers.hypermedia.Siren
 import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
+import daw.isel.pt.gomoku.controllers.loggin.LoggerMessages
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.LobbyIn
 import daw.isel.pt.gomoku.controllers.models.LobbyInfo
@@ -29,6 +30,8 @@ class LobbyController(
         authUser : AuthUser,
         @RequestBody lobbyIn: LobbyIn
     ): ResponseEntity<Siren<LobbyOut>> {
+        logger.info(LoggerMessages.LobbyLoggerMessages.CREATE_LOBBY)
+
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lobbyServices.createLobby(
@@ -45,6 +48,8 @@ class LobbyController(
 
     @GetMapping(Routes.LobbyRoutes.GET_AVAILABLE_LOBBIES)
     fun getLobbies(): ResponseEntity<List<Lobby>> {
+        logger.info(LoggerMessages.LobbyLoggerMessages.GET_AVAILABLE_LOBBIES)
+
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobbies())
@@ -55,6 +60,8 @@ class LobbyController(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
     ): ResponseEntity<Siren<LobbyOut>> {
+        logger.info(LoggerMessages.LobbyLoggerMessages.GET_LOBBY)
+
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobby(
@@ -70,6 +77,8 @@ class LobbyController(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
     ): ResponseEntity<Siren<GameOut>> {
+        logger.info(LoggerMessages.LobbyLoggerMessages.JOIN_LOBBY)
+
         val user = authUser.user
         val lobby = lobbyServices.getLobby(
             lobbyId = lobbyId
@@ -97,11 +106,13 @@ class LobbyController(
             )
     }
 
-    @DeleteMapping(Routes.LobbyRoutes.DELETE_LOBBY)
+    @DeleteMapping(Routes.LobbyRoutes.QUIT_LOBBY)
     fun quitLobby(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
     ): ResponseEntity<Siren<AuthUser>> {
+        logger.info(LoggerMessages.LobbyLoggerMessages.QUIT_LOBBY)
+
         val user = authUser.user
         lobbyServices.deleteLobby(
             userId = user.userId,
@@ -118,6 +129,8 @@ class LobbyController(
         authUser: AuthUser,
         @PathVariable lobbyId: Int
     ): ResponseEntity<LobbyInfo> {
+        logger.info(LoggerMessages.LobbyLoggerMessages.CHECK_FULL_LOBBY)
+
         val user = authUser.user
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -130,6 +143,7 @@ class LobbyController(
     }
 
     companion object{
-        private val logger = LoggerFactory.getLogger(LobbyController::class.java)
+        private val logger = LoggerFactory
+            .getLogger(LobbyController::class.java)
     }
 }

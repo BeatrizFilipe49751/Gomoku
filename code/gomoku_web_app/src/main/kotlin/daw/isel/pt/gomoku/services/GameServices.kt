@@ -2,7 +2,6 @@ package daw.isel.pt.gomoku.services
 
 import daw.isel.pt.gomoku.controllers.models.AllGameInfo
 import daw.isel.pt.gomoku.controllers.models.GameInfo
-import daw.isel.pt.gomoku.controllers.models.PublicGameInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
@@ -13,7 +12,6 @@ import daw.isel.pt.gomoku.repository.interfaces.transactions.TransactionManager
 import daw.isel.pt.gomoku.services.exceptions.GameError
 import daw.isel.pt.gomoku.services.exceptions.GameErrorMessages
 import daw.isel.pt.gomoku.services.exceptions.NotFoundException
-import daw.isel.pt.gomoku.services.exceptions.UnauthorizedException
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -63,21 +61,20 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun getGameInfo(gameId: String): PublicGameInfo {
+
+    fun getGameInfo(gameId: String): AllGameInfo {
         return transactionManager.run {
             val game = it.gameRepository.getGame(gameId)
-            if(game != null) {
-                val gameInfo = it.gameRepository.checkGameInfo(gameId)
-                if(gameInfo!= null)
-                    PublicGameInfo(
-                        name= game.name,
-                        playerBlack = gameInfo.player_black,
-                        playerWhite = gameInfo.player_white,
-                    )
-                else throw NotFoundException(GameErrorMessages.GAME_NOT_FOUND)
-            }  else throw UnauthorizedException(GameErrorMessages.INVALID_GAME_VIEWING)
+            val gameInfo = it.gameRepository.checkGameInfo(gameId)
+            if(game != null && gameInfo != null) {
+                AllGameInfo(
+                    game.toGame(),
+                    gameInfo
+                )
+            }  else throw NotFoundException(GameErrorMessages.GAME_NOT_FOUND)
         }
     }
+
 
     fun play(game: Game, userId: Int, col: Int, row: Int): AllGameInfo {
         return transactionManager.run {
