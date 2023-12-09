@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {execute_request_auth} from "../requests/requests";
 import {lobby_api_routes} from "../api-routes/api_routes";
+import {Loading} from "../web-ui/request-ui-handler";
 
 function Create_Lobby() {
   const [name, setName] = useState('');
   const [openingType, setOpeningType] = useState(1);
   const [variantType, setVariantType] = useState(1);
   const [boardSize, setBoardSize] = useState(15);
+  const [waitingForOpponent, setWaitingForOpponent] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const navigate = useNavigate();
@@ -27,9 +29,16 @@ function Create_Lobby() {
           lobby_api_routes.create_lobby.method,
           data
       )
-
       alert('Create lobby successful!');
-      //navigate('/users/lobby');
+      setWaitingForOpponent(true)
+
+      /**
+       *  TODO
+       *  - do polling
+       *  - quit waiting
+       *  - navigate to game when other user joins
+       */
+
     } catch (rejectedPromise) {
       const error = await rejectedPromise
       alert(error.message)
@@ -40,6 +49,10 @@ function Create_Lobby() {
   useEffect(() => {
     setIsSubmitDisabled(!name);
   }, [name]);
+
+  if(waitingForOpponent) {
+    return <Loading/>
+  }
 
   return (
     <div className="Auth-form-container">

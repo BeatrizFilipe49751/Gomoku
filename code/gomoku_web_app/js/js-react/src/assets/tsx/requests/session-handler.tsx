@@ -17,7 +17,6 @@ export function createCookie(token: string) {
     const expires = new Date();
     expires.setTime(expires.getTime() + 6 * 60 * 60 * 1000);
     cookies.set('authToken', token, { path: '/', expires });
-
 }
 
 export function getAuthToken() {

@@ -31,7 +31,7 @@ function Login() {
       const token = response.properties.token
       createCookie(token)
       alert('Login successful!')
-      navigate('/users/lobby');
+      navigate('/');
     } catch (rejectedPromise) {
       const error = await rejectedPromise
       alert(error.message)

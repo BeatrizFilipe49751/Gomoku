@@ -12,7 +12,7 @@ export const user_routes = {
         },
         login: {
             method: "POST",
-            url: api_route + "/users/token"
+            url: api_route + "/users/login"
         },
         logout: {
             method: "POST",

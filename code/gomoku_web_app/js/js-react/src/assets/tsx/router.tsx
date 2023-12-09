@@ -14,10 +14,15 @@ import Leaderboard from './user/leaderboard';
 import Join_Lobby from './lobby/join_lobby';
 import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
-import NavbarLogged from "./web-ui/navbar_logged";
 import Game from "./game/game"
-import HomeLogged from "./web-ui/home_logged";
 import Waiting_Opponent from "./lobby/waiting_opponent";
+import {getAuthToken} from "./requests/session-handler";
+import HomeLogged from "./web-ui/home_logged";
+
+const ConditionalHomeRenderer: React.FC = () => {
+  let token = getAuthToken()
+  return token ? <HomeLogged/> : <Home/>
+}
 
 const HeaderLayout = () => (
   <>
@@ -30,12 +35,16 @@ const HeaderLayout = () => (
 
 const home: RouteObject = {
   index: true,
-  element: <Home />,
+  element: <ConditionalHomeRenderer />,
 }
 
 const user_routes: RouteObject[] = [
   {
     path: 'users/login',
+    element: <Login />,
+  },
+  {
+    path: 'users/logout',
     element: <Login />,
   },
   {

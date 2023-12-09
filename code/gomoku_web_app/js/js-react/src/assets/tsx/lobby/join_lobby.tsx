@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {Loading} from "../web-ui/request-ui-handler";
+import {execute_request, execute_request_auth} from "../requests/requests";
+import {lobby_api_routes, user_routes} from "../api-routes/api_routes";
 
 // Test data - to be removed!
 const sampleLobbiesData = [
@@ -13,33 +16,28 @@ const sampleLobbiesData = [
 function Join_Lobby() {
   const [lobbiesData, setLobbiesData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchLobbiesData = async () => {
       try {
         // Replace with actual API call
         setLoading(true);
-        const response: Response = await fetch('http://localhost:8080/api/users/lobbies', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setLobbiesData(data);
+
+        const reponse = await execute_request_auth(
+            lobby_api_routes.get_available_lobbies.url,
+            lobby_api_routes.get_available_lobbies.method,
+            null
+        )
         setLoading(false);
       } catch (error) {
-        setError(error);
         setLoading(false);
       }
     };
 
     fetchLobbiesData();
-  }, []);*/
+  }, []);
 
   const getOpeningString = (opening) => {
       if (opening === 1) {
@@ -53,19 +51,12 @@ function Join_Lobby() {
       }
     };
 
-    const getVariantString = (variant) => {
+    const getVariantString = (variant: number) => {
       return variant === 1 ? 'freestyle' : 'swap';
     };
 
   if (loading) {
-    return (
-      <div className="spinner-container">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>;
+    return <Loading/>
   }
 
   return (
