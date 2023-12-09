@@ -18,6 +18,7 @@ import Game from "./game/game"
 import Waiting_Opponent from "./lobby/waiting_opponent";
 import {getAuthToken} from "./requests/session-handler";
 import HomeLogged from "./web-ui/home_logged";
+import Logout from "./user/logout";
 
 const ConditionalHomeRenderer: React.FC = () => {
   let token = getAuthToken()
@@ -45,7 +46,7 @@ const user_routes: RouteObject[] = [
   },
   {
     path: 'users/logout',
-    element: <Login />,
+    element: <Logout />,
   },
   {
     path: 'users/register',
