@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {execute_request_get} from "../requests/requests";
+import {execute_request} from "../requests/requests";
 import {user_routes} from "../api-routes/api_routes";
 
 function Leaderboard() {
@@ -10,11 +10,11 @@ function Leaderboard() {
   // To be used when integration with API is ready
   useEffect(() => {
     // Replace with actual API call
-    execute_request_get(
+    execute_request(
         user_routes.get_leaderboard.url,
         user_routes.get_leaderboard.method,
+        null
     ).then(response => {
-      console.log(response);
       setLeaderboardData(response);
     }).catch(rejectedPromise => {
       alert(rejectedPromise.message);
@@ -23,7 +23,6 @@ function Leaderboard() {
     });
   }, []);
 
-  // To test loading - to be removed!
   if (loading) {
     return (
       <div className="spinner-container">

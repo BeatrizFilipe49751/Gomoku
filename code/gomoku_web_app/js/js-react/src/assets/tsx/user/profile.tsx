@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { user_routes } from '../api-routes/api_routes';
-import {execute_request_get, execute_request_post, formatUrl} from '../requests/requests';
-
-const sampleProfile = { username: 'Username', email: 'username_123@gmail.com', points: 1000 };
+import {execute_request, formatUrl} from '../requests/requests';
 
 function Profile() {
   const { userId } = useParams();
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(undefined);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    setLoading(true)
-    execute_request_get(
+    execute_request(
         formatUrl(user_routes.get_user.url, {userId: userId}),
-        user_routes.get_user.method
-    ).then(response => {
-      console.log(response)
-      setUser(response.properties)
-    }).catch(error => {
-      alert(error.message);
-    }).finally(() => {
-      setLoading(false)
-    })
-
-  }, []);
+        user_routes.get_user.method,
+        null
+    )
+        .then(response => setUser(response.properties))
+        .catch(error => alert(error.message))
+        .finally(() => setLoading(false))}, []);
 
   if (loading) {
     return (
