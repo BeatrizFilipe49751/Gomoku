@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Home() {
+function HomeLogged() {
   return (
     <div>
       <div className="wave-container">
@@ -9,15 +9,15 @@ function Home() {
       </div>
       <div className="home-container">
         <div className="home-text-title">
-          <b>Welcome to Gomoku!</b>
+          <b>Welcome back!</b>
         </div>
         <div className="home-text">
-          🌟 <b>Join Us for More Fun:</b> Unlock exclusive features and connect with a community of Gomoku enthusiasts. Personalize your profile and explore new functionalities.
+          🎮 <b>Play with other Members:</b> As a member, enjoy the privilege of diving into Gomoku matches with other players. Experience the thrill of strategic gameplay in real-time.
           <br /><br />
-          🏆 <b>Check the Leaderboard:</b> See how you stack up against other players. Explore the leaderboard and learn from the best.
+          🏆 <b>Track Your Progress:</b> Check your position on the leaderboard, and strive for the top spot. Your journey to Gomoku mastery continues!
         </div>
         <div className="home-text-end">
-          <b>Ready to play?</b> Join us now and let the Gomoku games begin!
+          <b>Ready to dive in?</b> Let the games begin!
         </div>
         <div className="circles-container">
           <div className="circle">
@@ -73,4 +73,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomeLogged;

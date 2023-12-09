@@ -16,6 +16,7 @@ import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
 import NavbarLogged from "./web-ui/navbar_logged";
 import Game from "./game/game"
+import HomeLogged from "./web-ui/home_logged";
 
 const HeaderLayout = () => (
   <>
