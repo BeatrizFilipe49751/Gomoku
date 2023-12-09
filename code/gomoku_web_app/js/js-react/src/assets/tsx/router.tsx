@@ -17,6 +17,7 @@ import Profile from "./user/profile";
 import NavbarLogged from "./web-ui/navbar_logged";
 import Game from "./game/game"
 import HomeLogged from "./web-ui/home_logged";
+import Waiting_Opponent from "./lobby/waiting_opponent";
 
 const HeaderLayout = () => (
   <>
@@ -60,6 +61,10 @@ const lobby_routes: RouteObject[] = [
     path: 'users/lobbies',
     element: <Join_Lobby />,
   },
+  {
+    path: 'users/lobby/:lobbyId/wait',
+    element: <Waiting_Opponent />,
+  }
 ]
 
 const game_routes: RouteObject[] = [
