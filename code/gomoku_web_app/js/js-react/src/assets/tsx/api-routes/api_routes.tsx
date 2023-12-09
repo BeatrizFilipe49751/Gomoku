@@ -19,8 +19,8 @@ export const user_routes = {
         url: api_route + "/users/logout"
     },
     get_leaderboard: {
-        method: "POST",
-        url: api_route + "/users/logout"
+        method: "GET",
+        url: api_route + "/users/leaderboard"
     }
 }
 

@@ -4,10 +4,18 @@ export function formatUrl(template: string, replacements: Record<string, string>
     return template.replace(/\{(\w+)}/g, (match, key) => replacements[key] || match)
 }
 
-export async function execute_request(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
+export async function execute_request_post(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
     const response: Response = await fetch(requestInfo, {
         method: method,
         body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    return handleResponse(response);
+}
+
+export async function execute_request_get(requestInfo: RequestInfo, method: string): Promise<any> {
+    const response: Response = await fetch(requestInfo, {
+        method: method,
         headers: { 'Content-Type': 'application/json' },
     });
     return handleResponse(response);

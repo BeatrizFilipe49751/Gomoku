@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {getAuthToken} from "../requests/session-handler";
 
 
 function Home()  {
-  let token = getAuthToken()
+  const [token, setToken] = useState(getAuthToken())
+  useEffect(() => {
+    let token = getAuthToken()
+    setToken(token)
+  }, []);
   if (token === undefined) {
     return <HomeDefault/>
   } else {

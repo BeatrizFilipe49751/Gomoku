@@ -16,14 +16,7 @@ import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
 import Game from "./game/game"
 import Waiting_Opponent from "./lobby/waiting_opponent";
-import { getAuthToken } from "./requests/session-handler";
-import HomeLogged from "./web-ui/home_logged";
 import Logout from "./user/logout";
-
-const ConditionalHomeRenderer: React.FC = () => {
-  let token = getAuthToken()
-  return token ? <HomeLogged /> : <Home />
-}
 
 const HeaderLayout = () => (
   <>
@@ -36,7 +29,7 @@ const HeaderLayout = () => (
 
 const home: RouteObject = {
   index: true,
-  element: <ConditionalHomeRenderer />,
+  element: <Home />,
 }
 
 const user_routes: RouteObject[] = [

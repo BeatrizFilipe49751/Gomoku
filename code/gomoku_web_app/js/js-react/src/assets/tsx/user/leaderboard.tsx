@@ -1,58 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-// Test data - to be removed!
-const sampleLeaderboardData = [
-  { userId: 10, username: 'ABCD', points: 1000 },
-  { userId: 2, username: 'Mark Lee', points: 500 },
-  { userId: 3, username: 'Lee', points: 225 },
-  { userId: 4, username: 'user2', points: 100 },
-  { userId: 5, username: 'user6', points: 50 }
-];
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {execute_request_get} from "../requests/requests";
+import {user_routes} from "../api-routes/api_routes";
 
 function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // To be used when integration with API is ready
-  /*useEffect(() => {
-      const fetchLeaderboardData = async () => {
-        try {
-          // Replace with actual API call
-          const response = await fetch('/users/leaderboard');
-          const data = await response.json();
-          setLeaderboardData(data);
-          setLoading(false);
-        } catch (error) {
-          setError(error);
-          setLoading(false);
-        }
-  };
-
-  fetchLeaderboardData();
-    }, []);*/
-
-  // To test loading - to be removed!
   useEffect(() => {
-    setLoading(true);
-
-    setTimeout(() => {
-      // Simulate successful data fetching
-      setLeaderboardData(sampleLeaderboardData);
+    // Replace with actual API call
+    execute_request_get(
+        user_routes.get_leaderboard.url,
+        user_routes.get_leaderboard.method,
+    ).then(response => {
+      console.log(response);
+      setLeaderboardData(response);
+    }).catch(rejectedPromise => {
+      alert(rejectedPromise.message);
+    }).finally(() => {
       setLoading(false);
-    }, 2000);
+    });
   }, []);
 
+  // To test loading - to be removed!
   if (loading) {
     return (
       <div className="spinner-container">
         <div className="spinner"></div>
       </div>
     );
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>;
   }
 
   return (
