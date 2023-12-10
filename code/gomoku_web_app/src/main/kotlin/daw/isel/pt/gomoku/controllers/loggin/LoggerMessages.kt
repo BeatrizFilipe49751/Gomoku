@@ -4,6 +4,7 @@ object LoggerMessages {
     object GameLoggerMessages {
         const val PLAY = "Handling Game: PLAY"
         const val GET_GAME= "Handling Game: GET GAME"
+        const val GET_USER_ACTIVE_GAME = "Handling Game: GET USER ACTIVE GAME"
     }
 
     object UserLoggerMessages {

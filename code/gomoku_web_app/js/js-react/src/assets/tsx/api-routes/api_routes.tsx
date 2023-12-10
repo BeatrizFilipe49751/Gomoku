@@ -66,7 +66,7 @@ export const game_api_routes = {
     },
     get_game_userId: {
         method: "GET",
-        url: api_route + "/users/game/get"
+        url: api_route + "/users/game"
     },
 
 }

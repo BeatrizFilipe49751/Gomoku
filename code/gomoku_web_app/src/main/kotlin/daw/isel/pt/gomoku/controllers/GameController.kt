@@ -59,12 +59,12 @@ class GameController(val gameServices: GameServices) {
             )
     }
 
-    @GetMapping(Routes.GameRoutes.GET_GAME_BY_USER_ID)
+    @GetMapping(Routes.GameRoutes.GET_USER_ACTIVE_GAME)
     fun getGameByUserId(authUser: AuthUser):
             ResponseEntity<GameIdOut> {
-        logger.info(LoggerMessages.GameLoggerMessages.GET_GAME)
+        logger.info(LoggerMessages.GameLoggerMessages.GET_USER_ACTIVE_GAME)
 
-        val gameId = gameServices.getGameByUserId(
+        val gameId = gameServices.getUserActiveGame(
             authUser.user.userId
         )
 

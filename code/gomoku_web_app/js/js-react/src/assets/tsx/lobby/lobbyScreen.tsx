@@ -14,32 +14,34 @@ function LobbyScreen() {
 
   const navigate = useNavigate()
 
-  async function checkUserInLobby(){
-    try {
-      const get_lobby = await execute_request_auth(
-        lobby_api_routes.get_lobby_userId.url,
-        lobby_api_routes.get_lobby_userId.method,
-        null
-      )
-      setLoading(false)
-      navigate(`/users/lobby/${get_lobby.properties.lobbyId}/wait`)
-    } catch {}
-  }
-
-  async function checkUserInGame() {
-    const response = await execute_request_auth(
-      game_api_routes.get_game_userId.url,
-      game_api_routes.get_game_userId.method,
-      null
-    );
-    setLoading(false);
-    navigate(`/game/${response.gameId}`);
-  }
-
   useEffect(() => {
-    checkUserInGame()
-    .catch(() => checkUserInLobby())
-    .finally(() => setLoading(false))
+    execute_request_auth(
+        game_api_routes.get_game_userId.url,
+        game_api_routes.get_game_userId.method,
+        null
+    )
+        .then(response => {
+          setLoading(false);
+          navigate(`/game/${response.gameId}`);
+        })
+        .catch(rejectedPromise => {
+          // User not in an active Game
+          rejectedPromise.then(error => console.log(error))
+          execute_request_auth(
+              lobby_api_routes.get_lobby_userId.url,
+              lobby_api_routes.get_lobby_userId.method,
+              null
+          )
+              .then(lobbyResponse => {
+                setLoading(false)
+                navigate(`/users/lobby/${lobbyResponse.properties.lobbyId}/wait`)
+              })
+              .catch(rejectedPromise => {
+                // User not in a Lobby
+                //rejectedPromise.then(error => console.log(error))
+                setLoading(false)
+              })
+        })
   }, [])
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {

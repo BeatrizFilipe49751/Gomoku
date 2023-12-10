@@ -76,8 +76,8 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun getGameByUserId(userId: Int): String = transactionManager.run {
-            it.gameRepository.getGameByUserId(userId) ?:
+    fun getUserActiveGame(userId: Int): String = transactionManager.run {
+            it.gameRepository.getUserActiveGame(userId) ?:
                 throw NotFoundException(GameErrorMessages.GAME_NOT_FOUND)
     }
 

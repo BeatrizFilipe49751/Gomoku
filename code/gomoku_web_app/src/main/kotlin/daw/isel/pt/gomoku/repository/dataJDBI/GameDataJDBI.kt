@@ -60,7 +60,7 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
         return numRows > 0
     }
 
-    override fun getGameByUserId(userId: Int): String? =
+    override fun getUserActiveGame(userId: Int): String? =
         handle.createQuery("""
                 SELECT game
                 FROM game_users
