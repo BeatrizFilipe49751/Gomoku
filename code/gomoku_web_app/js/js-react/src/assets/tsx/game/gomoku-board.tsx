@@ -87,6 +87,14 @@ const GomokuBoard: React.FC<GomokuBoardProps> = ({ game, playFunction, playersIn
             )
         } else endContent = <></>
 
+        let turnText: React.JSX.Element
+        if (game.state === "Active") {
+            turnText = game.currentTurn === playersInfo.playerColor ?
+                <p className="down-info"><span className="current-turn">Your Turn</span></p> :
+                <p className="down-info">Waiting for {playersInfo.opponentUsername}</p>
+        } else turnText = <p className="down-info"><span className="current-turn">GAME FINISHED!</span></p>
+
+
         return (
             <div>
                 {endContent}
@@ -100,7 +108,7 @@ const GomokuBoard: React.FC<GomokuBoardProps> = ({ game, playFunction, playersIn
                     <p className="down-info">Your Color:<span className={"demo-circle " + playersInfo.playerColor}></span></p>
                 </div>
                 <div className="down-info-container right">
-                    <p className="down-info">Turn: <span className="current-turn">{currentUserTurn}</span></p>
+                    {turnText}
                 </div>
             </div>
         );
