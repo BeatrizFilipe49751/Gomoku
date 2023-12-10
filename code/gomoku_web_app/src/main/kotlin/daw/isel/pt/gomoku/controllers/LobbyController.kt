@@ -78,7 +78,6 @@ class LobbyController(
         @PathVariable userId: Int
     ): ResponseEntity<Siren<LobbyOut>> {
         logger.info(LoggerMessages.LobbyLoggerMessages.GET_LOBBY_BY_USER_ID)
-
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobbyByUserId(

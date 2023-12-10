@@ -107,6 +107,24 @@ class LobbyControllerTest {
     }
 
     @Test
+    fun `createLobby and get it by userId`() {
+        val user = createUserAndLogin()
+        val lobby = createLobby(user)
+        val client = createNewClient(port)
+        lobby.toLobbyOut().toLobbySiren(user)
+        println(user)
+        val uri = Routes.LobbyRoutes.GET_LOBBY_USER_ID.putParameters("userId", user.user.userId.toString())
+        client.get().uri(uri)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.token)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+        //.jsonPath("lobbyId").isEqualTo(lobby.lobbyId)
+        //.jsonPath("name").isEqualTo(lobby.name)
+        //.jsonPath("p1").isEqualTo(lobby.p1)
+    }
+
+    @Test
     fun `createLobby and get it without token when getting it`() {
         val user = createUserAndLogin()
         val lobby = createLobby(user)

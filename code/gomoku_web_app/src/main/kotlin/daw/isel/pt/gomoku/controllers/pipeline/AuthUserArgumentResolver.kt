@@ -14,7 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 class AuthUserArgumentResolver : HandlerMethodArgumentResolver {
 
     // .parameterType not working
-    override fun supportsParameter(parameter: MethodParameter) = true //parameter.parameterType == AuthUser::class.java
+    override fun supportsParameter(parameter: MethodParameter) = parameter.parameterType == AuthUser::class.java
 
     override fun resolveArgument(
         parameter: MethodParameter,
@@ -23,8 +23,8 @@ class AuthUserArgumentResolver : HandlerMethodArgumentResolver {
         binderFactory: WebDataBinderFactory?
     ): Any? {
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
-            ?: throw IllegalStateException("TODO")
-        return getUserFrom(request) ?: throw IllegalStateException("TODO")
+            ?: throw IllegalStateException("Missing Servlet")
+        return getUserFrom(request) ?: throw IllegalStateException("Missing User")
     }
 
     companion object {
