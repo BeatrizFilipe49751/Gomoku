@@ -12,7 +12,7 @@ import Register from './user/register';
 import Navbar from './web-ui/navbar';
 import Leaderboard from './user/leaderboard';
 import Get_lobbies from './lobby/get_lobbies';
-import Create_Lobby from "./lobby/create_lobby";
+import LobbyScreen from "./lobby/lobbyScreen";
 import Profile from "./user/profile";
 import Game from "./game/game"
 import Waiting_Opponent from "./lobby/waiting_opponent";
@@ -60,7 +60,7 @@ const user_routes: RouteObject[] = [
 const lobby_routes: RouteObject[] = [
   {
     path: 'users/lobby',
-    element: <Create_Lobby />,
+    element: <LobbyScreen />,
   },
   {
     path: 'users/lobbies',

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, NavigateFunction, useNavigate} from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { getAuthToken } from "../requests/session-handler";
+import {getAuthToken, getUser} from "../requests/session-handler";
 
 function Navbar()  {
   const navigate = useNavigate();
@@ -37,11 +37,7 @@ function NavbarDefault({navigate}: { navigate: NavigateFunction }) {
 }
 
 function NavbarLogged({navigate}: { navigate: NavigateFunction }) {
-    const user = {
-        userId: 6,
-        username: 'Username'
-    };
-
+    const user = getUser()
     return (
         <div className="sidenav">
             <div className="user-profile">

@@ -25,8 +25,15 @@ function Login() {
         user_routes.login.method,
         data
       )
-      const token = response.properties.token
-      createCookie(token)
+
+      console.log(response)
+      const responseData = {
+        userId: response.properties.user.userId,
+        username: response.properties.user.username,
+        token: response.properties.token
+      }
+
+      createCookie(responseData)
       alert('Login successful!')
       navigate('/');
     } catch (rejectedPromise) {

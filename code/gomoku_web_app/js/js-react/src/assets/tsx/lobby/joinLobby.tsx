@@ -12,11 +12,16 @@ export function JoinLobby() {
         execute_request_auth(
             formatUrl(lobby_api_routes.join_lobby.url, {lobbyId: lobbyId}),
             lobby_api_routes.join_lobby.method,
-            null)
+            null
+        )
             .then(response => {
                 navigate(`/game/${response.properties.gameId}` )
             })
-            .catch(error => alert(error.message))
+            .catch(rejectedPromise => {
+                rejectedPromise.then(error => {
+                    alert(error.message)
+                })
+            })
             .finally( () => {setLoading(false)}
             )
     }, []);

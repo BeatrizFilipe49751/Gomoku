@@ -4,7 +4,7 @@ import { execute_request_auth } from "../requests/requests";
 import { lobby_api_routes } from "../api-routes/api_routes";
 import { Loading } from "../web-ui/request-ui-handler";
 
-function Create_Lobby() {
+function LobbyScreen() {
   const [name, setName] = useState('');
   const [openingType, setOpeningType] = useState(1);
   const [variantType, setVariantType] = useState(1);
@@ -29,9 +29,7 @@ function Create_Lobby() {
         lobby_api_routes.create_lobby.method,
         data
       )
-      console.log(response.properties)
       alert('Create lobby successful!');
-      setWaitingForOpponent(true)
       navigate(`/users/lobby/${response.properties.lobbyId}/wait`)
 
     } catch (rejectedPromise) {
@@ -127,4 +125,4 @@ function Create_Lobby() {
   );
 }
 
-export default Create_Lobby;
+export default LobbyScreen;
