@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import SidePanel from "./utils/sidepanel";
-import {execute_request, execute_request_auth, formatUrl} from "../requests/requests";
+import {execute_request, execute_request_auth, execute_request_gen, formatUrl} from "../requests/requests";
 import {game_api_routes, user_routes} from "../api-routes/api_routes";
 import {getUser} from "../requests/session-handler";
 import GomokuBoard from "./gomoku-board";
@@ -20,10 +20,11 @@ function Game() {
 
     const updateGameInformation = async () => {
         try {
-            const response = await execute_request_auth(
+            const response = await execute_request_gen(
                 formatUrl(game_api_routes.get_game.url, {gameId: gameId}),
                 game_api_routes.get_game.method,
-                null
+                null,
+                true
             )
             console.log("GET GAME REQUEST")
             const newGameInfo = convertToGameInfo(response);
@@ -36,10 +37,11 @@ function Game() {
                 newGameInfo.playerBlack === userId ?
                     newGameInfo.playerWhite : newGameInfo.playerBlack
             try {
-                const userResponse = await execute_request(
+                const userResponse = await execute_request_gen(
                     formatUrl(user_routes.get_user.url, {userId: `${opponentId}`}),
                     user_routes.get_user.method,
-                    null
+                    null,
+                    false
                 )
                 console.log("GET USER REQUEST")
                 const newPlayersInfo =
@@ -73,13 +75,14 @@ function Game() {
         if(gameInfo != undefined) {
             if (gameInfo.state === "Active") {
                 try {
-                    const response = await execute_request_auth(
+                    const response = await execute_request_gen(
                         formatUrl(game_api_routes.play.url, {gameId: gameId}),
                         game_api_routes.play.method,
                         {
                             row: row,
                             col: col
-                        }
+                        },
+                        true
                     )
                     console.log("PLAY REQUEST")
                     const newGameInfo = convertToGameInfo(response)

@@ -16,7 +16,7 @@ function Waiting_Opponent() {
         ),
         lobby_api_routes.check_full_lobby.method,
         null,
-          false
+          true
       )
       if (response.gameId != null) {
         setLoading(false)

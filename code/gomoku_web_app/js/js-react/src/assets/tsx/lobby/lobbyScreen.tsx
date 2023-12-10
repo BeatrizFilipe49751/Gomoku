@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { execute_request_auth, formatUrl } from "../requests/requests";
+import {execute_request_auth, execute_request_gen, formatUrl} from "../requests/requests";
 import { game_api_routes, lobby_api_routes } from "../api-routes/api_routes";
 import { Loading } from "../web-ui/request-ui-handler";
 
@@ -15,10 +15,11 @@ function LobbyScreen() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    execute_request_auth(
+    execute_request_gen(
         game_api_routes.get_game_userId.url,
         game_api_routes.get_game_userId.method,
-        null
+        null,
+        true
     )
         .then(response => {
           setLoading(false);
@@ -27,10 +28,11 @@ function LobbyScreen() {
         .catch(rejectedPromise => {
           // User not in an active Game
           rejectedPromise.then(error => console.log(error))
-          execute_request_auth(
+          execute_request_gen(
               lobby_api_routes.get_lobby_userId.url,
               lobby_api_routes.get_lobby_userId.method,
-              null
+              null,
+              true
           )
               .then(lobbyResponse => {
                 setLoading(false)
@@ -53,10 +55,11 @@ function LobbyScreen() {
       size: boardSize
     }
     try {
-      const response = await execute_request_auth(
+      const response = await execute_request_gen(
         lobby_api_routes.create_lobby.url,
         lobby_api_routes.create_lobby.method,
-        data
+        data,
+          true
       )
       alert('Create lobby successful!');
       setLoading(false)
