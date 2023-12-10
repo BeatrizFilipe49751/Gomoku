@@ -1,99 +1,117 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import SidePanel from "./utils/sidepanel";
+import {execute_request, execute_request_auth, formatUrl} from "../requests/requests";
+import {game_api_routes, user_routes} from "../api-routes/api_routes";
+import {getUser} from "../requests/session-handler";
+import GomokuBoard from "./gomoku-board";
+import {useParams} from "react-router-dom";
+import {convertToGameInfo, createPlayersInfo} from "./game-conversions";
 
-interface GomokuBoardProps {
-    boardSize: number;
-}
+function Game() {
+    const [loading, setLoading] = useState(true);
+    const {gameId} = useParams()
+    const [gameInfo, setGameInfo] = useState<GameInfo>(undefined)
+    const [playersInfo, setPlayersInfo] = useState<PlayersInfo>(undefined)
+    const userInfo = getUser()
+    const userId = userInfo.userId
+    const username = userInfo.username
 
-interface Piece {
-    position: { row: number; col: number },
-    color: string
-}
-
-const GomokuBoard: React.FC<GomokuBoardProps> = ({ boardSize }) => {
-    const [dummyPieces, setDummyPieces] = useState<Piece[]>([
-        { position: { row: 14, col: 0 }, color: "white" },
-        { position: { row: 5, col: 12 }, color: "white" },
-        { position: { row: 1, col: 0 }, color: "white" },
-        { position: { row: 4, col: 6 }, color: "black" },
-        { position: { row: 14, col: 14 }, color: "black" }
-    ]);
-
-    function dummyPlay(row: number, col: number, color: string) {
-        setDummyPieces(prevPieces => [...prevPieces,
-        { position: { row: row, col: col }, color: color }
-        ]);
+    function updateGameInformation() {
+        execute_request_auth(
+            formatUrl(game_api_routes.get_game.url, { gameId: gameId }),
+            game_api_routes.get_game.method,
+            null
+        )
+            .then((response) => {
+                console.log("GET GAME REQUEST")
+                const newGameInfo = convertToGameInfo(response);
+                setGameInfo(newGameInfo);
+                const opponentId =
+                    newGameInfo.playerBlack === userId ?
+                        newGameInfo.playerWhite : newGameInfo.playerBlack
+                execute_request(
+                    formatUrl(user_routes.get_user.url, { userId: `${opponentId}` }),
+                    user_routes.get_user.method,
+                    null
+                )
+                    .then((userResponse) => {
+                        const newPlayersInfo =
+                            createPlayersInfo(userId, username, userResponse, newGameInfo);
+                        setPlayersInfo(newPlayersInfo);
+                    })
+                    .catch((rejectedPromise) => {
+                        alert(rejectedPromise.message);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            })
+            .catch((rejectedPromise) => {
+                alert(rejectedPromise.message);
+            });
     }
 
-    let drawBoard = () => {
-        const squares = [];
-        const circles = [];
+    useEffect(() => {
+        if (gameInfo != undefined && playersInfo != undefined) {
+            if (gameInfo.currentTurn === playersInfo.opponentColor) {
+                const intervalId = setInterval(updateGameInformation, 2000);
+                return () => clearInterval(intervalId);
+            }
+        } else {
+            updateGameInformation()
+        }
+    }, [])
 
-        for (let row = 0; row < 15; row++) {
-            for (let col = 0; col < 15; col++) {
-                if (row < boardSize - 1 && col < boardSize - 1) {
-                    squares.push(
-                        <div key={`square-${row}-${col}`} className="square"></div>
-                    )
-                }
-                const piece =
-                    dummyPieces.find(p => p.position.row === row && p.position.col === col)
-                if (piece !== undefined) {
-                    if (piece.color === "white") {
-                        circles.push(
-                            <div key={`circle-${row}-${col}`} className="circle white"></div>
-                        )
-                    } else {
-                        circles.push(
-                            <div key={`circle-${row}-${col}`} className="circle black"></div>
-                        )
+    function play(row: number, col: number) {
+        console.log(gameInfo)
+        if(gameInfo != undefined) {
+            if (gameInfo.state === "Active") {
+                execute_request_auth(
+                    formatUrl(game_api_routes.play.url, {gameId: gameId}),
+                    game_api_routes.play.method,
+                    {
+                        row: row,
+                        col: col
                     }
-                } else {
-                    circles.push(
-                        <div key={`circle-${row}-${col}`} className="circle" onClick={() => dummyPlay(row, col, "black")}></div>
-                    );
-                }
+                )
+                    .then(response => {
+                        const newGameInfo = convertToGameInfo(response)
+                        console.log(newGameInfo)
+                        setGameInfo(newGameInfo)
+                    })
+                    .catch(rejectedPromise => {
+                        alert(rejectedPromise.message)
+                    })
             }
         }
+    }
 
-        const boardSquareStyle = {
-            display: 'grid',
-            gridTemplateColumns: `repeat(${boardSize - 1}, 30px)`,
-            gridTemplateRows: `repeat(${boardSize - 1}, 30px)`,
-            boxShadow: '5px 5px 5px rgba(0, 0, 0, 0.5)',
-            gap: '0',
-        }
-        const boardCircleStyle = {
-            display: 'grid',
-            gridTemplateColumns: `repeat(${boardSize}, 30px)`,
-            gridTemplateRows: `repeat(${boardSize}, 30px)`,
-            gap: '0',
-        }
-
+    if (loading) {
         return (
-            <div>
-                <div style={boardSquareStyle}>
-                    {squares}
-                    <div style={boardCircleStyle} className="board-pos">
-                        {circles}
-                    </div>
+            <div className="spinner-container">
+                <div className="spinner"></div>
+            </div>
+        );
+    }
+
+    if (gameInfo != undefined && playersInfo != undefined) {
+        const containerSize = gameInfo.board.boardSize*40
+        return (
+            <div className="game-body">
+                <div className="sidemenu" style={{width: containerSize, height: containerSize}}>
+                    <SidePanel
+                        size={containerSize}
+                        gameInfo={gameInfo}
+                        playersInfo={playersInfo}
+                    />
+                </div>
+                <div className="game-container" style={{width: containerSize, height: containerSize}}>
+                    <h1 className="game-title">{gameInfo.name}</h1>
+                    <GomokuBoard game={gameInfo} playFunction={play} playersInfo={playersInfo}/>
                 </div>
             </div>
         );
-    };
-
-    return drawBoard();
-};
-
-function Game() {
-    // get gameId from route params
-    //const gameInfo = getGameInfo(gameId)
-    //const boardSize = gameInfo.boardSize
-    const dummyBoardSize = 15
-    return (
-        <div className="body-game">
-            <GomokuBoard boardSize={dummyBoardSize} />
-        </div>
-    );
+    }
 }
 
 export default Game;

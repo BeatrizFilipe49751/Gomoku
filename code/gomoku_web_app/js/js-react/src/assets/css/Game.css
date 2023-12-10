@@ -1,17 +1,33 @@
 /* Game Page */
-.body-game {
-    height: 100%;
+.game-body {
     width: 100%;
+    height: 100%;
     min-height: 100vh;
-    background-color: #f2f2f2;
+    position: relative;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     padding-left: 176px;
 }
 
+.game-container {
+    border-radius: 10px;
+    background: rgb(28,28,28);
+    background: radial-gradient(circle, rgba(28,28,28,1) 0%, rgba(0,136,104,1) 0%, rgba(0,31,16,1) 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidemenu {
+    position: absolute;
+}
+
 /* Board Content */
-.square {
+.game-square {
     width: 30px;
     height: 30px;
     border: 1px solid #000;
@@ -19,7 +35,7 @@
     background-color: burlywood;
 }
 
-.circle {
+.game-circle {
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -28,14 +44,14 @@
     cursor: pointer;
 }
 
-.circle.black {
+.game-circle.black {
     visibility: visible;
     background-color: #000000;
     cursor: default;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
 }
 
-.circle.white {
+.game-circle.white {
     visibility: visible;
     background-color: #ffffff;
     cursor: default;
@@ -44,4 +60,198 @@
 
 .board-pos {
     position: absolute;
+}
+
+.game-title {
+    text-align: center;
+    position: absolute;
+    top: 0;
+    padding-top: 30px;
+    background: linear-gradient(to right, #00ffe4, #00d57a, #7cfc00, #4682b4);
+    background-size: 400% 100%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: gradientAnimation 5s linear infinite forwards; /* Extend the duration */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes gradientAnimation {
+    0%, 100% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.down-info {
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.demo-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+.demo-circle.black {
+    background-color: #000000;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+.demo-circle.white {
+    background-color: #ffffff;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+.down-info-container {
+    position: absolute;
+    display: flex;
+    bottom: 0;
+    padding-bottom: 25px;
+}
+
+.down-info-container.left {
+    left: 150px;
+}
+
+.down-info-container.right {
+    right: 150px;
+}
+
+.current-turn {
+    font-size: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    color: #1da453;
+    margin-left: 5px;
+}
+
+.h1-winner {
+    position: fixed;
+    padding-left: 176px;
+    width: 100%;
+    text-align: center;
+    font-size: 333%;
+    color: grey;
+    opacity: 0.7;
+    animation: popIn 0.5s ease-out;
+}
+
+.absolute-win {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    80% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.sidepanel {
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    justify-content: center;
+    align-content: center;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.sidepanel p {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    text-align: center;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidepanel p.topic {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 40px;
+    font-weight: bold;
+    color: #818181;
+    text-align: center;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidepanel p.help {
+    padding: 8px 8px 8px 32px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    text-align: center;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidepanel a.help {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 40px;
+    position: absolute;
+    bottom: 0;
+    color: #818181;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.sidepanel a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.sidepanel a:hover {
+    color: #f1f1f1;
+}
+
+.sidepanel .closebtn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 36px;
+}
+
+.openbtn {
+    position: absolute;
+    z-index: 9999;
+    background-color: transparent;
+    right: 0;
+    top: 0;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    padding: 10px 15px;
+}
+
+.openbtn:hover {
+    color: grey;
 }

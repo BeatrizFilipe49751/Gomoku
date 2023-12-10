@@ -57,9 +57,7 @@ fun AllGameInfo.toGameOut(): GameOut{
         boardSize = this.game.board.size,
         currentTurn = this.game.currentTurn.color,
         pieces = this.game.board.serialize(),
-        state = if (this.game.state == ACTIVE)
-            "Game is Active"
-        else "Game is Finished, winner: ${this.game.currentTurn}"
+        state = this.game.state.stateChar
     )
 }
 

@@ -43,7 +43,7 @@ class GameController(val gameServices: GameServices) {
             )
     }
 
-    @GetMapping
+    @GetMapping(Routes.GameRoutes.GET_GAME)
     fun getGame(authUser: AuthUser, @PathVariable gameId: String):
             ResponseEntity<Siren<GameOut>> {
         logger.info(LoggerMessages.GameLoggerMessages.GET_GAME)

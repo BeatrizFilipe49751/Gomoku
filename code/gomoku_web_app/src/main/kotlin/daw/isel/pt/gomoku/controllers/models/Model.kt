@@ -23,7 +23,7 @@ data class GameOut(
     val playerWhite: Int,
     val currentTurn: Char,
     val pieces: String,
-    val state: String,
+    val state: Char,
 
 )
 data class GameInfo(val game : String, val player_black : Int, val player_white : Int)
