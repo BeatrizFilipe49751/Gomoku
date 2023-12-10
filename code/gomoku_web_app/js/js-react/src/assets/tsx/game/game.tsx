@@ -16,72 +16,72 @@ function Game() {
     const userId = userInfo.userId
     const username = userInfo.username
 
-    function updateGameInformation() {
-        execute_request_auth(
-            formatUrl(game_api_routes.get_game.url, { gameId: gameId }),
-            game_api_routes.get_game.method,
-            null
-        )
-            .then((response) => {
-                console.log("GET GAME REQUEST")
-                const newGameInfo = convertToGameInfo(response);
-                setGameInfo(newGameInfo);
-                const opponentId =
-                    newGameInfo.playerBlack === userId ?
-                        newGameInfo.playerWhite : newGameInfo.playerBlack
-                execute_request(
-                    formatUrl(user_routes.get_user.url, { userId: `${opponentId}` }),
+    const updateGameInformation = async () => {
+        try {
+            const response = await execute_request_auth(
+                formatUrl(game_api_routes.get_game.url, {gameId: gameId}),
+                game_api_routes.get_game.method,
+                null
+            )
+            console.log("GET GAME REQUEST")
+            const newGameInfo = convertToGameInfo(response);
+            setGameInfo(newGameInfo);
+            const opponentId =
+                newGameInfo.playerBlack === userId ?
+                    newGameInfo.playerWhite : newGameInfo.playerBlack
+            try {
+                const userResponse = await execute_request(
+                    formatUrl(user_routes.get_user.url, {userId: `${opponentId}`}),
                     user_routes.get_user.method,
                     null
                 )
-                    .then((userResponse) => {
-                        const newPlayersInfo =
-                            createPlayersInfo(userId, username, userResponse, newGameInfo);
-                        setPlayersInfo(newPlayersInfo);
-                    })
-                    .catch((rejectedPromise) => {
-                        alert(rejectedPromise.message);
-                    })
-                    .finally(() => {
-                        setLoading(false);
-                    });
-            })
-            .catch((rejectedPromise) => {
-                alert(rejectedPromise.message);
-            });
+                console.log("GET USER REQUEST")
+                const newPlayersInfo =
+                    createPlayersInfo(userId, username, userResponse, newGameInfo);
+                setPlayersInfo(newPlayersInfo);
+            } catch (rejectedPromise) {
+                const error = await rejectedPromise
+                alert(error.message)
+            }
+        } catch (rejectedPromise) {
+            const error = await rejectedPromise
+            alert(error.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const checkGameInformation = async () => {
+        if (gameInfo === undefined && playersInfo === undefined)
+            await updateGameInformation()
+        else if (gameInfo.currentTurn === playersInfo.opponentColor)
+            await updateGameInformation()
     }
 
     useEffect(() => {
-        if (gameInfo != undefined && playersInfo != undefined) {
-            if (gameInfo.currentTurn === playersInfo.opponentColor) {
-                const intervalId = setInterval(updateGameInformation, 2000);
-                return () => clearInterval(intervalId);
-            }
-        } else {
-            updateGameInformation()
-        }
+        const intervalId = setInterval(checkGameInformation, 2000);
+        return () => clearInterval(intervalId);
     }, [])
 
-    function play(row: number, col: number) {
-        console.log(gameInfo)
+    async function play (row: number, col: number) {
         if(gameInfo != undefined) {
             if (gameInfo.state === "Active") {
-                execute_request_auth(
-                    formatUrl(game_api_routes.play.url, {gameId: gameId}),
-                    game_api_routes.play.method,
-                    {
-                        row: row,
-                        col: col
-                    }
-                )
-                    .then(response => {
-                        const newGameInfo = convertToGameInfo(response)
-                        console.log(newGameInfo)
-                        setGameInfo(newGameInfo)
-                    })
-                    .catch(rejectedPromise => {
-                        alert(rejectedPromise.message)
-                    })
+                try {
+                    const response = await execute_request_auth(
+                        formatUrl(game_api_routes.play.url, {gameId: gameId}),
+                        game_api_routes.play.method,
+                        {
+                            row: row,
+                            col: col
+                        }
+                    )
+                    console.log("PLAY REQUEST")
+                    const newGameInfo = convertToGameInfo(response)
+                    setGameInfo(newGameInfo)
+                } catch (rejectedPromise) {
+                    const error = await rejectedPromise
+                    alert(error.message)
+                }
             }
         }
     }

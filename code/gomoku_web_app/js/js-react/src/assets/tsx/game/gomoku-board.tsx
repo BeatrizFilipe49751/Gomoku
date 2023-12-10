@@ -3,7 +3,7 @@ import Confetti from "./utils/confetti";
 
 interface GomokuBoardProps {
     game: GameInfo,
-    playFunction: (row: number, col: number) => void,
+    playFunction: (row: number, col: number) => Promise<void>,
     playersInfo: PlayersInfo
 }
 
@@ -43,9 +43,9 @@ const GomokuBoard: React.FC<GomokuBoardProps> = ({ game, playFunction, playersIn
                             key={`circle-${row}-${col}`}
                             className="game-circle"
                             onClick={
-                                () => {
+                                async () => {
                                     if (game.currentTurn === playersInfo.playerColor) {
-                                        playFunction(row, col)
+                                        await playFunction(row, col)
                                     }
                                 }
                             }
