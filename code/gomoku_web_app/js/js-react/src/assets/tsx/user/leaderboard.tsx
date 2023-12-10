@@ -8,6 +8,8 @@ function Leaderboard() {
   const [totalListSize, setTotalListSize] = useState(5);
   const [loading, setLoading] = useState(true);
   const [skip, setSkip] = useState(0)
+  const [index, setIndex] = useState(0)
+
   useEffect(() => {
     console.log(skip)
     const url = user_routes.get_leaderboard.url + `?limit:5&skip=${skip}`
@@ -65,18 +67,19 @@ function Leaderboard() {
               </tr>
             </thead>
             <tbody>
-              {leaderboardData.map((user, index) => (
-                <tr key={index}>
+              {leaderboardData.map((user, idx) => {
+                setIndex(prevIndex => prevIndex + idx)
+                return (<tr key={index}>
                   <td className="number">{index + 1}</td>
                   <td className="name">
                     <Link
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                      to={`/users/profile/${user.userId}`}>{user.username}
+                        style={{textDecoration: 'none', color: 'inherit'}}
+                        to={`/users/profile/${user.userId}`}>{user.username}
                     </Link>
                   </td>
                   <td className="points">{user.points}</td>
-                </tr>
-              ))}
+                </tr>)
+              })}
             </tbody>
           </table>
         </div>
