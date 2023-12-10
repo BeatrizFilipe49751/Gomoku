@@ -340,6 +340,26 @@ td {
   margin-top: 25px;
 }
 
+.btn-lobbies-div {
+  align-content: space-between;
+  padding-left: 5%;
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+.btn-paging {
+  margin: 20px;
+}
+
+
+
+.btn-leaderboard {
+  margin-top: 25px;
+  padding: 15px;
+}
+
 /* Join Lobby Page */
 .title-lobbies {
   padding-left: 5%;

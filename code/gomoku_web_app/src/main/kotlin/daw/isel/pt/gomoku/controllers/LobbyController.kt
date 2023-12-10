@@ -5,10 +5,7 @@ import daw.isel.pt.gomoku.controllers.hypermedia.toAuthUserSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.hypermedia.toLobbySiren
 import daw.isel.pt.gomoku.controllers.loggin.LoggerMessages
-import daw.isel.pt.gomoku.controllers.models.GameOut
-import daw.isel.pt.gomoku.controllers.models.LobbyIn
-import daw.isel.pt.gomoku.controllers.models.LobbyInfo
-import daw.isel.pt.gomoku.controllers.models.LobbyOut
+import daw.isel.pt.gomoku.controllers.models.*
 import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.*
 import daw.isel.pt.gomoku.domain.AuthUser
@@ -50,7 +47,7 @@ class LobbyController(
     fun getLobbies(
         @RequestParam(name = "skip", defaultValue = "0") skip: Int,
         @RequestParam(name = "limit", defaultValue = "5") limit: Int
-    ): ResponseEntity<List<Lobby>> {
+    ): ResponseEntity<ListOut<Lobby>> {
         logger.info(LoggerMessages.LobbyLoggerMessages.GET_AVAILABLE_LOBBIES)
 
         return ResponseEntity

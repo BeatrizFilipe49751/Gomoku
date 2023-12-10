@@ -31,6 +31,12 @@ data class AllGameInfo(
     val game: Game,
     val gameInfo: GameInfo
 )
+
+data class ListOut<T>(
+    val totalListSize: Int,
+    val list: List<T>
+)
+
 data class GameIdOut(val gameId: String)
 data class PublicGameInfo(val name: String, val playerBlack : Int, val playerWhite: Int)
 data class LobbyInfo(val message: String, val gameId: String?)

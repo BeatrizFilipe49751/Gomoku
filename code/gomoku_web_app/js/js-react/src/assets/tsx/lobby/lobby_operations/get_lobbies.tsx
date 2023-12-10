@@ -7,17 +7,25 @@ import { lobby_api_routes } from "../../api-routes/api_routes";
 function Get_lobbies() {
   const [lobbiesData, setLobbiesData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [skip, setSkip] = useState(0)
+  const [totalListSize, setTotalListSize] = useState(5);
   useEffect(() => {
+
+    const url = lobby_api_routes.get_available_lobbies.url + `?limit=${5}&skip=${skip}`
+
     execute_request_auth(
-      lobby_api_routes.get_available_lobbies.url,
+      url,
       lobby_api_routes.get_available_lobbies.method,
       null
     )
-      .then(response => setLobbiesData(response))
+      .then(response => {
+        console.log(response)
+        setTotalListSize(response.totalListSize)
+        setLobbiesData(response.list)
+      })
       .catch(error => alert(error.message))
       .finally(() => setLoading(false))
-  }, []);
+  }, [skip]);
 
   const getOpeningString = (opening: number) => {
     if (opening === 1) {
@@ -30,6 +38,22 @@ function Get_lobbies() {
       return 'swap';
     }
   };
+
+  const nextPage = () => {
+    let nextSkip = skip + 5
+    if(nextSkip > totalListSize) nextSkip = totalListSize
+    if(nextSkip < totalListSize){
+      setLoading(true);
+      setSkip(nextSkip)
+    }
+  }
+
+  const prevPage = () => {
+    if(skip >= 5) {
+      setLoading(true);
+      setSkip(prevState => prevState - 5)
+    }
+  }
 
   const getVariantString = (variant: number) => {
     return variant === 1 ? 'freestyle' : 'swap';
@@ -62,7 +86,12 @@ function Get_lobbies() {
           </Link>
         ))}
       </ol>
+      <div className="btn-lobbies-div">
+        <button className="btn btn-primary btn-paging" onClick={prevPage}>Previous Page</button>
+        <button className="btn btn-primary btn-paging" onClick={nextPage}>Next Page</button>
+      </div>
     </div>
+
   );
 }
 

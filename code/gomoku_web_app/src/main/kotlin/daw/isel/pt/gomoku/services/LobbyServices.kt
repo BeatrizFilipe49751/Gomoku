@@ -1,5 +1,7 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.controllers.models.ListOut
+import daw.isel.pt.gomoku.controllers.utils.MAX_LIMIT_SIZE
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.validateSkipAndLimit
 import daw.isel.pt.gomoku.domain.Lobby
@@ -32,7 +34,7 @@ class LobbyServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun getLobbies(limit: Int, skip: Int): List<Lobby>  =
+    fun getLobbies(limit: Int, skip: Int): ListOut<Lobby>  =
         transactionManager.run {
             val numLobbies = it.lobbyRepository.getNumLobbies()
             if (validateSkipAndLimit(
@@ -40,14 +42,21 @@ class LobbyServices(private val transactionManager: TransactionManager) {
                     limit = limit,
                     size = numLobbies
             )) {
-                it.lobbyRepository.getLobbies(
-                    skip = skip,
-                    limit = limit
+                ListOut(
+                    list = it.lobbyRepository.getLobbies(
+                        skip = skip,
+                        limit = limit
+                    ),
+                    totalListSize = numLobbies
                 )
-            } else it.lobbyRepository.getLobbies(
-                skip = 0,
-                limit = 5
-            )
+            } else
+                ListOut(
+                    list = it.lobbyRepository.getLobbies(
+                        skip = 0,
+                        limit = MAX_LIMIT_SIZE
+                    ),
+                    totalListSize = numLobbies
+                )
         }
 
     fun checkFullLobby(userId: Int, lobbyId: Int): Game? {

@@ -81,7 +81,7 @@ class UserController(val userServices: UserServices) {
     fun getLeaderboard(
         @RequestParam(name = "skip", defaultValue = "0") skip: Int,
         @RequestParam(name = "limit", defaultValue = "5") limit: Int
-    ): ResponseEntity<List<UserPoints>> {
+    ): ResponseEntity<ListOut<UserPoints>> {
         logger.info(LoggerMessages.UserLoggerMessages.GET_LEADERBOARD)
 
         return ResponseEntity
