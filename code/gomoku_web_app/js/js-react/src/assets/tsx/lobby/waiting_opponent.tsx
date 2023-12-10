@@ -1,30 +1,36 @@
-import { Loading } from "../web-ui/request-ui-handler";
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
+import {execute_request_auth, formatUrl} from "../requests/requests";
+import {lobby_api_routes} from "../api-routes/api_routes";
 
 function Waiting_Opponent() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { lobbyId  } = useParams()
+  const checkGameStatus = async () => {
+    try {
+      const response = await execute_request_auth(
+          formatUrl(
+              lobby_api_routes.check_full_lobby.url,
+              {lobbyId: lobbyId}
+          ),
+          lobby_api_routes.check_full_lobby.method,
+          null
+      )
+      if(response.gameId != null) {
+        setLoading(false)
+        navigate(`/game/${response.gameId}`)
+      }
+    } catch (rejectedPromise) {
+      const error = await rejectedPromise
+      alert(error.message)
+    }
+  };
 
-  /*const handleSubmit = async (e: { preventDefault: () => void; }) => {
-     e.preventDefault();
-
-     try {
-           setLoading(true);
-           const response: any = await execute_request(
-             user_routes.create_user.url,
-             user_routes.create_user.method,
-             data
-           )
-
-           navigate('/game');
-           } catch (rejectedPromise: any) {
-                 const error = await rejectedPromise
-                 alert(error.message)
-               } finally {
-                 setLoading(false);
-               }
-  }*/
+  useEffect(() => {
+    const intervalId = setInterval(checkGameStatus, 5000);
+    return () => clearInterval(intervalId);
+  }, [])
 
   if (loading) {
     return (

@@ -20,14 +20,18 @@ export async function execute_request(requestInfo: RequestInfo, method: string, 
 
 export async function execute_request_auth(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
     const token = getAuthToken()
-    const response: Response = await fetch(requestInfo, {
+    const requestOptions = {
         method: method,
-        body: JSON.stringify(data),
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        body: undefined
+    };
+    if (data !== null) {
+        requestOptions.body = JSON.stringify(data);
+    }
+    const response: Response = await fetch(requestInfo, requestOptions);
     return handleResponse(response);
 }
 

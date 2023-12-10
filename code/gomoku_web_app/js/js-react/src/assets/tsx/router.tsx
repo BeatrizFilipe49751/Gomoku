@@ -11,12 +11,14 @@ import Login from './user/login';
 import Register from './user/register';
 import Navbar from './web-ui/navbar';
 import Leaderboard from './user/leaderboard';
-import Join_Lobby from './lobby/join_lobby';
+import Get_lobbies from './lobby/get_lobbies';
 import Create_Lobby from "./lobby/create_lobby";
 import Profile from "./user/profile";
 import Game from "./game/game"
 import Waiting_Opponent from "./lobby/waiting_opponent";
 import Logout from "./user/logout";
+import {JoinLobby} from "./lobby/joinLobby";
+
 
 const HeaderLayout = () => (
   <>
@@ -62,7 +64,11 @@ const lobby_routes: RouteObject[] = [
   },
   {
     path: 'users/lobbies',
-    element: <Join_Lobby />,
+    element: <Get_lobbies />,
+  },
+  {
+    path: "users/lobby/:lobbyId",
+    element: <JoinLobby />
   },
   {
     path: 'users/lobby/:lobbyId/wait',
