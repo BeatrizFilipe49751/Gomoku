@@ -35,7 +35,7 @@ export const lobby_api_routes = {
     },
     get_lobby_userId: {
         method: "GET",
-        url: api_route + "/users/lobby/get/{userId}"
+        url: api_route + "/users/lobby/get"
     },
     join_lobby: {
         method: "PUT",
@@ -63,6 +63,10 @@ export const game_api_routes = {
     play: {
         method: "PUT",
         url: api_route + "/users/game/play/{gameId}"
-    }
+    },
+    get_game_userId: {
+        method: "GET",
+        url: api_route + "/users/game/get"
+    },
 
 }

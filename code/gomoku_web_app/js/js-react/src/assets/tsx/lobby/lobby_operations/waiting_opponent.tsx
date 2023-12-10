@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { execute_request_auth, formatUrl } from "../requests/requests";
-import { lobby_api_routes } from "../api-routes/api_routes";
+import { execute_request_auth, formatUrl } from "../../requests/requests";
+import { lobby_api_routes } from "../../api-routes/api_routes";
 
 function Waiting_Opponent() {
   const [loading, setLoading] = useState(true);

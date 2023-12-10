@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { execute_request_auth, formatUrl } from "../requests/requests";
-import { lobby_api_routes } from "../api-routes/api_routes";
+import { game_api_routes, lobby_api_routes } from "../api-routes/api_routes";
 import { Loading } from "../web-ui/request-ui-handler";
-import { getUser } from '../requests/session-handler';
 
 function LobbyScreen() {
   const [name, setName] = useState('');
@@ -14,23 +13,33 @@ function LobbyScreen() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate()
-  const user = getUser()
+
+  async function checkUserInLobby(){
+    try {
+      const get_lobby = await execute_request_auth(
+        lobby_api_routes.get_lobby_userId.url,
+        lobby_api_routes.get_lobby_userId.method,
+        null
+      )
+      setLoading(false)
+      navigate(`/users/lobby/${get_lobby.properties.lobbyId}/wait`)
+    } catch {}
+  }
+
+  async function checkUserInGame() {
+    const response = await execute_request_auth(
+      game_api_routes.get_game_userId.url,
+      game_api_routes.get_game_userId.method,
+      null
+    );
+    setLoading(false);
+    navigate(`/game/${response.gameId}`);
+  }
 
   useEffect(() => {
-    execute_request_auth(
-        formatUrl(
-            lobby_api_routes.get_lobby_userId.url, { userId: user.userId }
-        ),
-      lobby_api_routes.get_lobby_userId.method,
-      null
-    ).then(get_lobby => {
-      setLoading(false)
-      console.log("GOT LOBBY SUCCESSFULLY " + get_lobby)
-      navigate(`/users/lobby/${get_lobby.properties.lobbyId}/wait`)
-    }).catch(rejectedPromise => {
-      setLoading(false)
-      alert.arguments(rejectedPromise.message)
-    })
+    checkUserInGame()
+    .catch(() => checkUserInLobby())
+    .finally(() => setLoading(false))
   }, [])
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {

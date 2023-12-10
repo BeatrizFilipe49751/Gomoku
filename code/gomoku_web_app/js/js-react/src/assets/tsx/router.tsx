@@ -11,14 +11,14 @@ import Login from './user/login';
 import Register from './user/register';
 import Navbar from './web-ui/navbar';
 import Leaderboard from './user/leaderboard';
-import Get_lobbies from './lobby/get_lobbies';
+import Get_lobbies from './lobby/lobby_operations/get_lobbies';
 import LobbyScreen from "./lobby/lobbyScreen";
 import Profile from "./user/profile";
 import Game from "./game/game"
-import Waiting_Opponent from "./lobby/waiting_opponent";
+import Waiting_Opponent from "./lobby/lobby_operations/waiting_opponent";
 import Logout from "./user/logout";
-import { JoinLobby } from "./lobby/joinLobby";
-import {QuitLobby} from "./lobby/quit_lobby";
+import { JoinLobby } from "./lobby/lobby_operations/joinLobby";
+import {QuitLobby} from "./lobby/lobby_operations/quit_lobby";
 
 
 const HeaderLayout = () => (

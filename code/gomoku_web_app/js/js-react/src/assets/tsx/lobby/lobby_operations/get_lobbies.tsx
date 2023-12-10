@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Loading } from "../web-ui/request-ui-handler";
-import { execute_request_auth } from "../requests/requests";
-import { lobby_api_routes } from "../api-routes/api_routes";
+import { Loading } from "../../web-ui/request-ui-handler";
+import { execute_request_auth } from "../../requests/requests";
+import { lobby_api_routes } from "../../api-routes/api_routes";
 
 function Get_lobbies() {
   const [lobbiesData, setLobbiesData] = useState([]);
