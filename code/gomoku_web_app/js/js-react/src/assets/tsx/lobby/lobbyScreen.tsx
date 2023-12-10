@@ -38,7 +38,7 @@ function LobbyScreen() {
               })
               .catch(rejectedPromise => {
                 // User not in a Lobby
-                //rejectedPromise.then(error => console.log(error))
+                rejectedPromise.then(error => console.log(error))
                 setLoading(false)
               })
         })
