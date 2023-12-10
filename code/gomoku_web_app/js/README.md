@@ -1,23 +1,9 @@
-# Gomoku Web App Execution
+# Static Content Build Execution
 
->Note: Execute inside [gomokuWebApp](../) directory
-
-## Creation
 ```bash
-docker compose up --build
-```
-> Note: This also starts the application
-## Deletion
-```bash
-docker compose down
+npm install
 ```
 
-## Start Execution
 ```bash
-docker compose start
-```
-
-## Stop Execution
-```bash
-docker compose stop
+npm run build
 ```
