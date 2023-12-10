@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { user_routes } from '../api-routes/api_routes';
 import { execute_request } from '../requests/requests';
-import { createCookie } from "../requests/session-handler";
+import { createCookie, getUser, removeToken } from "../requests/session-handler";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -26,13 +26,16 @@ function Login() {
         data
       )
 
-      console.log(response)
       const responseData = {
         userId: response.properties.user.userId,
         username: response.properties.user.username,
         token: response.properties.token
       }
-
+      
+      const user = getUser()
+      if(user !== undefined) {
+        removeToken()
+      }
       createCookie(responseData)
       alert('Login successful!')
       navigate('/');

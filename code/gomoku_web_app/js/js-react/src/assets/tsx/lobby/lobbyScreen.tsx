@@ -1,21 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { execute_request_auth } from "../requests/requests";
+import { execute_request_auth, formatUrl } from "../requests/requests";
 import { lobby_api_routes } from "../api-routes/api_routes";
 import { Loading } from "../web-ui/request-ui-handler";
+import { getUser } from '../requests/session-handler';
 
 function LobbyScreen() {
   const [name, setName] = useState('');
   const [openingType, setOpeningType] = useState(1);
   const [variantType, setVariantType] = useState(1);
   const [boardSize, setBoardSize] = useState(15);
-  const [waitingForOpponent, setWaitingForOpponent] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const user = getUser()
 
-  // Event handler for form submission
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    execute_request_auth(
+        formatUrl(
+            lobby_api_routes.get_lobby_userId.url, { userId: user.userId }
+        ),
+      lobby_api_routes.get_lobby_userId.method,
+      null
+    ).then(get_lobby => {
+      setLoading(false)
+      console.log("GOT LOBBY SUCCESSFULLY " + get_lobby)
+      navigate(`/users/lobby/${get_lobby.properties.lobbyId}/wait`)
+    }).catch(rejectedPromise => {
+      setLoading(false)
+      alert.arguments(rejectedPromise.message)
+    })
+  }, [])
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const data = {
       name: name,
@@ -30,20 +48,23 @@ function LobbyScreen() {
         data
       )
       alert('Create lobby successful!');
+      setLoading(false)
       navigate(`/users/lobby/${response.properties.lobbyId}/wait`)
-
     } catch (rejectedPromise) {
       const error = await rejectedPromise
       alert(error.message)
     }
-  };
+    finally {
+      setLoading(false)
+    }
+  }
 
   // Update the submit button state based on the conditions
   useEffect(() => {
     setIsSubmitDisabled(!name);
   }, [name]);
 
-  if (waitingForOpponent) {
+  if (loading) {
     return <Loading />
   }
 
@@ -124,5 +145,4 @@ function LobbyScreen() {
     </div>
   );
 }
-
-export default LobbyScreen;
+export default LobbyScreen 

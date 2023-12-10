@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import {Link, useNavigate, useParams} from 'react-router-dom';
-import {execute_request_auth, formatUrl} from "../requests/requests";
-import {lobby_api_routes} from "../api-routes/api_routes";
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { execute_request_auth, formatUrl } from "../requests/requests";
+import { lobby_api_routes } from "../api-routes/api_routes";
 
 function Waiting_Opponent() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { lobbyId  } = useParams()
+  const { lobbyId } = useParams()
   const checkGameStatus = async () => {
     try {
       const response = await execute_request_auth(
-          formatUrl(
-              lobby_api_routes.check_full_lobby.url,
-              {lobbyId: lobbyId}
-          ),
-          lobby_api_routes.check_full_lobby.method,
-          null
+        formatUrl(
+          lobby_api_routes.check_full_lobby.url,
+          { lobbyId: lobbyId }
+        ),
+        lobby_api_routes.check_full_lobby.method,
+        null
       )
-      if(response.gameId != null) {
+      if (response.gameId != null) {
         setLoading(false)
         navigate(`/game/${response.gameId}`)
       }
@@ -39,10 +39,17 @@ function Waiting_Opponent() {
         <div className="loading-text">
           Waiting for opponent...
           Don't want to wait?
-          <div className="btn-place">
-            <Link to="/">
-              <button className="btn btn-primary custom-btn">Go back</button>
-            </Link>
+          <div className="btn-placement">
+            <div className="btn-place">
+              <Link to="/">
+                <button className="btn btn-primary custom-btn">Go back</button>
+              </Link>
+            </div>
+            <div className="btn-place">
+              <Link to="/">
+                <button className="btn btn-primary custom-btn">Quit</button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

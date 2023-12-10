@@ -33,6 +33,10 @@ export const lobby_api_routes = {
         method: "GET",
         url: api_route + "/users/lobby/{lobbyId}"
     },
+    get_lobby_userId: {
+        method: "GET",
+        url: api_route + "/users/lobby/get/{userId}"
+    },
     join_lobby: {
         method: "PUT",
         url: api_route + "/users/lobby/{lobbyId}"

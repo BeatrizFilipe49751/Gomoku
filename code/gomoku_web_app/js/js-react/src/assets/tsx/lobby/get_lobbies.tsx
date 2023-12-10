@@ -4,20 +4,19 @@ import { Loading } from "../web-ui/request-ui-handler";
 import { execute_request_auth } from "../requests/requests";
 import { lobby_api_routes } from "../api-routes/api_routes";
 
-// Test data - to be removed!
 function Get_lobbies() {
   const [lobbiesData, setLobbiesData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     execute_request_auth(
-        lobby_api_routes.get_available_lobbies.url,
-        lobby_api_routes.get_available_lobbies.method,
-        null
+      lobby_api_routes.get_available_lobbies.url,
+      lobby_api_routes.get_available_lobbies.method,
+      null
     )
-        .then(response => setLobbiesData(response))
-        .catch(error => alert(error.message))
-        .finally(() => setLoading(false))
+      .then(response => setLobbiesData(response))
+      .catch(error => alert(error.message))
+      .finally(() => setLoading(false))
   }, []);
 
   const getOpeningString = (opening: number) => {

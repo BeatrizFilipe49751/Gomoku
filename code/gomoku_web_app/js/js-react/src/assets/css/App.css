@@ -695,6 +695,11 @@ p {
   margin-top: 25px;
 }
 
+.btn-placement {
+  display: flex;
+  flex-direction: column
+}
+
 .circles-container {
   display: flex;
   justify-content: space-between;

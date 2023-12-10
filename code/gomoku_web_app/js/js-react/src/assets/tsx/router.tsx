@@ -17,7 +17,7 @@ import Profile from "./user/profile";
 import Game from "./game/game"
 import Waiting_Opponent from "./lobby/waiting_opponent";
 import Logout from "./user/logout";
-import {JoinLobby} from "./lobby/joinLobby";
+import { JoinLobby } from "./lobby/joinLobby";
 
 
 const HeaderLayout = () => (
@@ -78,7 +78,7 @@ const lobby_routes: RouteObject[] = [
 
 const game_routes: RouteObject[] = [
   {
-    path: 'game',
+    path: 'game/:gameId',
     element: <Game />
   }
 ]

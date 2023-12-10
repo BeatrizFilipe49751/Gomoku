@@ -1,23 +1,23 @@
 import React from 'react';
-import {Link, NavigateFunction, useNavigate} from 'react-router-dom';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {getAuthToken, getUser} from "../requests/session-handler";
+import { getAuthToken, getUser } from "../requests/session-handler";
 
-function Navbar()  {
-  const navigate = useNavigate();
-  let token = getAuthToken()
-  if (token === undefined) {
-    return (
-        <NavbarDefault navigate={navigate}/>
-    );
-  } else {
-    return (
-        <NavbarLogged navigate={navigate}/>
-    );
-  }
+function Navbar() {
+    const navigate = useNavigate()
+    let token = getAuthToken()
+    if (token === undefined) {
+        return (
+            <NavbarDefault navigate={navigate} />
+        );
+    } else {
+        return (
+            <NavbarLogged navigate={navigate} />
+        );
+    }
 }
 
-function NavbarDefault({navigate}: { navigate: NavigateFunction }) {
+function NavbarDefault({ navigate }: { navigate: NavigateFunction }) {
     return (
         <div className="sidenav">
             <Link to='/' className="nav-link" onClick={() => navigate('/')}>
@@ -36,8 +36,9 @@ function NavbarDefault({navigate}: { navigate: NavigateFunction }) {
     )
 }
 
-function NavbarLogged({navigate}: { navigate: NavigateFunction }) {
+function NavbarLogged({ navigate }: { navigate: NavigateFunction }) {
     const user = getUser()
+
     return (
         <div className="sidenav">
             <div className="user-profile">
@@ -67,7 +68,7 @@ function NavbarLogged({navigate}: { navigate: NavigateFunction }) {
                 <i className="bi-controller"></i> Join Lobby
             </Link>
             <Link to="/users/lobby" className="nav-link" onClick={() => navigate('/users/lobby')}>
-                <i className="bi-plus-circle"></i> New Lobby
+                <i className="bi-plus-circle"></i> Lobby
             </Link>
         </div>
     )
