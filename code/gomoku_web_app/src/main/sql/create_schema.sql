@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS games (
     name VARCHAR(255) NOT NULL,
     opening int NOT NULL,
     variant int NOT NULL,
-    state CHAR NOT NULL CHECK (state IN ('A', 'F', 'D')),
+    state CHAR NOT NULL CHECK (state IN ('A', 'F', 'D', 'C')),
     turn CHAR NOT NULL CHECK (turn IN ('b', 'w'))
 );
 

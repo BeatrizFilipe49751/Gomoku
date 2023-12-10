@@ -4,7 +4,7 @@ import {execute_request, execute_request_auth, formatUrl} from "../requests/requ
 import {game_api_routes, user_routes} from "../api-routes/api_routes";
 import {getUser} from "../requests/session-handler";
 import GomokuBoard from "./gomoku-board";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {convertToGameInfo, createPlayersInfo} from "./game-conversions";
 
 function Game() {
@@ -16,6 +16,8 @@ function Game() {
     const userId = userInfo.userId
     const username = userInfo.username
 
+    const navigate = useNavigate()
+
     const updateGameInformation = async () => {
         try {
             const response = await execute_request_auth(
@@ -25,6 +27,10 @@ function Game() {
             )
             console.log("GET GAME REQUEST")
             const newGameInfo = convertToGameInfo(response);
+            if (newGameInfo.state === "Cancelled") {
+                alert(`Game was ${newGameInfo.state}`)
+                navigate("/") // Navigate to Home
+            }
             setGameInfo(newGameInfo);
             const opponentId =
                 newGameInfo.playerBlack === userId ?
@@ -55,7 +61,7 @@ function Game() {
         if (gameInfo === undefined && playersInfo === undefined)
             await updateGameInformation()
         else if (gameInfo.currentTurn === playersInfo.opponentColor)
-            await updateGameInformation()
+                await updateGameInformation()
     }
 
     useEffect(() => {
@@ -86,6 +92,25 @@ function Game() {
         }
     }
 
+    async function quitGame () {
+        if(gameInfo != undefined) {
+            try {
+                setLoading(true)
+                await execute_request_auth(
+                    formatUrl(game_api_routes.quit_game.url, {gameId: gameId}),
+                    game_api_routes.quit_game.method,
+                    null
+                )
+                console.log("QUIT REQUEST")
+                setLoading(false)
+                navigate("/") // Navigate to Home
+            } catch (rejectedPromise) {
+                const error = await rejectedPromise
+                alert(error.message)
+            }
+        }
+    }
+
     if (loading) {
         return (
             <div className="spinner-container">
@@ -103,6 +128,7 @@ function Game() {
                         size={containerSize}
                         gameInfo={gameInfo}
                         playersInfo={playersInfo}
+                        quitGameFunction={quitGame}
                     />
                 </div>
                 <div className="game-container" style={{width: containerSize, height: containerSize}}>

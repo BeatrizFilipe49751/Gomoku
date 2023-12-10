@@ -68,5 +68,9 @@ export const game_api_routes = {
         method: "GET",
         url: api_route + "/users/game"
     },
+    quit_game: {
+        method: "PUT",
+        url: api_route + "/users/game/{gameId}/quit"
+    }
 
 }

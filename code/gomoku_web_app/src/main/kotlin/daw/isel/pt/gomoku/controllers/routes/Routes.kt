@@ -6,6 +6,7 @@ object Routes {
     object GameRoutes {
         const val PLAY = "$PREFIX/users/game/play/{gameId}"
         const val GET_GAME= "$PREFIX/users/game/{gameId}"
+        const val QUIT_GAME = "$PREFIX/users/game/{gameId}/quit"
         const val GET_USER_ACTIVE_GAME= "$PREFIX/users/game"
         const val AUTH_NEEDED = "$PREFIX/users/game/**"
     }

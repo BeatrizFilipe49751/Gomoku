@@ -59,6 +59,10 @@ function convertToGameState(gameState: string) {
             state = "Draw";
             break;
         }
+        case 'C': {
+            state = "Cancelled";
+            break;
+        }
         default:
             state = "Unknown";
     }

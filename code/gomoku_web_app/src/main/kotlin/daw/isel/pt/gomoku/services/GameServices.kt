@@ -5,6 +5,7 @@ import daw.isel.pt.gomoku.controllers.models.GameInfo
 import daw.isel.pt.gomoku.controllers.utils.toGame
 import daw.isel.pt.gomoku.controllers.utils.toGameSerialized
 import daw.isel.pt.gomoku.domain.game.*
+import daw.isel.pt.gomoku.domain.game.GameState.CANCELLED
 import daw.isel.pt.gomoku.domain.game.GameState.FINISHED
 import daw.isel.pt.gomoku.domain.game.PieceColor.BLACK
 import daw.isel.pt.gomoku.domain.game.PieceColor.WHITE
@@ -130,4 +131,14 @@ class GameServices(private val transactionManager: TransactionManager) {
             }
         }
     }
+
+    fun quitGame(game: Game): AllGameInfo =
+        transactionManager.run {
+            val gameInfo = it.gameRepository.checkGameInfo(game.id)
+                ?: throw NotFoundException("Game Not Found")
+            val newGame = game.copy(state = CANCELLED)
+            if (it.gameRepository.updateGame(newGame.toGameSerialized())){
+                AllGameInfo(newGame, gameInfo)
+            } else throw IllegalStateException("Game failed to update")
+        }
 }

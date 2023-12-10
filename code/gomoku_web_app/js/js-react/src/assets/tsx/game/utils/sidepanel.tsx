@@ -5,10 +5,11 @@ interface SidePanelProps {
     size: number,
     gameInfo: GameInfo
     playersInfo: PlayersInfo
+    quitGameFunction: () => Promise<void>
 }
 
 const SidePanel: React.FC<SidePanelProps> = (
-    { size, gameInfo, playersInfo}
+    { size, gameInfo, playersInfo, quitGameFunction}
 ) => {
     const [sidePanelWidth, setSidePanelWidth] = useState(0);
     const [sidePanelHeight, setSidePanelHeight] = useState(0);
@@ -43,7 +44,10 @@ const SidePanel: React.FC<SidePanelProps> = (
 
     return (
         <div>
-            <div className="sidepanel" style={{ width: sidePanelWidth + 'px', height: sidePanelHeight + 'px', right: 0, zIndex: 10000 }}>
+            <div
+                className="sidepanel"
+                style={{ width: sidePanelWidth + 'px', height: sidePanelHeight + 'px', right: 0, zIndex: 10000 }}
+            >
                 <a className="closebtn" onClick={closeNav}>×</a>
                 <p className="topic">OPENING </p>
                 <p>{gameInfo.opening}</p>
@@ -53,6 +57,12 @@ const SidePanel: React.FC<SidePanelProps> = (
                 <p>{playersInfo.playerUsername}</p>
                 <p>{playersInfo.opponentUsername}</p>
                 <p className="help">{goodMessage}</p>
+                <a
+                    className="quit"
+                    onClick={async () => {await quitGameFunction()}}
+                >
+                    Quit Game
+                </a>
                 <a href="https://en.wikipedia.org/wiki/Gomoku" target="_blank" rel="noopener noreferrer" className="help">
                     <i className="bi-book"></i>
                 </a>

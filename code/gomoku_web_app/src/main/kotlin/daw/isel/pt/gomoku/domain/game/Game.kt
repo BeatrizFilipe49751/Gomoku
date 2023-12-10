@@ -18,10 +18,12 @@ data class Game(
 ) {
         fun play(pieceToPlace: Piece): Game {
                 check(state == ACTIVE) {
-                        if (state == FINISHED)
-                                GameErrorMessages.GAME_FINISHED
-                        else
-                                GameErrorMessages.GAME_DRAW
+                        when (state) {
+                                FINISHED -> GameErrorMessages.GAME_FINISHED
+                                DRAW -> GameErrorMessages.GAME_DRAW
+                                CANCELLED -> GameErrorMessages.GAME_CANCELLED
+                                else -> GameErrorMessages.UNKNOWN
+                        }
                 }
                 check(!board.hasPiece(pieceToPlace)) { GameErrorMessages.INVALID_PLAY }
                 val newBoard = board.copy(pieces = board.pieces + pieceToPlace)

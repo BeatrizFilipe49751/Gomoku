@@ -210,14 +210,10 @@
 }
 
 .sidepanel a.help {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
     font-size: 40px;
     position: absolute;
     bottom: 0;
     color: #818181;
-    text-align: center;
-    transition: 0.3s;
 }
 
 .sidepanel a {
@@ -229,6 +225,20 @@
     transition: 0.3s;
 }
 
+.sidepanel a.quit {
+    font-size: 30px;
+    color: #818181;
+    text-align: center;
+    transition: 0.3s;
+    background-color: transparent;
+    bottom: 0;
+    margin-bottom: 5px;
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
 .sidepanel a:hover {
     color: #f1f1f1;
 }
@@ -238,6 +248,7 @@
     top: 0;
     right: 10px;
     font-size: 36px;
+    cursor: pointer;
 }
 
 .openbtn {

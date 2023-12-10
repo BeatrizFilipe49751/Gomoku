@@ -44,6 +44,25 @@ class GameController(val gameServices: GameServices) {
             )
     }
 
+    @PutMapping(Routes.GameRoutes.QUIT_GAME)
+    fun quitGame(
+        authUser: AuthUser,
+        @PathVariable gameId: String
+    ): ResponseEntity<Siren<GameOut>> {
+        logger.info(LoggerMessages.GameLoggerMessages.QUIT_GAME)
+        val game = gameServices.getGame(
+            gameId = gameId
+        )
+        val newGame = gameServices.quitGame(
+            game = game
+        )
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                newGame.toGameOut().toGameSiren()
+            )
+    }
+
     @GetMapping(Routes.GameRoutes.GET_GAME)
     fun getGame(authUser: AuthUser, @PathVariable gameId: String):
             ResponseEntity<Siren<GameOut>> {
