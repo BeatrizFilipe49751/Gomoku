@@ -29,7 +29,8 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
             opening= opening,
             variant= variant,
             p1=userId,
-            p2=null
+            p2=null,
+            boardSize = boardSize
         )
     }
 

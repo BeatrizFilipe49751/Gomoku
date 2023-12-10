@@ -93,9 +93,6 @@ function LobbyScreen() {
                   onChange={(e) => setOpeningType(parseInt(e.target.value, 10))}
                 >
                   <option value="1">Freestyle</option>
-                  <option value="2">Pro</option>
-                  <option value="3">Long_Pro</option>
-                  <option value="4">Swap</option>
                 </select>
               </div>
             </div>
@@ -108,7 +105,6 @@ function LobbyScreen() {
                   onChange={(e) => setVariantType(parseInt(e.target.value, 10))}
                 >
                   <option value="1">Freestyle</option>
-                  <option value="2">Swap</option>
                 </select>
               </div>
             </div>
@@ -118,7 +114,10 @@ function LobbyScreen() {
                 <select
                   className="form-control"
                   value={boardSize}
-                  onChange={(e) => setBoardSize(parseInt(e.target.value, 10))}
+                  onChange={(e) => {
+                    const newSize = parseInt(e.target.value, 10)
+                    setBoardSize(newSize)
+                  }}
                 >
                   <option value="15">15</option>
                   <option value="19">19</option>

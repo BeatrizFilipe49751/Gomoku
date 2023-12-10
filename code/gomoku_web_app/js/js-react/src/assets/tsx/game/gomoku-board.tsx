@@ -71,12 +71,14 @@ const GomokuBoard: React.FC<GomokuBoardProps> = ({ game, playFunction, playersIn
 
         let endContent: React.JSX.Element;
         if (game.state === "Finished") {
-            endContent = (
-                <div className="absolute-win">
+            endContent = game.currentTurn === playersInfo.playerColor ?
+                (<div className="absolute-win">
                     <h1 className="h1-winner">Winner: {currentUserTurn}</h1>
                     <Confetti></Confetti>
-                </div>
-            )
+                </div>) :
+                (<div className="absolute-win">
+                    <h1 className="h1-winner">Winner: {currentUserTurn}</h1>
+                </div>)
         } else if (game.state === "Draw") {
             endContent = (
                 <div className="absolute-win">
