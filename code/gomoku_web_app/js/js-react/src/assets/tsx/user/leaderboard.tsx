@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {execute_request, execute_request_gen} from "../requests/requests";
+import {execute_request_gen} from "../requests/requests";
 import {user_routes} from "../api-routes/api_routes";
 
 function Leaderboard() {
@@ -8,7 +8,6 @@ function Leaderboard() {
   const [totalListSize, setTotalListSize] = useState(5);
   const [loading, setLoading] = useState(true);
   const [skip, setSkip] = useState(0)
-  const [index, setIndex] = useState(0)
 
   useEffect(() => {
     console.log(skip)
@@ -67,19 +66,18 @@ function Leaderboard() {
               </tr>
             </thead>
             <tbody>
-              {leaderboardData.map((user, idx) => {
-                setIndex(prevIndex => prevIndex + idx)
-                return (<tr key={index}>
+              {leaderboardData.map((user, index) => (
+                <tr key={index}>
                   <td className="number">{index + 1}</td>
                   <td className="name">
                     <Link
-                        style={{textDecoration: 'none', color: 'inherit'}}
-                        to={`/users/profile/${user.userId}`}>{user.username}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                      to={`/users/profile/${user.userId}`}>{user.username}
                     </Link>
                   </td>
                   <td className="points">{user.points}</td>
-                </tr>)
-              })}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
