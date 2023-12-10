@@ -110,7 +110,8 @@ class LobbyController(
             opening= lobby.opening,
             variant = lobby.variant,
             gameNumber = lobbyId,
-            playerWhite = user.userId
+            playerWhite = user.userId,
+            boardSize = lobby.boardSize
         )
 
         logger.info(newGame.game.gameString())

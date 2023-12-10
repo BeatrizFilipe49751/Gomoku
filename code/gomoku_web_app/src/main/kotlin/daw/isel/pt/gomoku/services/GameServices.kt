@@ -24,12 +24,13 @@ class GameServices(private val transactionManager: TransactionManager) {
         opening: Int,
         variant: Int,
         playerBlack: Int,
-        playerWhite: Int
+        playerWhite: Int,
+        boardSize: Int
     ): AllGameInfo {
         return transactionManager.run {
             val newGame = Game(
                 id = UUID.randomUUID().toString(),
-                board = Board(),
+                board = Board(size = boardSize),
                 name = name,
                 opening = opening.toOpening(),
                 variant = variant.toVariant()
