@@ -20,6 +20,7 @@ object LoggerMessages {
     object LobbyLoggerMessages {
         const val CREATE_LOBBY = "Handling Lobby: CREATE LOBBY"
         const val GET_LOBBY = "Handling Lobby: GET LOBBY"
+        const val GET_LOBBY_BY_USER_ID = "Handling Lobby: GET BY USER ID LOBBY"
         const val CHECK_FULL_LOBBY = "Handling Lobby: CHECK FULL LOBBY"
         const val GET_AVAILABLE_LOBBIES = "Handling Lobby: GET AVAILABLE LOBBIES"
         const val JOIN_LOBBY = "Handling Lobby: JOIN LOBBY"

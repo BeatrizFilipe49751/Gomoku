@@ -68,6 +68,14 @@ class LobbyServices(private val transactionManager: TransactionManager) {
         }
     }
 
+    fun getLobbyByUserId(userId: Int): Lobby {
+        return transactionManager.run {
+            it.lobbyRepository.getLobbyByUserId(userId)
+                ?: throw NotFoundException(LobbyErrorMessages.LOBBY_NOT_FOUND)
+        }
+    }
+
+
     /**
      * when is lobby admin, checks if there is another player in the lobby
      * if there isn't the lobby is deleted, if there is, the other player becomes that lobby's admin

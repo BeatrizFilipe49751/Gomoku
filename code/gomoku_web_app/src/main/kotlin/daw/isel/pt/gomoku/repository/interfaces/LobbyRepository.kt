@@ -11,6 +11,8 @@ interface LobbyRepository {
         boardSize: Int
     ): Lobby
     fun getLobby(lobbyId: Int): Lobby?
+
+    fun getLobbyByUserId(userId: Int): Lobby?
     fun getLobbies(): List<Lobby>
     fun deleteLobby(lobbyId: Int): Boolean
     fun quitLobby(lobbyId: Int, userId: Int): Boolean

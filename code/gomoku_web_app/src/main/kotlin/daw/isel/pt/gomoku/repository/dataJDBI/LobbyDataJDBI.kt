@@ -45,6 +45,12 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
             .mapTo(Lobby::class.java)
             .singleOrNull()
     }
+    override fun getLobbyByUserId(userId: Int): Lobby? {
+        return handle.createQuery("select lobbyId, name, p1, p2 from lobby where p1 = :userId")
+            .bind("userId", userId)
+            .mapTo(Lobby::class.java)
+            .singleOrNull()
+    }
     override fun deleteLobby(lobbyId: Int): Boolean {
         val numRows = handle.createUpdate("DELETE FROM lobby where lobby.lobbyId = :lobbyId")
             .bind("lobbyId", lobbyId)
