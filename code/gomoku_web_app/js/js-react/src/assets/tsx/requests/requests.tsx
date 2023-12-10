@@ -18,6 +18,28 @@ export async function execute_request(requestInfo: RequestInfo, method: string, 
     return handleResponse(response);
 }
 
+export async function execute_request_generic(requestInfo: RequestInfo, method: string, data: any, auth: boolean) {
+    let headers = {
+        'Content-Type': 'application/json'
+    }
+    if(auth) {
+        const token = getAuthToken()
+        headers['Authorization'] = `Bearer ${token}`
+    }
+
+    const requestOptions = {
+        method: method,
+        headers: headers,
+        body: undefined
+    }
+
+    if (data !== null) {
+        requestOptions.body = JSON.stringify(data);
+    }
+    const response: Response = await fetch(requestInfo, requestOptions);
+    return handleResponse(response);
+}
+
 export async function execute_request_auth(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
     const token = getAuthToken()
     const requestOptions = {
@@ -37,7 +59,6 @@ export async function execute_request_auth(requestInfo: RequestInfo, method: str
 
 export async function handleResponse(response: Response): Promise<any> {
     let status: number = response.status
-    console.log(status)
     switch (status) {
         case 400:
         case 404:

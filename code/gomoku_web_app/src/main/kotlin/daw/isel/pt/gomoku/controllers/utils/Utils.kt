@@ -8,6 +8,8 @@ import daw.isel.pt.gomoku.domain.game.GameState.ACTIVE
 import daw.isel.pt.gomoku.domain.game.GameState.FINISHED
 
 
+const val MAX_LIMIT_SIZE = 5
+
 fun Game.toGameSerialized(): GameSerialized {
     return GameSerialized(
         gameId = this.id,
@@ -75,6 +77,9 @@ fun Lobby.toLobbyOut(): LobbyOut =
 fun String.putParameters(key: String, value: String) : String {
     return this.replace("{$key}", value)
 }
+
+fun validateSkipAndLimit(skip: Int, limit: Int, size: Int): Boolean =
+    skip > 0 && limit <= MAX_LIMIT_SIZE && skip < size
 
 const val emptySquare = "| "
 const val blackPiece = "|B"

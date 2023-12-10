@@ -2,6 +2,7 @@ package daw.isel.pt.gomoku.services
 
 
 import daw.isel.pt.gomoku.controllers.models.UserPoints
+import daw.isel.pt.gomoku.controllers.utils.validateSkipAndLimit
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.domain.User
 import daw.isel.pt.gomoku.domain.authentication.Token
@@ -99,8 +100,20 @@ class UserServices(private val transactionManager: TransactionManager, private v
         }
     }
 
-    fun getLeaderboard(): List<UserPoints> =
+
+    fun getLeaderboard(skip: Int, limit: Int): List<UserPoints> =
         transactionManager.run {
-            it.usersRepository.getLeaderboard()
+            val leaderBoardSize = it.usersRepository.getLeaderBoardSize()
+            if(validateSkipAndLimit(skip, limit, leaderBoardSize)) {
+                it.usersRepository.getLeaderboard(
+                    skip = skip,
+                    limit = limit
+                )
+            } else {
+                it.usersRepository.getLeaderboard(
+                    skip = 0,
+                    limit = 5
+                )
+            }
     }
 }

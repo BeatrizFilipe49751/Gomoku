@@ -7,6 +7,8 @@ interface GameRepository {
     fun getGame(gameId: String): GameSerialized?
     fun createGame(game: GameSerialized, gameNumber: Int, playerBlack: Int, playerWhite: Int): Boolean
     fun updateGame(game: GameSerialized): Boolean
+
+    fun getGameByUserId(userId: Int): String?
     fun checkGameStarted(gameNumber: Int): GameSerialized?
     fun checkGameInfo(gameId : String): GameInfo?
     fun addUserToLeaderboard(userId: Int, username: String, points: Int): Boolean

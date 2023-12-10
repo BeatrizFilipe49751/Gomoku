@@ -34,12 +34,26 @@ class LobbyDataJDBI(private val handle: Handle): LobbyRepository {
         )
     }
 
-    override fun getLobbies(): List<Lobby> {
+    override fun getLobbies(skip: Int, limit: Int): List<Lobby> {
         return handle.createQuery("""
-            select lobbyId, name, opening, variant, boardsize, p1 from lobby where p2 IS NULL
+            select lobbyId, name, opening, variant, boardsize, p1 
+            from lobby where p2 IS NULL
+            LIMIT :limit
+            OFFSET :skip
         """.trimIndent())
+            .bind("limit", limit)
+            .bind("skip", skip)
             .mapTo(Lobby::class.java)
             .list()
+    }
+
+    override fun getNumLobbies(): Int {
+        return handle.createQuery("""
+            select count(*) 
+            from lobby where p2 IS NULL 
+        """.trimIndent())
+            .mapTo(Int::class.java)
+            .single()
     }
 
     override fun getLobby(lobbyId: Int): Lobby? {

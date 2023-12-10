@@ -1,6 +1,7 @@
 package daw.isel.pt.gomoku.services
 
 import daw.isel.pt.gomoku.controllers.utils.toGame
+import daw.isel.pt.gomoku.controllers.utils.validateSkipAndLimit
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.domain.game.Game
 import daw.isel.pt.gomoku.domain.game.Opening
@@ -31,11 +32,23 @@ class LobbyServices(private val transactionManager: TransactionManager) {
         }
     }
 
-    fun getLobbies(): List<Lobby> {
-        return transactionManager.run {
-            it.lobbyRepository.getLobbies()
+    fun getLobbies(limit: Int, skip: Int): List<Lobby>  =
+        transactionManager.run {
+            val numLobbies = it.lobbyRepository.getNumLobbies()
+            if (validateSkipAndLimit(
+                    skip = skip,
+                    limit = limit,
+                    size = numLobbies
+            )) {
+                it.lobbyRepository.getLobbies(
+                    skip = skip,
+                    limit = limit
+                )
+            } else it.lobbyRepository.getLobbies(
+                skip = 0,
+                limit = 5
+            )
         }
-    }
 
     fun checkFullLobby(userId: Int, lobbyId: Int): Game? {
         return transactionManager.run {

@@ -78,13 +78,16 @@ class UserController(val userServices: UserServices) {
     }
 
     @GetMapping(Routes.UserRoutes.GET_LEADERBOARD)
-    fun getLeaderboard(): ResponseEntity<List<UserPoints>> {
+    fun getLeaderboard(
+        @RequestParam(name = "skip", defaultValue = "0") skip: Int,
+        @RequestParam(name = "limit", defaultValue = "5") limit: Int
+    ): ResponseEntity<List<UserPoints>> {
         logger.info(LoggerMessages.UserLoggerMessages.GET_LEADERBOARD)
 
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
-                userServices.getLeaderboard()
+                userServices.getLeaderboard(skip = skip, limit = limit)
             )
     }
 

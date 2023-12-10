@@ -28,7 +28,8 @@ class GameServiceTest {
             opening = Opening.FREESTYLE.id,
             variant = Variant.FREESTYLE.id,
             playerBlack = authedUser1.user.userId,
-            playerWhite = authedUser2.user.userId
+            playerWhite = authedUser2.user.userId,
+            smallBoard
         )
         assertEquals(gameName, allgameinfo.game.name)
         assertTrue(allgameinfo.game.board.isEmptyBoard)
@@ -46,7 +47,6 @@ class GameServiceTest {
         assertEquals(created.state, game.state)
         assertEquals(created.currentTurn, game.currentTurn)
     }
-
     @Test
     fun `Execute two plays successfully`() {
         val allGameInfo = createNewGame()
@@ -143,6 +143,7 @@ class GameServiceTest {
                 variant = Variant.FREESTYLE.id,
                 playerBlack= user1.user.userId,
                 playerWhite= user2.user.userId,
+                smallBoard
             )
         }
     }

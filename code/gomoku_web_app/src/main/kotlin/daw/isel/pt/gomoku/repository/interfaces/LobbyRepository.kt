@@ -13,7 +13,9 @@ interface LobbyRepository {
     fun getLobby(lobbyId: Int): Lobby?
 
     fun getLobbyByUserId(userId: Int): Lobby?
-    fun getLobbies(): List<Lobby>
+    fun getLobbies(skip: Int, limit: Int): List<Lobby>
+
+    fun getNumLobbies(): Int
     fun deleteLobby(lobbyId: Int): Boolean
     fun quitLobby(lobbyId: Int, userId: Int): Boolean
     fun joinLobby(lobbyId: Int, userId: Int): Boolean

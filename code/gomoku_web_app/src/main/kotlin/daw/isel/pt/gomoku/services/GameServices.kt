@@ -76,6 +76,10 @@ class GameServices(private val transactionManager: TransactionManager) {
         }
     }
 
+    fun getGameByUserId(userId: Int): String = transactionManager.run {
+            it.gameRepository.getGameByUserId(userId) ?:
+                throw NotFoundException(GameErrorMessages.GAME_NOT_FOUND)
+    }
 
     fun play(game: Game, userId: Int, col: Int, row: Int): AllGameInfo {
         return transactionManager.run {

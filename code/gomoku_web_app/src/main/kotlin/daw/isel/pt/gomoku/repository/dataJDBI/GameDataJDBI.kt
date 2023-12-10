@@ -60,6 +60,23 @@ class GameDataJDBI(private val handle: Handle): GameRepository {
         return numRows > 0
     }
 
+    override fun getGameByUserId(userId: Int): String? =
+        handle.createQuery("""
+                SELECT game
+                FROM game_users
+                WHERE (player_black = :userId OR player_white = :userId)
+                AND EXISTS (
+                    SELECT 1
+                    FROM games
+                    WHERE game_users.game = games.gameId
+                    AND state = 'A'
+                );
+            """.trimIndent()
+        )
+            .bind("userId", userId)
+            .mapTo(String::class.java)
+            .singleOrNull()
+
     override fun checkGameStarted(gameNumber: Int): GameSerialized? {
         return handle.createQuery("""
              SELECT gameid, name, opening, variant, board, state, turn from games where gameid =

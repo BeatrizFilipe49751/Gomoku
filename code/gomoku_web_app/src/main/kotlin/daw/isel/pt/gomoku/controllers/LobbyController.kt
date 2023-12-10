@@ -47,12 +47,19 @@ class LobbyController(
     }
 
     @GetMapping(Routes.LobbyRoutes.GET_AVAILABLE_LOBBIES)
-    fun getLobbies(): ResponseEntity<List<Lobby>> {
+    fun getLobbies(
+        @RequestParam(name = "skip", defaultValue = "0") skip: Int,
+        @RequestParam(name = "limit", defaultValue = "5") limit: Int
+    ): ResponseEntity<List<Lobby>> {
         logger.info(LoggerMessages.LobbyLoggerMessages.GET_AVAILABLE_LOBBIES)
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(lobbyServices.getLobbies())
+            .body(lobbyServices.getLobbies(
+                    skip = skip,
+                    limit = limit
+                )
+            )
     }
 
     @GetMapping(Routes.LobbyRoutes.GET_LOBBY)

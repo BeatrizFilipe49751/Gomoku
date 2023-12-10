@@ -3,6 +3,7 @@ package daw.isel.pt.gomoku.controllers
 import daw.isel.pt.gomoku.controllers.hypermedia.Siren
 import daw.isel.pt.gomoku.controllers.hypermedia.toGameSiren
 import daw.isel.pt.gomoku.controllers.loggin.LoggerMessages
+import daw.isel.pt.gomoku.controllers.models.GameIdOut
 import daw.isel.pt.gomoku.controllers.models.GameOut
 import daw.isel.pt.gomoku.controllers.models.PlayIn
 import daw.isel.pt.gomoku.controllers.routes.Routes
@@ -55,6 +56,22 @@ class GameController(val gameServices: GameServices) {
             .status(HttpStatus.OK)
             .body(
                 game.toGameOut().toGameSiren()
+            )
+    }
+
+    @GetMapping(Routes.GameRoutes.GET_GAME_BY_USER_ID)
+    fun getGameByUserId(authUser: AuthUser):
+            ResponseEntity<GameIdOut> {
+        logger.info(LoggerMessages.GameLoggerMessages.GET_GAME)
+
+        val gameId = gameServices.getGameByUserId(
+            authUser.user.userId
+        )
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                GameIdOut(gameId)
             )
     }
 

@@ -15,5 +15,6 @@ interface UserRepository {
     fun removeToken(token: TokenValidationInfo) : Int
     fun checkUserToken(tokenValidationInfo: TokenValidationInfo) : Pair<User, Token>?
     fun updateToken(token : Token, now : Instant)
-    fun getLeaderboard(): List<UserPoints>
+    fun getLeaderboard(skip: Int, limit: Int): List<UserPoints>
+    fun getLeaderBoardSize(): Int
 }

@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
 import daw.isel.pt.gomoku.utils.TestUtils
 import daw.isel.pt.gomoku.utils.TestUtils.createUserAndLogin
@@ -30,6 +31,42 @@ class LobbyServiceTest {
         val lobby = lobbyServices.getLobbyByUserId(user.user.userId)
         println(lobby)
         assertNotNull(lobby)
+    }
+
+    @Test
+    fun `get lobbies with skip and limit`() {
+        val expectedLobbies = mutableListOf<Lobby>()
+        repeat(10) {
+            val user = createUserAndLogin()
+            expectedLobbies.add(
+                lobbyServices.createLobby(userId = user.user.userId, newLobbyName())
+            )
+        }
+
+        val lobbies = lobbyServices.getLobbies(limit = 5, skip = 5)
+
+        assertEquals(
+            expected = expectedLobbies.subList(5, 10),
+            actual= lobbies
+        )
+    }
+
+    @Test
+    fun `get lobbies with invalid skip and limit`() {
+        val expectedLobbies = mutableListOf<Lobby>()
+        repeat(10) {
+            val user = createUserAndLogin()
+            expectedLobbies.add(
+                lobbyServices.createLobby(userId = user.user.userId, newLobbyName())
+            )
+        }
+
+        val lobbies = lobbyServices.getLobbies(limit = 100000, skip = 15)
+
+        assertEquals(
+            expected = expectedLobbies.subList(0, 5),
+            actual= lobbies
+        )
     }
 
     @Test

@@ -110,20 +110,32 @@ class UsersDataJDBI(private val handle: Handle): UserRepository {
     }
 
     override fun updateToken(token: Token, now: Instant) {
-        handle.createUpdate(
-            """
+        handle.createUpdate("""
                 update tokens
                 set last_used_at = :last_used_at
                 where token_validation = :validation_information
-            """.trimIndent()
-        )
+            """.trimIndent())
             .bind("last_used_at", now.epochSeconds)
             .bind("validation_information", token.tokenValidationInfo.validationInfo)
             .execute()
     }
 
-    override fun getLeaderboard(): List<UserPoints> {
-        return handle.createQuery("select userId, username, points from leaderboard group by username, userId order by points desc")
+
+    override fun getLeaderBoardSize(): Int {
+        return handle.createQuery("select count(*) from leaderboard")
+            .mapTo(Int::class.java)
+            .single()
+    }
+    override fun getLeaderboard(skip: Int, limit: Int): List<UserPoints> {
+        return handle.createQuery("""
+            select userId, username, points from leaderboard 
+            group by username, userId 
+            order by points desc
+            LIMIT :limit
+            OFFSET :skip
+        """.trimIndent())
+            .bind("limit", limit)
+            .bind("skip", skip)
             .mapTo(UserPoints::class.java)
             .list()
     }
