@@ -42,6 +42,12 @@ const SidePanel: React.FC<SidePanelProps> = (
         default: goodMessage = "???"
     }
 
+    const quitGameButton: React.JSX.Element = gameInfo.state === "Active" ?
+        <a className="quit" onClick={async () => {await quitGameFunction()}}>
+            Quit Game
+        </a> : <></>
+
+
     return (
         <div>
             <div
@@ -57,12 +63,7 @@ const SidePanel: React.FC<SidePanelProps> = (
                 <p>{playersInfo.playerUsername}</p>
                 <p>{playersInfo.opponentUsername}</p>
                 <p className="help">{goodMessage}</p>
-                <a
-                    className="quit"
-                    onClick={async () => {await quitGameFunction()}}
-                >
-                    Quit Game
-                </a>
+                {quitGameButton}
                 <a href="https://en.wikipedia.org/wiki/Gomoku" target="_blank" rel="noopener noreferrer" className="help">
                     <i className="bi-book"></i>
                 </a>
