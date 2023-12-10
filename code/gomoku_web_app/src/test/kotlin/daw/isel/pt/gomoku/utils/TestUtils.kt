@@ -41,7 +41,7 @@ object TestUtils {
 
 
     fun resetDatabase() = runWithHandle {
-        it.createUpdate("TRUNCATE game_users, games, lobby, tokens, users;")
+        it.createUpdate("TRUNCATE game_users, games, lobby, tokens, users, leaderboard;")
             .execute()
     }
     fun runWithHandle(block: (Handle) -> Unit) = jdbi.useTransaction<Exception>(block)
