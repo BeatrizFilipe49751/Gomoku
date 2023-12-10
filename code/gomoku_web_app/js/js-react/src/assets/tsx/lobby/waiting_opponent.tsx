@@ -32,6 +32,8 @@ function Waiting_Opponent() {
     return () => clearInterval(intervalId);
   }, [])
 
+
+
   if (loading) {
     return (
       <div className="spinner-container">
@@ -46,7 +48,7 @@ function Waiting_Opponent() {
               </Link>
             </div>
             <div className="btn-place">
-              <Link to="/">
+              <Link to={`/users/lobby/quit/${lobbyId}`}>
                 <button className="btn btn-primary custom-btn">Quit</button>
               </Link>
             </div>
