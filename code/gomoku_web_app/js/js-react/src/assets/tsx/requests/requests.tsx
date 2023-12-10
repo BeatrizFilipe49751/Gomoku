@@ -18,7 +18,7 @@ export async function execute_request(requestInfo: RequestInfo, method: string, 
     return handleResponse(response);
 }
 
-export async function execute_request_generic(requestInfo: RequestInfo, method: string, data: any, auth: boolean) {
+export async function execute_request_gen(requestInfo: RequestInfo, method: string, data: any, auth: boolean) {
     let headers = {
         'Content-Type': 'application/json'
     }

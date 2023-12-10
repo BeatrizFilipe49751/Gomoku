@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Loading } from "../../web-ui/request-ui-handler";
-import { execute_request_auth } from "../../requests/requests";
+import {execute_request_auth, execute_request_gen} from "../../requests/requests";
 import { lobby_api_routes } from "../../api-routes/api_routes";
 
 function Get_lobbies() {
@@ -13,10 +13,11 @@ function Get_lobbies() {
 
     const url = lobby_api_routes.get_available_lobbies.url + `?limit=${5}&skip=${skip}`
 
-    execute_request_auth(
+    execute_request_gen(
       url,
       lobby_api_routes.get_available_lobbies.method,
-      null
+      null,
+        true
     )
       .then(response => {
         console.log(response)

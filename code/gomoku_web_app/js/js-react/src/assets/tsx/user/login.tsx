@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { user_routes } from '../api-routes/api_routes';
-import { execute_request } from '../requests/requests';
+import { execute_request_gen } from '../requests/requests';
 import { createCookie, getUser, removeToken } from "../requests/session-handler";
 
 function Login() {
@@ -20,10 +20,11 @@ function Login() {
     }
     try {
       setLoading(true)
-      const response: any = await execute_request(
+      const response: any = await execute_request_gen(
         user_routes.login.url,
         user_routes.login.method,
-        data
+        data,
+          true
       )
 
       const responseData = {

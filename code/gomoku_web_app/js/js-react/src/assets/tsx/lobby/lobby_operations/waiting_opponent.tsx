@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { execute_request_auth, formatUrl } from "../../requests/requests";
+import {execute_request_auth, execute_request_gen, formatUrl} from "../../requests/requests";
 import { lobby_api_routes } from "../../api-routes/api_routes";
 
 function Waiting_Opponent() {
@@ -9,13 +9,14 @@ function Waiting_Opponent() {
   const { lobbyId } = useParams()
   const checkGameStatus = async () => {
     try {
-      const response = await execute_request_auth(
+      const response = await execute_request_gen(
         formatUrl(
           lobby_api_routes.check_full_lobby.url,
           { lobbyId: lobbyId }
         ),
         lobby_api_routes.check_full_lobby.method,
-        null
+        null,
+          false
       )
       if (response.gameId != null) {
         setLoading(false)

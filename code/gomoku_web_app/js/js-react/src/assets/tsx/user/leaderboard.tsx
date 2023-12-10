@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {execute_request} from "../requests/requests";
+import {execute_request, execute_request_gen} from "../requests/requests";
 import {user_routes} from "../api-routes/api_routes";
 
 function Leaderboard() {
@@ -11,10 +11,11 @@ function Leaderboard() {
   useEffect(() => {
     console.log(skip)
     const url = user_routes.get_leaderboard.url + `?limit:5&skip=${skip}`
-    execute_request(
+    execute_request_gen(
         url,
         user_routes.get_leaderboard.method,
-        null
+        null,
+        false
     ).then(response => {
       setTotalListSize(response.totalListSize)
       setLeaderboardData(response.list);
