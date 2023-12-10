@@ -82,13 +82,12 @@ class LobbyController(
     @GetMapping(Routes.LobbyRoutes.GET_LOBBY_USER_ID)
     fun getLobbyByUserId(
         authUser: AuthUser,
-        @PathVariable userId: Int
     ): ResponseEntity<Siren<LobbyOut>> {
         logger.info(LoggerMessages.LobbyLoggerMessages.GET_LOBBY_BY_USER_ID)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(lobbyServices.getLobbyByUserId(
-                userId = userId
+                authUser.user.userId
             )
                 .toLobbyOut()
                 .toLobbySiren(authUser = authUser)

@@ -21,7 +21,7 @@ object Routes {
     object LobbyRoutes {
         const val CREATE_LOBBY = "$PREFIX/users/lobby"
         const val GET_LOBBY = "$PREFIX/users/lobby/{lobbyId}"
-        const val GET_LOBBY_USER_ID = "$PREFIX/users/lobby/get/{userId}"
+        const val GET_LOBBY_USER_ID = "$PREFIX/users/lobby/get"
         const val CHECK_FULL_LOBBY = "$PREFIX/users/lobby/{lobbyId}/full"
         const val GET_AVAILABLE_LOBBIES = "$PREFIX/users/lobbies"
         const val JOIN_LOBBY = "$PREFIX/users/lobby/{lobbyId}"

@@ -104,7 +104,11 @@ class UserServices(private val transactionManager: TransactionManager, private v
     fun getLeaderboard(skip: Int, limit: Int): List<UserPoints> =
         transactionManager.run {
             val leaderBoardSize = it.usersRepository.getLeaderBoardSize()
-            if(validateSkipAndLimit(skip, limit, leaderBoardSize)) {
+            if(validateSkipAndLimit(
+                    skip= skip,
+                    limit= limit,
+                    size= leaderBoardSize
+            )) {
                 it.usersRepository.getLeaderboard(
                     skip = skip,
                     limit = limit
