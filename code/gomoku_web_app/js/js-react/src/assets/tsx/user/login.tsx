@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { user_routes } from '../api-routes/api_routes';
-import { execute_request_gen } from '../requests/requests';
-import { createCookie, getUser, removeToken } from "../requests/session-handler";
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {tryRequest} from '../utils/requests';
+import {createCookie, getUserCookie, removeUserCookie} from "../utils/session-handler";
+import {login} from "../requests/user_requests";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -11,40 +11,21 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Event handler for form submission
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const data = {
-      email: email,
-      password: password,
-    }
-    try {
-      setLoading(true)
-      const response: any = await execute_request_gen(
-        user_routes.login.url,
-        user_routes.login.method,
-        data,
-          true
-      )
+    const responseData = await tryRequest({
+      loadingSetter: setLoading,
+      request: login,
+      args: [email, password]
+    })
 
-      const responseData = {
-        userId: response.properties.user.userId,
-        username: response.properties.user.username,
-        token: response.properties.token
-      }
-      
-      const user = getUser()
-      if(user !== undefined) {
-        removeToken()
+    if (responseData != undefined) {
+      const user = getUserCookie()
+      if (user !== undefined) {
+        removeUserCookie()
       }
       createCookie(responseData)
-      alert('Login successful!')
       navigate('/');
-    } catch (rejectedPromise) {
-      const error = await rejectedPromise
-      alert(error.message)
-    } finally {
-      setLoading(false)
     }
   };
 

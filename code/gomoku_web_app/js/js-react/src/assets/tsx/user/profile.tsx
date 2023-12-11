@@ -1,26 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { user_routes } from '../api-routes/api_routes';
-import {execute_request, execute_request_gen, formatUrl} from '../requests/requests';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+import {tryRequest} from '../utils/requests';
+import {getUser} from "../requests/user_requests";
 
 function Profile() {
   const { userId } = useParams();
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    execute_request_gen(
-      formatUrl(user_routes.get_user.url, { userId: userId }),
-      user_routes.get_user.method,
-      null,
-        false
-    )
-      .then(response => setUser(response.properties))
-      .catch(rejectedPromise => {
-        rejectedPromise.then((error: { message: any; }) => {
-          alert(error.message)
-        })
-      })
-      .finally(() => setLoading(false))
+
+    tryRequest({
+      loadingSetter: setLoading,
+      request: getUser,
+      args: [userId]
+    }).then(response => {
+      if (response != undefined) {
+        setUser(response.properties)
+      }
+    })
   }, []);
 
   if (loading) {

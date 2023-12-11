@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {execute_request_auth, execute_request_gen, formatUrl} from "../requests/requests";
-import { game_api_routes, lobby_api_routes } from "../api-routes/api_routes";
-import { Loading } from "../web-ui/request-ui-handler";
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {tryRequest} from "../utils/requests";
+import {Loading} from "../web-ui/request-ui-handler";
+import {createLobby, getActiveLobby} from '../requests/lobby_requests';
+import {getUserActiveGame} from '../requests/game_requests';
 
 function LobbyScreen() {
   const [name, setName] = useState('');
@@ -15,61 +16,45 @@ function LobbyScreen() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    execute_request_gen(
-        game_api_routes.get_game_userId.url,
-        game_api_routes.get_game_userId.method,
-        null,
-        true
-    )
-        .then(response => {
-          setLoading(false);
-          navigate(`/game/${response.gameId}`);
-        })
-        .catch(rejectedPromise => {
-          // User not in an active Game
-          rejectedPromise.then(error => console.log(error))
-          execute_request_gen(
-              lobby_api_routes.get_lobby_userId.url,
-              lobby_api_routes.get_lobby_userId.method,
-              null,
-              true
-          )
-              .then(lobbyResponse => {
-                setLoading(false)
-                navigate(`/users/lobby/${lobbyResponse.properties.lobbyId}/wait`)
-              })
-              .catch(rejectedPromise => {
-                // User not in a Lobby
-                rejectedPromise.then(error => console.log(error))
-                setLoading(false)
-              })
-        })
+
+    const checkUserStatus = async () => {
+      const game = await tryRequest({
+        loadingSetter: setLoading,
+        request: getUserActiveGame,
+        args:  []
+      }, false)
+
+      if(game != undefined) {
+        navigate(`/game/${game.gameId}`);
+        return
+      }
+
+      const lobby = await tryRequest({
+        loadingSetter: setLoading,
+        request: getActiveLobby,
+        args: []
+      }, false)
+
+      if(lobby != undefined) {
+        navigate(`/users/lobby/${lobby.properties.lobbyId}/wait`)
+        return
+      }
+    }
+
+    checkUserStatus()
   }, [])
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const data = {
-      name: name,
-      opening: openingType,
-      variant: variantType,
-      size: boardSize
-    }
-    try {
-      const response = await execute_request_gen(
-        lobby_api_routes.create_lobby.url,
-        lobby_api_routes.create_lobby.method,
-        data,
-          true
-      )
-      alert('Create lobby successful!');
-      setLoading(false)
-      navigate(`/users/lobby/${response.properties.lobbyId}/wait`)
-    } catch (rejectedPromise) {
-      const error = await rejectedPromise
-      alert(error.message)
-    }
-    finally {
-      setLoading(false)
+   
+    const resp = await tryRequest({
+      loadingSetter: setLoading,
+      request: createLobby,
+      args: [name, openingType, variantType, boardSize]
+    })
+
+    if(resp != undefined) {
+      navigate(`/users/lobby/${resp.properties.lobbyId}/wait`)
     }
   }
 

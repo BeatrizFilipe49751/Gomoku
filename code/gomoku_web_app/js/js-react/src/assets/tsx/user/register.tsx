@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { user_routes } from "../api-routes/api_routes";
-import {execute_request, execute_request_gen} from "../requests/requests";
-import { Loading } from "../web-ui/request-ui-handler";
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {tryRequest} from "../utils/requests";
+import {Loading} from "../web-ui/request-ui-handler";
+import {register} from '../requests/user_requests';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -27,27 +27,14 @@ function Register() {
       return;
     }
 
-    const data = {
-      username: username,
-      email: email,
-      password: password,
-    };
-
-    try {
-      setLoading(true);
-      await execute_request_gen(
-        user_routes.create_user.url,
-        user_routes.create_user.method,
-        data,
-          false
-      )
-      alert('Registration successful! Proceed to login.');
+    const resp = await tryRequest({
+      loadingSetter: setLoading,
+      request: register,
+      args: [username, email, password]
+    })
+    
+    if(resp != undefined) {
       navigate('/users/login');
-    } catch (rejectedPromise: any) {
-      const error = await rejectedPromise
-      alert(error.message)
-    } finally {
-      setLoading(false);
     }
   };
 

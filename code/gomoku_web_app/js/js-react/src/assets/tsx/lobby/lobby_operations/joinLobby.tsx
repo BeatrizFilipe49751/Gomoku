@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Loading } from "../../web-ui/request-ui-handler";
-import {execute_request_auth, execute_request_gen, formatUrl} from "../../requests/requests";
-import { lobby_api_routes } from "../../api-routes/api_routes";
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
+import {Loading} from "../../web-ui/request-ui-handler";
+import {tryRequest} from "../../utils/requests";
+import {joinLobby} from '../../requests/lobby_requests';
 
 export function JoinLobby() {
     const [loading, setLoading] = useState(true)
     const { lobbyId } = useParams()
     const navigate = useNavigate();
     useEffect(() => {
-        execute_request_gen(
-            formatUrl(lobby_api_routes.join_lobby.url, { lobbyId: lobbyId }),
-            lobby_api_routes.join_lobby.method,
-            null,
-            true
-        )
-            .then(response => {
-                navigate(`/game/${response.properties.gameId}`)
-            })
-            .catch(rejectedPromise => {
-                alert(rejectedPromise.message)
-            })
-            .finally(() => { setLoading(false) }
-            )
+        tryRequest({
+            loadingSetter: setLoading,
+            request: joinLobby,
+            args: [lobbyId]
+        }).then(resp => {
+            if (resp != undefined) {
+                navigate(`/game/${resp.properties.gameId}`)
+            } else {
+                navigate("/")
+            }
+        })
     }, []);
 
     return (

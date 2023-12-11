@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 
 // inspiration: https://codepen.io/jonathanbell/pen/OvYVYw
 const Confetti: React.FC = () => {

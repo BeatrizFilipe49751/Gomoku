@@ -1,33 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import SidePanel from "./utils/sidepanel";
-import {execute_request, execute_request_auth, execute_request_gen, formatUrl} from "../requests/requests";
-import {game_api_routes, user_routes} from "../api-routes/api_routes";
-import {getUser} from "../requests/session-handler";
+import {tryRequest} from "../utils/requests";
 import GomokuBoard from "./gomoku-board";
 import {useNavigate, useParams} from "react-router-dom";
 import {convertToGameInfo, createPlayersInfo} from "./game-conversions";
+import {getGame, play, quitGame} from "../requests/game_requests";
+import {getUser} from "../requests/user_requests";
+import {getUserCookie} from "../utils/session-handler"
 
 function Game() {
     const [loading, setLoading] = useState(true);
-    const {gameId} = useParams()
+    const { gameId } = useParams()
     const [gameInfo, setGameInfo] = useState<GameInfo>(undefined)
     const [playersInfo, setPlayersInfo] = useState<PlayersInfo>(undefined)
-    const userInfo = getUser()
+    const userInfo = getUserCookie()
     const userId = userInfo.userId
     const username = userInfo.username
 
     const navigate = useNavigate()
 
     const updateGameInformation = async () => {
-        try {
-            const response = await execute_request_gen(
-                formatUrl(game_api_routes.get_game.url, {gameId: gameId}),
-                game_api_routes.get_game.method,
-                null,
-                true
-            )
-            console.log("GET GAME REQUEST")
-            const newGameInfo = convertToGameInfo(response);
+        const game = await tryRequest({
+            request: getGame,
+            args: [gameId]
+        })
+        console.log("GET GAME REQUEST")
+        if (game != undefined) {
+            const newGameInfo = convertToGameInfo(game);
             if (newGameInfo.state === "Cancelled") {
                 alert(`Game was ${newGameInfo.state}`)
                 navigate("/") // Navigate to Home
@@ -36,34 +35,29 @@ function Game() {
             const opponentId =
                 newGameInfo.playerBlack === userId ?
                     newGameInfo.playerWhite : newGameInfo.playerBlack
-            try {
-                const userResponse = await execute_request_gen(
-                    formatUrl(user_routes.get_user.url, {userId: `${opponentId}`}),
-                    user_routes.get_user.method,
-                    null,
-                    false
-                )
-                console.log("GET USER REQUEST")
+
+            const user = await tryRequest({
+                request: getUser,
+                args: [`${opponentId}`]
+            })
+            console.log("GET USER REQUEST")
+            if (user != undefined) {
                 const newPlayersInfo =
-                    createPlayersInfo(userId, username, userResponse, newGameInfo);
+                    createPlayersInfo(userId, username, user, newGameInfo);
                 setPlayersInfo(newPlayersInfo);
-            } catch (rejectedPromise) {
-                const error = await rejectedPromise
-                alert(error.message)
             }
-        } catch (rejectedPromise) {
-            const error = await rejectedPromise
-            alert(error.message)
-        } finally {
-            setLoading(false);
         }
     }
 
+
     const checkGameInformation = async () => {
-        if (gameInfo === undefined && playersInfo === undefined)
+        if (gameInfo === undefined && playersInfo === undefined) {
             await updateGameInformation()
+            setLoading(false)
+        }
+
         else if (gameInfo.currentTurn === playersInfo.opponentColor)
-                await updateGameInformation()
+            await updateGameInformation()
     }
 
     useEffect(() => {
@@ -71,45 +65,35 @@ function Game() {
         return () => clearInterval(intervalId);
     }, [])
 
-    async function play (row: number, col: number) {
-        if(gameInfo != undefined) {
+    async function playPiece(
+        row: number,
+        col: number
+    ) {
+        if (gameInfo != undefined) {
             if (gameInfo.state === "Active") {
-                try {
-                    const response = await execute_request_gen(
-                        formatUrl(game_api_routes.play.url, {gameId: gameId}),
-                        game_api_routes.play.method,
-                        {
-                            row: row,
-                            col: col
-                        },
-                        true
-                    )
-                    console.log("PLAY REQUEST")
-                    const newGameInfo = convertToGameInfo(response)
+                const newGame = await tryRequest({
+                    request: play,
+                    args: [gameId, row, col]
+                })
+                console.log("PLAY REQUEST")
+                if (newGame != undefined) {
+                    const newGameInfo = convertToGameInfo(newGame)
                     setGameInfo(newGameInfo)
-                } catch (rejectedPromise) {
-                    const error = await rejectedPromise
-                    alert(error.message)
                 }
             }
         }
     }
 
-    async function quitGame () {
-        if(gameInfo != undefined) {
-            try {
-                setLoading(true)
-                await execute_request_auth(
-                    formatUrl(game_api_routes.quit_game.url, {gameId: gameId}),
-                    game_api_routes.quit_game.method,
-                    null
-                )
-                console.log("QUIT REQUEST")
-                setLoading(false)
+
+    async function quit() {
+        if (gameInfo != undefined) {
+            const quit = tryRequest({
+                loadingSetter: setLoading,
+                request: quitGame,
+                args: [gameId]
+            })
+            if (quit != undefined) {
                 navigate("/") // Navigate to Home
-            } catch (rejectedPromise) {
-                const error = await rejectedPromise
-                alert(error.message)
             }
         }
     }
@@ -123,20 +107,20 @@ function Game() {
     }
 
     if (gameInfo != undefined && playersInfo != undefined) {
-        const containerSize = gameInfo.board.boardSize*40
+        const containerSize = gameInfo.board.boardSize * 40
         return (
             <div className="game-body">
-                <div className="sidemenu" style={{width: containerSize, height: containerSize}}>
+                <div className="sidemenu" style={{ width: containerSize, height: containerSize }}>
                     <SidePanel
                         size={containerSize}
                         gameInfo={gameInfo}
                         playersInfo={playersInfo}
-                        quitGameFunction={quitGame}
+                        quitGameFunction={quit}
                     />
                 </div>
-                <div className="game-container" style={{width: containerSize, height: containerSize}}>
+                <div className="game-container" style={{ width: containerSize, height: containerSize }}>
                     <h1 className="game-title">{gameInfo.name}</h1>
-                    <GomokuBoard game={gameInfo} playFunction={play} playersInfo={playersInfo}/>
+                    <GomokuBoard game={gameInfo} playFunction={playPiece} playersInfo={playersInfo} />
                 </div>
             </div>
         );

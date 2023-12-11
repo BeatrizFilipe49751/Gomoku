@@ -1,30 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import {execute_request_auth, execute_request_gen, formatUrl} from "../../requests/requests";
-import { lobby_api_routes } from "../../api-routes/api_routes";
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
+import {tryRequest} from "../../utils/requests";
+import {check_full_lobby} from '../../requests/lobby_requests';
 
 function Waiting_Opponent() {
-  const [loading, setLoading] = useState(true);
+  const [waiting, setWaiting] = useState(true);
   const navigate = useNavigate();
   const { lobbyId } = useParams()
   const checkGameStatus = async () => {
-    try {
-      const response = await execute_request_gen(
-        formatUrl(
-          lobby_api_routes.check_full_lobby.url,
-          { lobbyId: lobbyId }
-        ),
-        lobby_api_routes.check_full_lobby.method,
-        null,
-          true
-      )
-      if (response.gameId != null) {
-        setLoading(false)
-        navigate(`/game/${response.gameId}`)
-      }
-    } catch (rejectedPromise) {
-      const error = await rejectedPromise
-      alert(error.message)
+    const game = await tryRequest({
+      request: check_full_lobby,
+      args: [lobbyId]
+    })
+
+    if(game != undefined && game.gameId != null) {
+      setWaiting(false)
+      navigate(`/game/${game.gameId}`)
     }
   };
 
@@ -33,9 +24,7 @@ function Waiting_Opponent() {
     return () => clearInterval(intervalId);
   }, [])
 
-
-
-  if (loading) {
+  if (waiting) {
     return (
       <div className="spinner-container">
         <div className="spinner"></div>

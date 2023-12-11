@@ -1,24 +1,32 @@
-import { getAuthToken } from "./session-handler";
+import {getAuthToken} from "./session-handler";
 
 export function formatUrl(template: string, replacements: Record<string, string>): string {
     return template.replace(/\{(\w+)}/g, (match, key) => replacements[key] || match)
 }
 
-export async function execute_request(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
-    const requestOptions = {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: undefined
-
-    };
-    if (data !== null) {
-        requestOptions.body = JSON.stringify(data);
+export async function tryRequest(
+    {
+        loadingSetter,
+        request,
+        args
+    }: {
+    loadingSetter?: (newState: boolean) => void,
+    request: (...args: any[]) => Promise<any>,
+    args: any[]
+}, error_message: boolean = true): Promise<any>{
+    try {
+        loadingSetter?.(true)
+        return await request(...args)
+    } catch(rejectedPromise) {
+        const error = await rejectedPromise
+        if(error_message)
+            alert(error.message)
+    } finally {
+        loadingSetter?.(false)
     }
-    const response = await fetch(requestInfo, requestOptions);
-    return handleResponse(response);
 }
 
-export async function execute_request_gen(requestInfo: RequestInfo, method: string, data: any, auth: boolean) {
+export async function execute_request(requestInfo: RequestInfo, method: string, data: any, auth: boolean) {
     let headers = {
         'Content-Type': 'application/json'
     }
@@ -33,23 +41,6 @@ export async function execute_request_gen(requestInfo: RequestInfo, method: stri
         body: undefined
     }
 
-    if (data !== null) {
-        requestOptions.body = JSON.stringify(data);
-    }
-    const response: Response = await fetch(requestInfo, requestOptions);
-    return handleResponse(response);
-}
-
-export async function execute_request_auth(requestInfo: RequestInfo, method: string, data: any): Promise<any> {
-    const token = getAuthToken()
-    const requestOptions = {
-        method: method,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        body: undefined
-    };
     if (data !== null) {
         requestOptions.body = JSON.stringify(data);
     }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {getAuthToken} from "../requests/session-handler";
+import {getAuthToken} from "../utils/session-handler";
 
 
 function Home()  {

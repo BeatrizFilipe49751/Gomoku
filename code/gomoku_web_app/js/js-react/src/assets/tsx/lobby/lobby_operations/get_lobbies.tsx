@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Loading } from "../../web-ui/request-ui-handler";
-import {execute_request_auth, execute_request_gen} from "../../requests/requests";
-import { lobby_api_routes } from "../../api-routes/api_routes";
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {Loading} from "../../web-ui/request-ui-handler";
+import {tryRequest} from "../../utils/requests";
+import {next, prev} from '../../utils/paging';
+import {getLobbies} from "../../requests/lobby_requests";
 
 function Get_lobbies() {
   const [lobbiesData, setLobbiesData] = useState([]);
@@ -11,50 +12,33 @@ function Get_lobbies() {
   const [totalListSize, setTotalListSize] = useState(5);
   useEffect(() => {
 
-    const url = lobby_api_routes.get_available_lobbies.url + `?limit=${5}&skip=${skip}`
+    const fetchLobbies = async() => {
+        const leaderBoard = await tryRequest({
+            loadingSetter: setLoading,
+            request: getLobbies,
+            args : [skip]
+        })
 
-    execute_request_gen(
-      url,
-      lobby_api_routes.get_available_lobbies.method,
-      null,
-        true
-    )
-      .then(response => {
-        console.log(response)
-        setTotalListSize(response.totalListSize)
-        setLobbiesData(response.list)
-      })
-      .catch(error => alert(error.message))
-      .finally(() => setLoading(false))
+        if(leaderBoard != undefined) {
+            setTotalListSize(leaderBoard.totalListSize)
+            setLobbiesData(leaderBoard.list)
+        }
+    }
+    fetchLobbies()
   }, [skip]);
 
   const getOpeningString = (opening: number) => {
-    if (opening === 1) {
-      return 'freestyle';
-    } else if (opening === 2) {
-      return 'pro';
-    } else if (opening === 3) {
-      return 'long_pro';
-    } else if (opening === 4) {
-      return 'swap';
+    switch (opening) {
+        case 1:
+            return 'freestyle';
+        case 2:
+            return 'pro';
+        case 3:
+            return 'long_pro';
+        case 4:
+            return 'swap';
     }
   };
-
-  const nextPage = () => {
-    let nextSkip = skip + 5
-    if(nextSkip > totalListSize) nextSkip = totalListSize
-    if(nextSkip < totalListSize){
-      setLoading(true);
-      setSkip(nextSkip)
-    }
-  }
-
-  const prevPage = () => {
-    if(skip >= 5) {
-      setLoading(true);
-      setSkip(prevState => prevState - 5)
-    }
-  }
 
   const getVariantString = (variant: number) => {
     return variant === 1 ? 'freestyle' : 'swap';
@@ -88,8 +72,21 @@ function Get_lobbies() {
         ))}
       </ol>
       <div className="btn-lobbies-div">
-        <button className="btn btn-primary btn-paging" onClick={prevPage}>Previous Page</button>
-        <button className="btn btn-primary btn-paging" onClick={nextPage}>Next Page</button>
+        <button className="btn btn-primary btn-paging" onClick={() => {
+          prev({
+            skip: skip,
+            setSkip: setSkip,
+            setLoading: setLoading
+          })
+        }}>Previous Page</button>
+        <button className="btn btn-primary btn-paging" onClick={() =>
+          next({
+            skip: skip,
+            setSkip: setSkip,
+            setLoading: setLoading,
+            totalListSize: totalListSize
+          })
+        }>Next Page</button>
       </div>
     </div>
 

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {execute_request_gen} from "../requests/requests";
-import {user_routes} from "../api-routes/api_routes";
+import {tryRequest} from "../utils/requests";
+import {getLeaderBoard} from "../requests/user_requests";
+import {next, prev} from '../utils/paging';
 
 function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -10,39 +11,18 @@ function Leaderboard() {
   const [skip, setSkip] = useState(0)
 
   useEffect(() => {
-    console.log(skip)
-    const url = user_routes.get_leaderboard.url + `?limit:5&skip=${skip}`
-    execute_request_gen(
-        url,
-        user_routes.get_leaderboard.method,
-        null,
-        false
-    ).then(response => {
-      setTotalListSize(response.totalListSize)
-      setLeaderboardData(response.list);
-    }).catch(rejectedPromise => {
-      alert(rejectedPromise.message);
-    }).finally(() => {
-      setLoading(false);
-    });
+    tryRequest({
+      loadingSetter: setLoading,
+      request: getLeaderBoard,
+      args: [skip]
+    })
+      .then(response => {
+        if(response != undefined) {
+          setTotalListSize(response.totalListSize)
+          setLeaderboardData(response.list);
+        }
+      })
   }, [skip]);
-
-  const nextPage = () => {
-    let nextSkip = skip + 5
-    if(nextSkip > totalListSize) nextSkip = totalListSize
-    if(nextSkip < totalListSize){
-      setLoading(true);
-      setSkip(nextSkip)
-    }
-  }
-
-  const prevPage = () => {
-    if(skip >= 5) {
-      setLoading(true);
-      setSkip(prevState => prevState - 5)
-    }
-  }
-
 
   if (loading) {
     return (
@@ -82,8 +62,21 @@ function Leaderboard() {
           </table>
         </div>
         <div className="btn-place">
-          <button className="btn btn-primary btn-paging" onClick={prevPage}>Previous Page</button>
-          <button className="btn btn-primary btn-paging" onClick={nextPage}>Next Page</button>
+          <button className="btn btn-primary btn-paging" onClick={() =>
+            prev({
+              skip: skip,
+              setSkip: setSkip,
+              setLoading: setLoading
+            })
+          }>Previous Page</button>
+          <button className="btn btn-primary btn-paging" onClick={() =>
+            next({
+              skip: skip,
+              setSkip: setSkip,
+              setLoading: setLoading,
+              totalListSize: totalListSize
+            })
+          }>Next Page</button>
         </div>
       </div>
 

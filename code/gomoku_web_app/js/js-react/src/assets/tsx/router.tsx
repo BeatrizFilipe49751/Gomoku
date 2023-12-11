@@ -1,6 +1,6 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Outlet, RouteObject } from 'react-router-dom';
+import {createRoot} from 'react-dom/client';
+import {createBrowserRouter, Outlet, RouteObject, RouterProvider} from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/App.css';
@@ -17,7 +17,7 @@ import Profile from "./user/profile";
 import Game from "./game/game"
 import Waiting_Opponent from "./lobby/lobby_operations/waiting_opponent";
 import Logout from "./user/logout";
-import { JoinLobby } from "./lobby/lobby_operations/joinLobby";
+import {JoinLobby} from "./lobby/lobby_operations/joinLobby";
 import {QuitLobby} from "./lobby/lobby_operations/quit_lobby";
 
 

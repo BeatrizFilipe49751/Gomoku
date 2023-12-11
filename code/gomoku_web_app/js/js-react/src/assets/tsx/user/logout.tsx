@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
-import { user_routes } from '../api-routes/api_routes';
-import {execute_request_gen, handleResponse} from '../requests/requests';
-import { removeToken } from "../requests/session-handler";
-import { Loading } from "../web-ui/request-ui-handler";
+import {useNavigate} from 'react-router-dom';
+import {tryRequest} from '../utils/requests';
+import {Loading} from "../web-ui/request-ui-handler";
+import {logout} from "../requests/user_requests";
 
 
 function Logout() {
@@ -11,18 +10,15 @@ function Logout() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        execute_request_gen(
-            user_routes.logout.url,
-            user_routes.logout.method,
-            null, true)
-            .then(() => {
-                removeToken()
-                alert('Logout successful!')
-                navigate('/')
-            })
-            .catch(error => alert(error.message))
-            .finally( () => {setLoading(false)}
-        )
+        tryRequest(
+            {
+            loadingSetter: setLoading,
+            request: logout,
+            args: []
+        }).then( () => {
+            navigate('/')
+        })
+
     }, []);
 
     if (loading) {
