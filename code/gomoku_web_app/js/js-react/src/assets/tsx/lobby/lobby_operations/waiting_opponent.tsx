@@ -20,7 +20,19 @@ function Waiting_Opponent() {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(checkGameStatus, 5000);
+    let iterations = 0;
+    const maxIterations = 12 * 10;
+  
+    const intervalId = setInterval(() => {
+      checkGameStatus();
+      iterations++;
+      if (iterations >= maxIterations) {
+        clearInterval(intervalId); // Stop the interval when the maximum is reached
+        alert('No player has joined, try again later');
+        navigate(`/users/lobby/quit/${lobbyId}`)
+      }
+    }, 5000);
+  
     return () => clearInterval(intervalId);
   }, [])
 

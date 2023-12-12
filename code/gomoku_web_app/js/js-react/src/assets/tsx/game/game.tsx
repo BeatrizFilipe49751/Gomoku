@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import SidePanel from "./utils/sidepanel";
-import {tryRequest} from "../utils/requests";
+import { tryRequest } from "../utils/requests";
 import GomokuBoard from "./gomoku-board";
-import {useNavigate, useParams} from "react-router-dom";
-import {convertToGameInfo, createPlayersInfo} from "./game-conversions";
-import {getGame, play, quitGame} from "../requests/game_requests";
-import {getUser} from "../requests/user_requests";
-import {getUserCookie} from "../utils/session-handler"
+import { useNavigate, useParams } from "react-router-dom";
+import { convertToGameInfo, createPlayersInfo } from "./game-conversions";
+import { getGame, play, quitGame } from "../requests/game_requests";
+import { getUser } from "../requests/user_requests";
+import { getUserCookie } from "../utils/session-handler"
 
 function Game() {
     const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ function Game() {
             request: getGame,
             args: [gameId]
         })
-        console.log("GET GAME REQUEST")
+       
         if (game != undefined) {
             const newGameInfo = convertToGameInfo(game);
             if (newGameInfo.state === "Cancelled") {
@@ -39,7 +39,7 @@ function Game() {
                 request: getUser,
                 args: [`${opponentId}`]
             })
-            console.log("GET USER REQUEST")
+          
             if (user != undefined) {
                 const newPlayersInfo =
                     createPlayersInfo(userId, username, user, newGameInfo);
@@ -73,7 +73,7 @@ function Game() {
                     request: play,
                     args: [gameId, row, col]
                 })
-                console.log("PLAY REQUEST")
+              
                 if (newGame != undefined) {
                     const newGameInfo = convertToGameInfo(newGame)
                     setGameInfo(newGameInfo)
