@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {tryRequest} from "../utils/requests";
 import {getLeaderBoard} from "../requests/user_requests";
-import {next, prev} from '../utils/paging';
+import {next, pagingHidden, prev} from '../utils/paging';
 
 function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -62,14 +62,14 @@ function Leaderboard() {
           </table>
         </div>
         <div className="btn-place">
-          <button className="btn btn-primary btn-paging" onClick={() =>
+          <button hidden={pagingHidden(leaderboardData)} className="btn btn-primary btn-paging" onClick={() =>
             prev({
               skip: skip,
               setSkip: setSkip,
               setLoading: setLoading
             })
           }>Previous Page</button>
-          <button className="btn btn-primary btn-paging" onClick={() =>
+          <button hidden={pagingHidden(leaderboardData)} className="btn btn-primary btn-paging" onClick={() =>
             next({
               skip: skip,
               setSkip: setSkip,

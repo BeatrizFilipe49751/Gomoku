@@ -65,10 +65,10 @@ function NavbarLogged({ navigate }: { navigate: NavigateFunction }) {
                 <i className="bi-trophy"></i> Leaderboard
             </Link>
             <Link to="/users/lobbies" className="nav-link" onClick={() => navigate('/users/lobbies')}>
-                <i className="bi-controller"></i> Join Lobby
+                <i className="bi-arrow-right-circle"></i> Join a Lobby
             </Link>
             <Link to="/users/lobby" className="nav-link" onClick={() => navigate('/users/lobby')}>
-                <i className="bi-plus-circle"></i> Lobby
+                <i className="bi-controller"></i> My Lobby
             </Link>
         </div>
     )

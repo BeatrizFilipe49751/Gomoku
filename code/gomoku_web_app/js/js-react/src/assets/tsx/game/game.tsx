@@ -35,7 +35,6 @@ function Game() {
             const opponentId =
                 newGameInfo.playerBlack === userId ?
                     newGameInfo.playerWhite : newGameInfo.playerBlack
-
             const user = await tryRequest({
                 request: getUser,
                 args: [`${opponentId}`]
@@ -54,10 +53,9 @@ function Game() {
         if (gameInfo === undefined && playersInfo === undefined) {
             await updateGameInformation()
             setLoading(false)
-        }
-
-        else if (gameInfo.currentTurn === playersInfo.opponentColor)
+        } else if (gameInfo.currentTurn === playersInfo.opponentColor)
             await updateGameInformation()
+
     }
 
     useEffect(() => {

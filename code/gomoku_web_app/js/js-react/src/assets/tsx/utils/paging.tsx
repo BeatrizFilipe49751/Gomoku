@@ -26,3 +26,5 @@ export function prev(
         setSkip(nextSkip => nextSkip - 5)
     }
 }
+
+export const pagingHidden = (data: any[]): boolean => data.length === 0

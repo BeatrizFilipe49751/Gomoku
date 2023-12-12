@@ -24,8 +24,8 @@ export async function getUser(userId: string) {
     )
 }
 
-export async function register(email: string, username: string, password: string) {
-    const data = { email, username, password }
+export async function register(username: string, email: string, password: string) {
+    const data = { username, email, password }
     const resp = await execute_request(
         user_routes.create_user.url,
         user_routes.create_user.method,

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Loading} from "../../web-ui/request-ui-handler";
 import {tryRequest} from "../../utils/requests";
-import {next, prev} from '../../utils/paging';
+import {next, pagingHidden, prev} from '../../utils/paging';
 import {getLobbies} from "../../requests/lobby_requests";
 
 function Get_lobbies() {
@@ -48,9 +48,12 @@ function Get_lobbies() {
     return <Loading />
   }
 
+  const lobbiesTitle = lobbiesData.length > 0 ?
+    "Available Lobbies" : "No Available Lobbies"
+
   return (
     <div className="lobbies-container">
-      <div className="title-lobbies">Available Lobbies</div>
+      <div className="title-lobbies">{lobbiesTitle}</div>
       <ol>
         {lobbiesData.map((lobby) => (
           <Link
@@ -72,14 +75,14 @@ function Get_lobbies() {
         ))}
       </ol>
       <div className="btn-lobbies-div">
-        <button className="btn btn-primary btn-paging" onClick={() => {
+        <button hidden={pagingHidden(lobbiesData)} className="btn btn-primary btn-paging" onClick={() => {
           prev({
             skip: skip,
             setSkip: setSkip,
             setLoading: setLoading
           })
         }}>Previous Page</button>
-        <button className="btn btn-primary btn-paging" onClick={() =>
+        <button hidden={pagingHidden(lobbiesData)} className="btn btn-primary btn-paging" onClick={() =>
           next({
             skip: skip,
             setSkip: setSkip,
