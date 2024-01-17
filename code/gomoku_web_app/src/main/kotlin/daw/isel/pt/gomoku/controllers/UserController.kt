@@ -114,10 +114,11 @@ class UserController(val userServices: UserServices) {
             response: HttpServletResponse,
             authUser: AuthUser
         ) {
+            deleteCookie(response)
             if(request.cookies == null) {
                 val cookie = Cookie(COOKIE_NAME, authUser.token)
                 cookie.isHttpOnly = true
-                cookie.path = "/"
+                cookie.path = BASE_PATH
                 cookie.maxAge = HOUR
                 response.addCookie(cookie)
             }

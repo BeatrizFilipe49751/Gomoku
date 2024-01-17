@@ -3,7 +3,6 @@ import {Cookies} from 'react-cookie';
 
 const cookies = new Cookies()
 export function createCookie(data: any) {
-    console.log()
     if (getUserCookie() != undefined) removeUserCookie()
     const expires = new Date();
     expires.setTime(expires.getTime() + 6 * 60 * 60 * 1000);

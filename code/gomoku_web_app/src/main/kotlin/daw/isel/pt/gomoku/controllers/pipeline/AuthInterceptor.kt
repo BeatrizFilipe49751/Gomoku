@@ -14,10 +14,8 @@ class AuthInterceptor(private val tokenValidator: RequestTokenValidator): Handle
         logger.info(LoggerMessages.AuthLoggerMessages.AUTH_INTERCEPTOR)
 
         val authInfo = getAuthToken(request) ?: throw UnauthorizedException("Unauthorized Access")
-        logger.info("TOKENNN $authInfo")
 
         val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authInfo)
-        logger.info("FAILED TO GET AUTHED USER")
         return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
         else {
             AuthUserArgumentResolver.addUserTo(authenticatedUser, request)
@@ -29,13 +27,12 @@ class AuthInterceptor(private val tokenValidator: RequestTokenValidator): Handle
         val authorizationHeader: String? = request.getHeader(NAME_AUTHORIZATION_HEADER)
 
         if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_STRING)) {
-            logger.info("AUTH INTERCEPTOR: Got token from request")
+            logger.info("AUTH INTERCEPTOR: Got token from Header")
             return authorizationHeader
         }
 
         request.cookies?.find { it.name == "auth" }?.let { cookie ->
             logger.info("AUTH INTERCEPTOR: Got token from HTTP cookie")
-            logger.info("AUTH INTERCEPTOR: token value ${cookie.value}")
             return "$BEARER_STRING${cookie.value}"
         }
 
