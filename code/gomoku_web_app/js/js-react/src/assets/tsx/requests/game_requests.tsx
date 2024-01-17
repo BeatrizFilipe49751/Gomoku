@@ -5,8 +5,7 @@ export async function getUserActiveGame() {
     return await execute_request(
         game_api_routes.get_game_userId.url,
         game_api_routes.get_game_userId.method,
-        null,
-        true
+        null
     )
 }
 
@@ -17,8 +16,7 @@ export async function play(gameId: string, row: number, col: number) {
         {
             row: row,
             col: col
-        },
-        true
+        }
     )
 }
 
@@ -26,15 +24,13 @@ export async function quitGame (gameId: string) {
     return await execute_request(
         formatUrl(game_api_routes.quit_game.url, {gameId: gameId}),
         game_api_routes.quit_game.method,
-        null,
-        true
+        null
     )
 }
 export async function getGame(gameId: string) {
     return await execute_request(
         formatUrl(game_api_routes.get_game.url, {gameId: gameId}),
         game_api_routes.get_game.method,
-        null,
-        true
+        null
     )
 }

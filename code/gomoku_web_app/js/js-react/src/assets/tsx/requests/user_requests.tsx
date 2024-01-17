@@ -9,8 +9,7 @@ export async function getLeaderBoard(
     return await execute_request(
         url,
         user_routes.get_leaderboard.method,
-        null,
-        false
+        null
     )
 }
 
@@ -19,8 +18,7 @@ export async function getUser(userId: string) {
     return await execute_request(
         formatUrl(user_routes.get_user.url, { userId: userId }),
         user_routes.get_user.method,
-        null,
-        false
+        null
     )
 }
 
@@ -29,8 +27,7 @@ export async function register(username: string, email: string, password: string
     const resp = await execute_request(
         user_routes.create_user.url,
         user_routes.create_user.method,
-        data,
-        false
+        data
     )
     alert('Registration successful! Proceed to login.');
     return resp
@@ -44,14 +41,12 @@ export async function login(email: string, password: string) {
     const response: any = await execute_request(
         user_routes.login.url,
         user_routes.login.method,
-        data,
-        true
+        data
     )
     alert('Login successful!')
     return {
         userId: response.properties.user.userId,
         username: response.properties.user.username,
-        token: response.properties.token
     }
 }
 
@@ -59,7 +54,7 @@ export async function logout() {
     const resp = await execute_request(
         user_routes.logout.url,
         user_routes.logout.method,
-        null, true)
+        null)
     removeUserCookie()
     alert('Logout successful!')
     return resp

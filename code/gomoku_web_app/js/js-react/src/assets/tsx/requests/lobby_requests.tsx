@@ -5,8 +5,7 @@ export async function joinLobby(lobbyId: string) {
     return await execute_request(
         formatUrl(lobby_api_routes.join_lobby.url, { lobbyId: lobbyId }),
         lobby_api_routes.join_lobby.method,
-        null,
-        true
+        null
     )
 }
 
@@ -20,8 +19,7 @@ export async function createLobby(
     const response = await execute_request(
         lobby_api_routes.create_lobby.url,
         lobby_api_routes.create_lobby.method,
-        data,
-        true
+        data
     )
     alert('Create lobby successful!');
     return response
@@ -32,8 +30,7 @@ export async function getLobbies(skip : number) {
     return await execute_request(
         url,
         lobby_api_routes.get_available_lobbies.method,
-        null,
-        true
+        null
     )
 }
 
@@ -44,8 +41,7 @@ export async function check_full_lobby(lobbyId: string) {
             { lobbyId: lobbyId }
         ),
         lobby_api_routes.check_full_lobby.method,
-        null,
-        true
+        null
     )
 }
 
@@ -53,8 +49,7 @@ export async function getActiveLobby() {
     return await execute_request(
         lobby_api_routes.get_lobby_userId.url,
         lobby_api_routes.get_lobby_userId.method,
-        null,
-        true
+        null
     )
 }
 
@@ -62,7 +57,6 @@ export async function quitLobby(lobbyId: string) {
     return await execute_request(
         formatUrl(lobby_api_routes.quit_lobby.url, { lobbyId: lobbyId }),
         lobby_api_routes.quit_lobby.method,
-        null,
-        true
+        null
     )
 }

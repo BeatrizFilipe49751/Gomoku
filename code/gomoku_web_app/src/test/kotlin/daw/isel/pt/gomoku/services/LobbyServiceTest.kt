@@ -1,5 +1,6 @@
 package daw.isel.pt.gomoku.services
 
+import daw.isel.pt.gomoku.controllers.models.ListOut
 import daw.isel.pt.gomoku.domain.Lobby
 import daw.isel.pt.gomoku.services.exceptions.AlreadyInLobbyException
 import daw.isel.pt.gomoku.utils.TestUtils
@@ -44,9 +45,12 @@ class LobbyServiceTest {
         }
 
         val lobbies = lobbyServices.getLobbies(limit = 5, skip = 5)
-
+        val expectedLobbiesOut = ListOut(
+            list = expectedLobbies.subList(5, 10),
+            totalListSize = expectedLobbies.size
+        )
         assertEquals(
-            expected = expectedLobbies.subList(5, 10),
+            expected = expectedLobbiesOut,
             actual= lobbies
         )
     }
@@ -62,9 +66,13 @@ class LobbyServiceTest {
         }
 
         val lobbies = lobbyServices.getLobbies(limit = 100000, skip = 15)
+        val expectedLobbiesOut = ListOut(
+            list = expectedLobbies.subList(0, 5),
+            totalListSize = expectedLobbies.size
+        )
 
         assertEquals(
-            expected = expectedLobbies.subList(0, 5),
+            expected = expectedLobbiesOut,
             actual= lobbies
         )
     }

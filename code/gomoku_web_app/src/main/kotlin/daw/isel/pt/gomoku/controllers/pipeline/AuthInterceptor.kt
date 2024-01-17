@@ -10,21 +10,36 @@ import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
 class AuthInterceptor(private val tokenValidator: RequestTokenValidator): HandlerInterceptor {
-
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        val authorizationHeader: String? = request.getHeader(NAME_AUTHORIZATION_HEADER)
-        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_STRING)) {
-            response.status = HttpServletResponse.SC_UNAUTHORIZED
-            throw UnauthorizedException("Unauthorized Access")
-        }
         logger.info(LoggerMessages.AuthLoggerMessages.AUTH_INTERCEPTOR)
 
-        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authorizationHeader)
+        val authInfo = getAuthToken(request) ?: throw UnauthorizedException("Unauthorized Access")
+        logger.info("TOKENNN $authInfo")
+
+        val authenticatedUser = tokenValidator.processAuthorizationHeaderValue(authInfo)
+        logger.info("FAILED TO GET AUTHED USER")
         return if(authenticatedUser == null) throw UnauthorizedException("Unauthorized Access")
         else {
             AuthUserArgumentResolver.addUserTo(authenticatedUser, request)
             true
         }
+    }
+
+    private fun getAuthToken(request: HttpServletRequest): String? {
+        val authorizationHeader: String? = request.getHeader(NAME_AUTHORIZATION_HEADER)
+
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_STRING)) {
+            logger.info("AUTH INTERCEPTOR: Got token from request")
+            return authorizationHeader
+        }
+
+        request.cookies?.find { it.name == "auth" }?.let { cookie ->
+            logger.info("AUTH INTERCEPTOR: Got token from HTTP cookie")
+            logger.info("AUTH INTERCEPTOR: token value ${cookie.value}")
+            return "$BEARER_STRING${cookie.value}"
+        }
+
+        return null
     }
 
     companion object {

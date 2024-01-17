@@ -9,6 +9,9 @@ import daw.isel.pt.gomoku.controllers.routes.Routes
 import daw.isel.pt.gomoku.controllers.utils.toUserOut
 import daw.isel.pt.gomoku.domain.AuthUser
 import daw.isel.pt.gomoku.services.UserServices
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -48,26 +51,35 @@ class UserController(val userServices: UserServices) {
 
 
     @PostMapping(Routes.UserRoutes.LOGIN)
-    fun login(@RequestBody userInLogin: UserInLogin): ResponseEntity<Siren<AuthUser>> {
+    fun login(
+        @RequestBody userInLogin: UserInLogin,
+        request: HttpServletRequest,
+        response: HttpServletResponse
+    ): ResponseEntity<Siren<AuthUser>> {
         logger.info(LoggerMessages.UserLoggerMessages.LOGIN)
+        val authedUser =  userServices.login(email = userInLogin.email, password = userInLogin.password)
+
+        handleCookie(
+            request = request,
+            response = response,
+            authUser = authedUser
+        )
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(
-                userServices.login(
-                    email = userInLogin.email,
-                    password = userInLogin.password
-                ).toAuthUserSiren()
-            )
+            .body(authedUser.toAuthUserSiren())
     }
 
 
     @PostMapping(Routes.UserRoutes.LOGOUT)
-    fun logout(authedUser : AuthUser): ResponseEntity<Siren<UserOut>>  {
+    fun logout(
+        authedUser : AuthUser,
+        response: HttpServletResponse
+    ): ResponseEntity<Siren<UserOut>>  {
         logger.info(LoggerMessages.UserLoggerMessages.LOGOUT)
 
         userServices.logout(authedUser.token)
-
+        deleteCookie(response = response)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
@@ -93,6 +105,31 @@ class UserController(val userServices: UserServices) {
 
 
     companion object{
+
+        private const val HOUR = 3600
+        private const val COOKIE_NAME = "auth"
+        private const val BASE_PATH = "/"
+        private fun handleCookie(
+            request: HttpServletRequest,
+            response: HttpServletResponse,
+            authUser: AuthUser
+        ) {
+            if(request.cookies == null) {
+                val cookie = Cookie(COOKIE_NAME, authUser.token)
+                cookie.isHttpOnly = true
+                cookie.path = "/"
+                cookie.maxAge = HOUR
+                response.addCookie(cookie)
+            }
+        }
+
+        private fun deleteCookie(response: HttpServletResponse) {
+            val cookie = Cookie(COOKIE_NAME , null)
+            cookie.maxAge = 0
+            cookie.path = BASE_PATH
+            response.addCookie(cookie)
+        }
+
         private val logger = LoggerFactory
             .getLogger(UserController::class.java)
     }

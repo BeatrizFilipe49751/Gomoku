@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link, NavigateFunction, useNavigate} from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {getAuthToken, getUserCookie} from "../utils/session-handler";
+import {getUserCookie} from "../utils/session-handler";
 
 function Navbar() {
     const navigate = useNavigate()
-    let token = getAuthToken()
-    if (token === undefined) {
+    let user = getUserCookie()
+    if (user === undefined) {
         return (
             <NavbarDefault navigate={navigate} />
         );

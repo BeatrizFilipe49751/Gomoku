@@ -1,5 +1,3 @@
-import {getAuthToken} from "./session-handler";
-
 export function formatUrl(template: string, replacements: Record<string, string>): string {
     return template.replace(/\{(\w+)}/g, (match, key) => replacements[key] || match)
 }
@@ -26,13 +24,9 @@ export async function tryRequest(
     }
 }
 
-export async function execute_request(requestInfo: RequestInfo, method: string, data: any, auth: boolean) {
+export async function execute_request(requestInfo: RequestInfo, method: string, data: any) {
     let headers = {
         'Content-Type': 'application/json'
-    }
-    if(auth) {
-        const token = getAuthToken()
-        headers['Authorization'] = `Bearer ${token}`
     }
 
     const requestOptions = {

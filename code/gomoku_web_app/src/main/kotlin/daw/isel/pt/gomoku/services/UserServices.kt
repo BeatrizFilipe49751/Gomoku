@@ -71,6 +71,7 @@ class UserServices(private val transactionManager: TransactionManager, private v
                 lastUsedAt = now
             )
             repo.createToken(newToken, usersDomain.maxNumberOfTokensPerUser)
+
             AuthUser(
                 token = tokenValue,
                 user = user

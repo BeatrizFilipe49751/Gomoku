@@ -20,6 +20,7 @@ function Login() {
     })
 
     if (responseData != undefined) {
+      console.log(`response data ${responseData}`)
       const user = getUserCookie()
       if (user !== undefined) {
         removeUserCookie()

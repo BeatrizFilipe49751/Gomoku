@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {getAuthToken} from "../utils/session-handler";
+import {getUserCookie} from "../utils/session-handler";
 
 
 function Home()  {
-  const [token, setToken] = useState(getAuthToken())
+  const [user, setUser] = useState(getUserCookie())
   useEffect(() => {
-    let token = getAuthToken()
-    setToken(token)
+    let user = getUserCookie()
+    setUser(user)
   }, []);
-  if (token === undefined) {
+  if (user === undefined) {
     return <HomeDefault/>
   } else {
     return <HomeLogged/>
